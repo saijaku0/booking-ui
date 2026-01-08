@@ -1,0 +1,32 @@
+name: Check Angular Update
+on:
+  schedule:
+    - cron: '0 7 * * 1'
+  workflow_dispatch:
+jobs:
+  check-version:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Get current Angular version
+        id: current
+        run: |
+          # Get current version angular
+          VERSION=$(node -p "require('./package.json').dependencies['@angular/core']")
+          echo "current_v=$VERSION" >> $GITHUB_OUTPUT
+          echo "current version in project: $VERSION"
+
+     - name: Get latest Angular version
+        id: latest
+        run: |
+          LATEST=$(npm show @angular/core version)
+          echo "latest_v=$LATEST" >> $GITHUB_OUTPUT
+          echo "latest version: $LATEST"
+
+      - name: Compare versions
+        if: steps.current.outputs.current_v != steps.latest.outputs.latest_v
+        run: |
+          echo "::warning title=New Angular Version Available::Доступно обновление! С $({ steps.current.outputs.current_v }) до $({ steps.latest.outputs.latest_v })"
+          echo "to update run: ng update @angular/core @angular/cli"
