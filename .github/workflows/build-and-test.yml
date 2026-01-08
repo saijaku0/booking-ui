@@ -1,0 +1,33 @@
+name: Angular CI Build and Test
+on:
+  push:
+  pull_request:
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    #TODO: add two users check...
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Set up Node.js
+        uses: actions/checkout@v6
+        with:
+          node-version: "24.x"
+          cache: "npm"
+          cache-dependency-path: ./app/booking-ui/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint Code
+        run: npm run lint
+
+      - name: Check Formatting
+        run: npx prettier --check .
+
+      - name: Run tests
+        run: npm test -- --watch=false --browsers=ChromeHeadless
+
+      - neme: Build application
+        run: npm build -- --coonfiguartion=production
