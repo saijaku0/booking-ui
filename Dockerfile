@@ -1,13 +1,13 @@
 FROM node:24-alpine AS build
 WORKDIR /app
 
-COPY package*.json ./
-RUN npm ci 
+COPY app/booking-ui/package*.json ./
+RUN npm install 
 
-COPY . .
+COPY app/booking-ui/ .
 RUN npx ng build --configuration=production
 
 FROM nginx:stable-alpine
-COPY --from=build /app/dist/booking-ui/browser /usr/shared/nginx/html
+COPY --from=build /app/dist/booking-ui/browser /usr/share/nginx/html
 
 EXPOSE 80
