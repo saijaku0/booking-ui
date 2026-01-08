@@ -2,7 +2,7 @@ FROM node:24-alpine AS build
 WORKDIR /app
 
 COPY app/booking-ui/package*.json ./
-RUN npm install 
+RUN npm install --ignore-scripts 
 
 COPY app/booking-ui/ .
 RUN npx ng build --configuration=production
