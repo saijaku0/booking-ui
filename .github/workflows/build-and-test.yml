@@ -18,7 +18,7 @@ jobs:
           cache-dependency-path: ./app/booking-ui/package-lock.json
 
       - name: Install dependencies
-        run: npm ci
+        run: npm install
 
       - name: Lint Code
         run: npm run lint
