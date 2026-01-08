@@ -33,10 +33,10 @@ situations (like booking a doctor's visit).
 ## Infrastructure & Workflow
 * Dockerized Environment: The application is containerized to ensure that the "it works on my machine" problem is eliminated
 * GitHub Actions CI: Every push triggers a pipeline that:
-<ol type = "1">
-  <li> Lints the code for consistency </li>
-  <li> Runs unit tests to ensure stability </li>
-  <li> Builds the production Docker image </li>
-</ol>
+	<ol type = "1">
+	  <li> Lints the code for consistency </li>
+	  <li> Runs unit tests to ensure stability </li>
+	  <li> Builds the production Docker image </li>
+	</ol>
 
 
