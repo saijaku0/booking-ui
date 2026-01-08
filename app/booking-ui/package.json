@@ -7,7 +7,8 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "serve:ssr:booking-ui": "node dist/booking-ui/server/server.mjs"
+    "serve:ssr:booking-ui": "node dist/booking-ui/server/server.mjs",
+    "prepare": "cd ../.. && husky"
   },
   "prettier": {
     "printWidth": 100,
@@ -43,10 +44,24 @@
     "@angular/build": "^21.0.5",
     "@angular/cli": "^21.0.5",
     "@angular/compiler-cli": "^21.0.0",
+    "@commitlint/cli": "^20.3.1",
+    "@commitlint/config-conventional": "^20.3.1",
     "@types/express": "^5.0.1",
     "@types/node": "^20.17.19",
+    "husky": "^9.1.7",
     "jsdom": "^27.1.0",
+    "lint-staged": "^16.2.7",
+    "prettier": "^3.7.4",
     "typescript": "~5.9.2",
     "vitest": "^4.0.8"
+  },
+  "lint-staged": {
+    "*.{ts,html}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{scss,css,json,md}": [
+      "prettier --write"
+    ]
   }
 }
