@@ -6,7 +6,7 @@
     "start": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test --watch=false --browser=chromium --headless",
+    "test": "ng test --watch=false",
     "lint": "ng lint",
     "format": "prettier --write .",
     "serve:ssr:booking-ui": "node dist/booking-ui/server/server.mjs",
