@@ -1,5 +1,7 @@
 # Project Overview: Medical Appointment Booking System
 
+![Project_Status](https://img.shields.io/badge/Status-Active-success)
+
 This project is a modern web application designed to streamline the process of scheduling and managin medical appointments.
 It focused on providing a clean, accessible, and high-performance user interface for both patients and healthcare providers.
 

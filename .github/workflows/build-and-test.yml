@@ -18,16 +18,25 @@ jobs:
           cache-dependency-path: ./app/booking-ui/package-lock.json
 
       - name: Install dependencies
-        run: npm ci
+        working-directory: app/booking-ui
+        run: npm install
 
       - name: Lint Code
+        working-directory: app/booking-ui
         run: npm run lint
 
       - name: Check Formatting
+        working-directory: app/booking-ui
         run: npx prettier --check .
 
       - name: Run tests
-        run: npm test -- --watch=false --browsers=ChromeHeadless
+        working-directory: app/booking-ui
+        run: npm test
 
-      - neme: Build application
-        run: npm build -- --coonfiguartion=production
+      - name: Install Playwright Browsers
+        working-directory: app/booking-ui
+        run: npx playwright install chromium
+
+      - name: Build application
+        working-directory: app/booking-ui
+        run: npm run build -- --configuration=production
