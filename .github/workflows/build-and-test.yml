@@ -31,7 +31,11 @@ jobs:
 
       - name: Run tests
         working-directory: app/booking-ui
-        run: npm test -- --watch=false --browsers=ChromeHeadless
+        run: npm test
+
+      - name: Install Playwright Browsers
+        working-directory: app/booking-ui
+        run: npx playwright install chromium
 
       - name: Build application
         working-directory: app/booking-ui
