@@ -18,16 +18,21 @@ jobs:
           cache-dependency-path: ./app/booking-ui/package-lock.json
 
       - name: Install dependencies
+        working-directory: app/booking-ui
         run: npm install
 
       - name: Lint Code
+        working-directory: app/booking-ui
         run: npm run lint
 
       - name: Check Formatting
+        working-directory: app/booking-ui
         run: npx prettier --check .
 
       - name: Run tests
+        working-directory: app/booking-ui
         run: npm test -- --watch=false --browsers=ChromeHeadless
 
       - name: Build application
+        working-directory: app/booking-ui
         run: npm build -- --configuration=production
