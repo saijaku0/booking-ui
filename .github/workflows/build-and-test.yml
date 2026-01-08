@@ -39,4 +39,4 @@ jobs:
 
       - name: Build application
         working-directory: app/booking-ui
-        run: npm build -- --configuration=production
+        run: npm run build -- --configuration=production
