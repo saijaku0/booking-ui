@@ -7,6 +7,7 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
+    "lint": "eslint .",
     "serve:ssr:booking-ui": "node dist/booking-ui/server/server.mjs",
     "prepare": "cd ../.. && git config core.hooksPath .husky"
   },
