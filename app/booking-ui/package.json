@@ -8,7 +8,7 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "serve:ssr:booking-ui": "node dist/booking-ui/server/server.mjs",
-    "prepare": "cd ../.. && husky"
+    "prepare": "cd ../.. && git config core.hooksPath .husky"
   },
   "prettier": {
     "printWidth": 100,

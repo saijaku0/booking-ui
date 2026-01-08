@@ -1,1 +1,4 @@
-cd app/booking-ui && npx --no -- commitlint --edit "$1"
+#!/usr/bin/env sh
+
+cd app/booking-ui
+npx --no -- commitlint --edit "$1"
