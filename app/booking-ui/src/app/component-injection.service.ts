@@ -1,4 +1,7 @@
-import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { inject, Injectable } from '@angular/core';
 
 @Injectable({ providedIn: 'root' })
-export class BasicComponentInjection {}
+export class BasicComponentInjection {
+  private http = inject(HttpClient);
+}
