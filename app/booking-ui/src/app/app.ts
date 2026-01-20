@@ -1,6 +1,7 @@
-import { Component, signal } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { Header } from '../header/header';
+import { ConfigService } from './app.config.service';
 
 @Component({
   selector: 'app-root',
@@ -8,6 +9,20 @@ import { Header } from '../header/header';
   templateUrl: './app.html',
   styleUrl: './app.scss',
 })
-export class App {
+export class App implements OnInit {
   protected readonly title = signal('booking-ui');
+  private configService = inject(ConfigService);
+
+  ngOnInit() {
+    console.log('Компонент загрузился, отправляю запрос...');
+
+    this.configService.getDoctors().subscribe({
+      next: (data) => {
+        console.log('data:', data);
+      },
+      error: (err) => {
+        console.error('error:', err);
+      },
+    });
+  }
 }
