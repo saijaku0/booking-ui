@@ -1,5 +1,5 @@
 export const environment = {
   production: false,
-  apiUrl: 'http://localhost:5194/api',
+  apiUrl: 'https://localhost:7294/api/v1',
   apiKey: 'Booking_App_Secret_Key_v1',
 };
