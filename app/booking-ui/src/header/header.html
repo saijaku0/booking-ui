@@ -1,1 +1,52 @@
-<p>header works!</p>
+<header class="header">
+  <a href="/" class="logo">
+    <h1>BookingUI</h1>
+  </a>
+
+  <button class="hamburger-btn" (click)="toggleMobileMenu()">
+    <span class="material-icons">
+      {{ isMobileMenu() ? 'close' : 'menu' }}
+    </span>
+  </button>
+
+  <nav class="navigation-bar" [class.open]="isMobileMenu()">
+    <ul>
+      <li><a href="/" (click)="closeMobileNav()">Home</a></li>
+      <li><a href="/bookings" (click)="closeMobileNav()">Bookings</a></li>
+      <li><a href="/contact" (click)="closeMobileNav()">Contact</a></li>
+      <li>
+        <button (click)="toggleMenu()" class="nav-link dropdown-trigger">
+          Specialties
+          <span class="material-icons arrow-icon">expand_more</span>
+        </button>
+        @if (menuOpen()) {
+          <ul class="dropdown-menu">
+            @for (specialty of specialtiesOptions(); track specialty.id) {
+              <li>
+                <a href="/specialties/{{ specialty.id }}">{{ specialty.name }}</a>
+              </li>
+            }
+          </ul>
+        }
+      </li>
+    </ul>
+
+    <div class="mobile-actions">
+      <button class="login-button">Login</button>
+    </div>
+  </nav>
+
+  <div class="desktop-actions">
+    <button class="login-button">Login</button>
+  </div>
+
+  @if (isMobileMenu()) {
+    <div
+      class="overlay"
+      (click)="closeMobileNav()"
+      (keydown.enter)="closeMobileNav()"
+      tabindex="0"
+      role="button"
+    ></div>
+  }
+</header>
