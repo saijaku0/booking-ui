@@ -3,11 +3,17 @@
     <h1>BookingUI</h1>
   </a>
 
-  <nav class="navigation-bar">
+  <button class="hamburger-btn" (click)="toggleMobileMenu()">
+    <span class="material-icons">
+      {{ isMobileMenu() ? 'close' : 'menu' }}
+    </span>
+  </button>
+
+  <nav class="navigation-bar" [class.open]="isMobileMenu()">
     <ul>
-      <li><a href="/">Home</a></li>
-      <li><a href="/bookings">Bookings</a></li>
-      <li><a href="/contact">Contact</a></li>
+      <li><a href="/" (click)="closeMobileNav()">Home</a></li>
+      <li><a href="/bookings" (click)="closeMobileNav()">Bookings</a></li>
+      <li><a href="/contact" (click)="closeMobileNav()">Contact</a></li>
       <li>
         <button (click)="toggleMenu()" class="nav-link dropdown-trigger">
           Specialties
@@ -24,9 +30,23 @@
         }
       </li>
     </ul>
+
+    <div class="mobile-actions">
+      <button class="login-button">Login</button>
+    </div>
   </nav>
 
-  <div class="actions">
+  <div class="desktop-actions">
     <button class="login-button">Login</button>
   </div>
+
+  @if (isMobileMenu()) {
+    <div
+      class="overlay"
+      (click)="closeMobileNav()"
+      (keydown.enter)="closeMobileNav()"
+      tabindex="0"
+      role="button"
+    ></div>
+  }
 </header>

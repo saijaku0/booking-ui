@@ -7,6 +7,15 @@ interface Specialties {
   link: string;
 }
 
+const mokedSpecialties: Specialties[] = [
+  { id: 1, name: 'Cardiology', link: '/specialties/cardiology' },
+  { id: 2, name: 'Dermatology', link: '/specialties/dermatology' },
+  { id: 3, name: 'Neurology', link: '/specialties/neurology' },
+  { id: 4, name: 'Pediatrics', link: '/specialties/pediatrics' },
+  { id: 5, name: 'Psychiatry', link: '/specialties/psychiatry' },
+  { id: 6, name: 'Radiology', link: '/specialties/radiology' },
+];
+
 @Component({
   selector: 'app-header',
   imports: [],
@@ -15,17 +24,20 @@ interface Specialties {
 })
 export class Header {
   menuOpen = signal(false);
-  specialtiesOptions = signal<Specialties[]>([
-    { id: 1, name: 'Cardiology', link: '/specialties/cardiology' },
-    { id: 2, name: 'Dermatology', link: '/specialties/dermatology' },
-    { id: 3, name: 'Neurology', link: '/specialties/neurology' },
-    { id: 4, name: 'Pediatrics', link: '/specialties/pediatrics' },
-    { id: 5, name: 'Psychiatry', link: '/specialties/psychiatry' },
-    { id: 6, name: 'Radiology', link: '/specialties/radiology' },
-  ]);
+  isMobileMenu = signal(false);
+  specialtiesOptions = signal<Specialties[]>(mokedSpecialties);
+
   private componentInjection = inject(BasicComponentInjection);
 
   toggleMenu() {
-    this.menuOpen.set(!this.menuOpen());
+    this.menuOpen.update((val) => !val);
+  }
+
+  toggleMobileMenu() {
+    this.isMobileMenu.update((val) => !val);
+  }
+
+  closeMobileNav() {
+    this.isMobileMenu.set(false);
   }
 }
