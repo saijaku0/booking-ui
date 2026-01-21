@@ -1,0 +1,121 @@
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+
+  padding: 0 24px;
+  height: 64px;
+
+  background-color: var(--mat-sys-on-surface-container-low);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+
+  .logo {
+    text-decoration: none;
+    color: var(--mat-sys-on-surface);
+
+    h1 {
+      margin: 0;
+      font-size: 1.5rem;
+      font-weight: 500;
+      letter-spacing: -0.5px;
+    }
+  }
+
+  .navigation-bar {
+    ul {
+      list-style: none;
+      display: flex;
+      align-items: center;
+
+      gap: 32px;
+      padding: 0;
+      margin: 0;
+    }
+
+    a,
+    .nav-link {
+      text-decoration: none;
+      color: var(--mat-sys-on-surface-variant);
+      font-weight: bold;
+      font-weight: 500;
+      font-size: 1rem;
+      cursor: pointer;
+      background: none;
+      border: none;
+      padding: 0;
+      font-family: inherit;
+
+      display: flex;
+      align-items: center;
+      gap: 4px;
+
+      transition: color 0.2s;
+
+      &:hover {
+        color: var(--mat-sys-primary);
+      }
+
+      .arrow-icon {
+        font-size: 18px;
+        padding-top: 2px;
+      }
+    }
+
+    position: relative;
+
+    .dropdown-menu {
+      position: absolute;
+      top: 100%;
+      left: 0;
+
+      background-color: white;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+
+      min-width: 100%;
+      border-radius: 8px;
+      padding: 8px 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0 !important;
+
+      li {
+        width: 100%;
+
+        a {
+          display: block;
+          padding: 8px 16px;
+          color: var(--mat-sys-on-surface);
+
+          &:hover {
+            background-color: var(--mat-sys-surface-container-high);
+          }
+        }
+      }
+    }
+  }
+
+  .login-button {
+    background-color: var(--mat-sys-primary);
+    color: var(--mat-sys-on-primary);
+
+    border: none;
+    padding: 8px 24px;
+    border-radius: 10px;
+    font-weight: 500;
+    cursor: pointer;
+    transition:
+      background-color 0.2s,
+      transform 0.1s;
+
+    &:hover {
+      opacity: 0.9;
+    }
+
+    &:active {
+      transform: scale(0.98);
+    }
+  }
+}

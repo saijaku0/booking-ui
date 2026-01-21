@@ -1,1 +1,32 @@
-<p>header works!</p>
+<header class="header">
+  <a href="/" class="logo">
+    <h1>BookingUI</h1>
+  </a>
+
+  <nav class="navigation-bar">
+    <ul>
+      <li><a href="/">Home</a></li>
+      <li><a href="/bookings">Bookings</a></li>
+      <li><a href="/contact">Contact</a></li>
+      <li>
+        <button (click)="toggleMenu()" class="nav-link dropdown-trigger">
+          Specialties
+          <span class="material-icons arrow-icon">expand_more</span>
+        </button>
+        @if (menuOpen()) {
+          <ul class="dropdown-menu">
+            @for (specialty of specialtiesOptions(); track specialty.id) {
+              <li>
+                <a href="/specialties/{{ specialty.id }}">{{ specialty.name }}</a>
+              </li>
+            }
+          </ul>
+        }
+      </li>
+    </ul>
+  </nav>
+
+  <div class="actions">
+    <button class="login-button">Login</button>
+  </div>
+</header>
