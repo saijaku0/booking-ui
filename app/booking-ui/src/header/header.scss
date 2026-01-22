@@ -1,13 +1,37 @@
+@mixin button-styles($bg-color, $text-color, $padding: 0.5rem 1.5rem) {
+  background-color: var($bg-color);
+  color: var($text-color);
+  border: none;
+  padding: $padding;
+  border-radius: 10px;
+  font-weight: 500;
+  cursor: pointer;
+  transition:
+    background-color 0.2s,
+    transform 0.1s,
+    opacity 0.2s;
+
+  &:hover {
+    opacity: 0.9;
+  }
+
+  &:active {
+    transform: scale(0.98);
+  }
+}
+
+/* Header Styles */
 .header {
   display: flex;
   justify-content: space-between;
   align-items: center;
+
   position: sticky;
   top: 0;
   z-index: 1000;
 
-  padding: 0 24px;
-  height: 64px;
+  padding: 0 1.5rem;
+  height: 4rem;
 
   background-color: var(--mat-sys-on-surface-container-low);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
@@ -33,14 +57,9 @@
       list-style: none;
       display: flex;
       align-items: center;
-
-      gap: 32px;
+      gap: 2em;
       padding: 0;
       margin: 0;
-    }
-
-    .mobile-actions {
-      display: none;
     }
 
     a,
@@ -72,62 +91,52 @@
       }
     }
 
-    position: relative;
+    .dropdown-container {
+      position: relative;
 
-    .dropdown-menu {
-      position: absolute;
-      top: 100%;
-      left: 0;
+      .dropdown-menu {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        background-color: white;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        min-width: 100%;
+        border-radius: 8px;
+        padding: 0.5rem 0;
+        display: flex;
+        flex-direction: column;
+        gap: 0 !important;
 
-      background-color: white;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-
-      min-width: 100%;
-      border-radius: 8px;
-      padding: 8px 0;
-      display: flex;
-      flex-direction: column;
-      gap: 0 !important;
-
-      li {
-        width: 100%;
-
-        a {
-          display: block;
-          padding: 8px 16px;
-          color: var(--mat-sys-on-surface);
-
-          &:hover {
-            background-color: var(--mat-sys-surface-container-high);
+        li {
+          width: 100%;
+          a {
+            display: block;
+            padding: 0.5rem 1rem;
+            color: var(--mat-sys-on-surface);
+            &:hover {
+              background-color: var(--mat-sys-surface-container-high);
+            }
           }
         }
       }
     }
+
+    .mobile-actions {
+      display: none;
+    }
   }
 
   .desktop-actions {
+    display: flex;
+    gap: 0.5rem;
     justify-self: end;
-  }
 
-  .login-button {
-    background-color: var(--mat-sys-primary);
-    color: var(--mat-sys-on-primary);
-
-    border: none;
-    padding: 8px 24px;
-    border-radius: 10px;
-    font-weight: 500;
-    cursor: pointer;
-    transition:
-      background-color 0.2s,
-      transform 0.1s;
-
-    &:hover {
-      opacity: 0.9;
+    .login-button {
+      @include button-styles(--mat-sys-primary, --mat-sys-on-primary);
     }
 
-    &:active {
-      transform: scale(0.98);
+    .signup-button {
+      @include button-styles(--mat-sys-secondary, --mat-sys-on-secondary, 0.5rem 1.25rem);
     }
   }
 
@@ -142,9 +151,11 @@
   .overlay {
     display: none;
   }
+}
 
-  /* Responsive Styles */
-  @media (max-width: 768px) {
+/* Responsive Styles */
+@media (max-width: 768px) {
+  .header {
     .hamburger-btn {
       display: block;
       position: relative;
@@ -164,9 +175,9 @@
       background-color: var(--mat-sys-surface);
       box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
 
-      justify-content: start;
+      justify-content: flex-start;
       flex-direction: column;
-      padding-top: 80px;
+      padding-top: 5rem;
       transition: right 0.3s ease-in-out;
       z-index: 1000;
 
@@ -181,19 +192,31 @@
         padding: 0 20px;
       }
 
-      .dropdown-menu {
-        position: static;
-        box-shadow: none;
-        padding-left: 20px;
-        border-left: 2px solid var(--mat-sys-outline-variant);
+      .dropdown-container {
+        width: 100%;
+        .dropdown-menu {
+          position: static;
+          box-shadow: none;
+          padding-left: 1.25em;
+          border-left: 2px solid var(--mat-sys-outline-variant);
+        }
       }
 
       .mobile-actions {
         display: block;
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
         margin-top: 20px;
 
         .login-button {
-          padding: 15px 60px;
+          @include button-styles(--mat-sys-primary, --mat-sys-on-primary, 0.75rem);
+          width: 100%;
+        }
+
+        .signup-button {
+          @include button-styles(--mat-sys-secondary, --mat-sys-on-secondary, 0.75rem);
+          width: 100%;
         }
       }
     }
@@ -207,10 +230,6 @@
       height: 100%;
       background: rgba(0, 0, 0, 0.5);
       z-index: 900;
-    }
-
-    .actions {
-      display: none;
     }
   }
 }
