@@ -106,7 +106,31 @@
   }
 
   .desktop-actions {
+    display: flex;
+    gap: 0.5rem;
     justify-self: end;
+
+    .signup-button {
+      background-color: var(--mat-sys-secondary);
+      color: var(--mat-sys-on-secondary);
+
+      border: none;
+      padding: 7px 20px;
+      border-radius: 10px;
+      font-weight: 500;
+      cursor: pointer;
+      transition:
+        background-color 0.2s,
+        transform 0.1s;
+
+      &:hover {
+        opacity: 0.9;
+      }
+
+      &:active {
+        transform: scale(0.98);
+      }
+    }
   }
 
   .login-button {
@@ -190,10 +214,35 @@
 
       .mobile-actions {
         display: block;
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
         margin-top: 20px;
 
         .login-button {
           padding: 15px 60px;
+        }
+
+        .signup-button {
+          background-color: var(--mat-sys-secondary);
+          color: var(--mat-sys-on-secondary);
+
+          border: none;
+          padding: 15px 60px;
+          border-radius: 10px;
+          font-weight: 500;
+          cursor: pointer;
+          transition:
+            background-color 0.2s,
+            transform 0.1s;
+
+          &:hover {
+            opacity: 0.9;
+          }
+
+          &:active {
+            transform: scale(0.98);
+          }
         }
       }
     }
