@@ -1,0 +1,22 @@
+<article class="doctor-card">
+  <div class="card-image-wrapper">
+    <img [src]="doctor.image" [alt]="doctor.name" class="avatar" />
+    <div class="rating-badge">
+      <span class="material-icons star-icon">star</span>
+      <span class="score">{{ doctor.rating }}</span>
+    </div>
+  </div>
+
+  <div class="card-content">
+    <div class="info">
+      <p class="specialty">{{ doctor.specialty }}</p>
+      <h3 class="name">{{ doctor.name }}</h3>
+    </div>
+
+    <div class="price-tag">
+      <span class="label">Visit price</span>
+    </div>
+
+    <button class="book-btn">Book Appointment</button>
+  </div>
+</article>
