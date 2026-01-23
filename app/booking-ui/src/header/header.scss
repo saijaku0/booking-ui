@@ -31,10 +31,21 @@
   height: 4rem;
   padding: 0 1.5rem;
 
-  background-color: color-mix(in srgb, var(--mat-sys-surface-container-low), transparent 20%);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+
+    background-color: color-mix(in srgb, var(--mat-sys-surface-container-low), transparent 20%);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+
+    z-index: -1;
+  }
 
   .logo {
     text-decoration: none;
@@ -248,8 +259,10 @@
       position: fixed;
       top: 0;
       right: -100%;
-      width: 250px;
-      height: 100vh;
+      width: 280px;
+      bottom: 0; // Прибиваем к низу намертво
+      height: auto; // Высота определяется якорями top/bottom
+      min-height: 100dvh;
       background-color: var(--mat-sys-surface);
       box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
 
@@ -310,6 +323,7 @@
 
       position: fixed;
       top: 0;
+      bottom: 0;
       left: 0;
       width: 100vw;
       height: 100vh;
