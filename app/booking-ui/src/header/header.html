@@ -15,19 +15,16 @@
       <li><a href="/bookings" (click)="closeMobileNav()">Bookings</a></li>
       <li><a href="/contact" (click)="closeMobileNav()">Contact</a></li>
       <li class="dropdown-container">
-        <button (click)="toggleMenu()" class="nav-link dropdown-trigger">
+        <button
+          (click)="toggleMenu()"
+          class="nav-link dropdown-trigger"
+          [class.active]="menuOpen()"
+        >
           Specialties
-          <span class="material-icons arrow-icon">expand_more</span>
+          <span class="material-icons arrow-icon">
+            {{ menuOpen() ? 'expand_less' : 'expand_more' }}
+          </span>
         </button>
-        @if (menuOpen()) {
-          <ul class="dropdown-menu">
-            @for (specialty of specialtiesOptions(); track specialty.id) {
-              <li>
-                <a href="/specialties/{{ specialty.id }}">{{ specialty.name }}</a>
-              </li>
-            }
-          </ul>
-        }
       </li>
     </ul>
 
@@ -41,6 +38,49 @@
     <button class="login-button">Login</button>
     <button class="signup-button">Sign Up</button>
   </div>
+
+  @if (menuOpen()) {
+    <div class="mega-menu-panel">
+      <div class="mobile-menu-header">
+        <button
+          class="back-btn"
+          (click)="toggleMenu()"
+          (keydown.enter)="toggleMenu()"
+          tabindex="1"
+          role="button"
+        >
+          <span class="material-icons">arrow_back</span>
+        </button>
+        <h3>Select Specialty</h3>
+      </div>
+      <div class="mega-menu-grid">
+        <div class="menu-sidebar">
+          <h3>Categories</h3>
+          <a href="#">Popular Specialists</a>
+          <a href="#">New Doctors</a>
+          <a href="#">Online Consultation</a>
+        </div>
+
+        <div class="menu-content">
+          <h3>All Specialties</h3>
+          <div class="specialties-grid">
+            @for (specialty of specialtiesOptions(); track specialty.id) {
+              <a [href]="specialty.link" class="specialty-item" (click)="toggleMenu()">
+                {{ specialty.name }}
+              </a>
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div
+      class="mega-menu-backdrop"
+      (click)="toggleMenu()"
+      (keydown.enter)="toggleMenu()"
+      tabindex="3"
+    ></div>
+  }
 
   @if (isMobileMenu()) {
     <div
