@@ -39,7 +39,7 @@
     <button class="signup-button">Sign Up</button>
   </div>
 
-  @if (menuOpen()) {
+  @if (menuOpen() && !isMobileMenu()) {
     <div class="mega-menu-panel">
       <div class="mobile-menu-header">
         <button
