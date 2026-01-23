@@ -1,4 +1,12 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
+
+export interface Doctor {
+  id: number;
+  name: string;
+  specialty: string;
+  rating: number;
+  image: string;
+}
 
 @Component({
   selector: 'app-doctor-card',
@@ -6,4 +14,6 @@ import { Component } from '@angular/core';
   templateUrl: './doctor-card.html',
   styleUrl: './doctor-card.scss',
 })
-export class DoctorCard {}
+export class DoctorCard {
+  @Input({ required: true }) doctor!: Doctor;
+}

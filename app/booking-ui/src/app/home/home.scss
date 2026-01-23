@@ -111,3 +111,38 @@
     }
   }
 }
+
+.doctors-section {
+  padding: 40px 24px;
+  max-width: 1200px;
+  margin: 0 auto;
+
+  .section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+
+    h2 {
+      font-size: 1.5rem;
+      color: var(--mat-sys-on-surface);
+      margin: 0;
+    }
+
+    .view-all {
+      color: var(--mat-sys-primary);
+      text-decoration: none;
+      font-weight: 500;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+
+  .doctors-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 24px;
+  }
+}
