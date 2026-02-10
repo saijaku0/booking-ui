@@ -1,19 +1,20 @@
 <header class="header">
-  <a href="/" class="logo">
+  <a routerLink="/" class="logo">
     <h1>BookingUI</h1>
   </a>
 
   <button class="hamburger-btn" (click)="toggleMobileMenu()">
-    <span class="material-icons">
-      {{ isMobileMenu() ? 'close' : 'menu' }}
-    </span>
+    <span class="material-icons">{{ isMobileMenu() ? 'close' : 'menu' }}</span>
   </button>
 
   <nav class="navigation-bar" [class.open]="isMobileMenu()">
-    <ul>
-      <li><a href="/" (click)="closeMobileNav()">Home</a></li>
-      <li><a href="/doctors" (click)="closeMobileNav()">Doctors</a></li>
-      <li><a href="/contact" (click)="closeMobileNav()">Contact</a></li>
+    <ul class="nav-links">
+      @for (link of navLinks(); track link.path) {
+        <li>
+          <a [routerLink]="link.path" (click)="closeMobileNav()">{{ link.label }}</a>
+        </li>
+      }
+
       <li class="dropdown-container">
         <button
           (click)="toggleMenu()"
@@ -21,125 +22,102 @@
           [class.active]="menuOpen()"
         >
           Specialties
-          <span class="material-icons arrow-icon">
-            {{ menuOpen() ? 'expand_less' : 'expand_more' }}
-          </span>
+          <span class="material-icons arrow-icon">{{
+            menuOpen() ? 'expand_less' : 'expand_more'
+          }}</span>
         </button>
       </li>
     </ul>
 
     <div class="mobile-actions">
-      @if (!currentUser()) {
-        <a routerLink="/auth/login" (click)="closeMobileNav()" class="login-button">Login</a>
-        <a routerLink="/auth/register" (click)="closeMobileNav()" class="signup-button">Sign Up</a>
-      } @else {
-        <div class="mobile-user-info">
-          <div class="avatar">
-            {{ currentUser()?.email?.charAt(0)?.toUpperCase() }}
-          </div>
-          <div class="info">
-            <span class="email">{{ currentUser()?.email }}</span>
-            <span class="role">{{ currentUser()?.roles?.[0] }}</span>
-          </div>
-        </div>
-
-        @if (crmLink()) {
-          <a [routerLink]="crmLink()" (click)="closeMobileNav()" class="crm-button full-width">
-            <span class="material-icons">dashboard</span>
-            Go to Dashboard
-          </a>
-        }
-
-        <button (click)="logout()" class="logout-button full-width">
-          <span class="material-icons">logout</span>
-          Log Out
-        </button>
-      }
+      <ng-container *ngTemplateOutlet="authActions; context: { mode: 'mobile' }"></ng-container>
     </div>
   </nav>
 
   <div class="desktop-actions">
-    @if (!currentUser()) {
-      <a routerLink="/auth/login" class="login-button">Login</a>
-      <a routerLink="/auth/register" class="signup-button">Sign Up</a>
-    } @else {
-      @if (crmLink()) {
-        <a [routerLink]="crmLink()" class="crm-button">
-          <span class="material-icons">dashboard</span>
-          CRM Panel
-        </a>
-      }
-
-      <div class="user-profile">
-        <div class="avatar">
-          {{ currentUser()?.email?.charAt(0)?.toUpperCase() }}
-        </div>
-        <span class="user-name">
-          {{ currentUser()?.roles?.[0] || 'User' }}
-        </span>
-
-        <button (click)="logout()" class="logout-icon-btn" title="Logout">
-          <span class="material-icons">logout</span>
-        </button>
-      </div>
-    }
+    <ng-container *ngTemplateOutlet="authActions; context: { mode: 'desktop' }"></ng-container>
   </div>
 
-  @if (menuOpen() && !isMobileMenu()) {
+  @if (menuOpen()) {
     <div class="mega-menu-panel">
       <div class="mobile-menu-header">
-        <button
-          class="back-btn"
-          (click)="toggleMenu()"
-          (keydown.enter)="toggleMenu()"
-          tabindex="1"
-          role="button"
-        >
+        <button class="back-btn" (click)="toggleMenu()">
           <span class="material-icons">arrow_back</span>
         </button>
         <h3>Select Specialty</h3>
+        <button class="close-btn" (click)="closeMobileNav()">
+          <span class="material-icons">close</span>
+        </button>
       </div>
-      <div class="mega-menu-grid">
-        <div class="menu-sidebar">
-          <h3>Categories</h3>
-          <a href="#">Popular Specialists</a>
-          <a href="#">New Doctors</a>
-          <a href="#">Online Consultation</a>
-        </div>
-
-        <div class="menu-content">
-          <h3>All Specialties</h3>
-          <div class="specialties-grid">
-            @for (spec of specialties(); track spec.id) {
-              <a
-                [routerLink]="['/search']"
-                [queryParams]="{ specialtyId: spec.id }"
-                class="specialty-item"
-                (click)="toggleMenu()"
-              >
-                {{ spec.name }}
-              </a>
-            }
-          </div>
+      <div class="menu-content">
+        <h3>All Specialties</h3>
+        <div class="specialties-grid">
+          @for (spec of specialties(); track spec.id) {
+            <a
+              [routerLink]="['/search']"
+              [queryParams]="{ specialtyId: spec.id }"
+              (click)="toggleMenu()"
+            >
+              {{ spec.name }}
+            </a>
+          }
         </div>
       </div>
     </div>
-
     <div
       class="mega-menu-backdrop"
+      role="button"
+      tabindex="0"
       (click)="toggleMenu()"
       (keydown.enter)="toggleMenu()"
-      tabindex="3"
-    ></div>
-  }
-
-  @if (isMobileMenu()) {
-    <div
-      class="overlay"
-      (click)="closeMobileNav()"
-      (keydown.enter)="closeMobileNav()"
-      tabindex="0"
-      role="button"
+      (keydown.escape)="toggleMenu()"
     ></div>
   }
 </header>
+
+@if (isMobileMenu()) {
+  <div
+    class="overlay"
+    role="button"
+    tabindex="0"
+    (click)="closeMobileNav()"
+    (keydown.enter)="closeMobileNav()"
+    (keydown.escape)="closeMobileNav()"
+  >
+    >
+  </div>
+}
+<ng-template #authActions let-mode="mode">
+  @if (!currentUser()) {
+    <div class="auth-buttons" [class.mobile]="mode === 'mobile'">
+      <a routerLink="/auth/login" (click)="closeMobileNav()" class="btn-login">Login</a>
+      <a routerLink="/auth/register" (click)="closeMobileNav()" class="btn-signup">Sign Up</a>
+    </div>
+  } @else {
+    <div class="user-panel" [class.mobile-user]="mode === 'mobile'">
+      <div class="user-info">
+        <div class="avatar">{{ currentUser()?.email?.charAt(0)?.toUpperCase() }}</div>
+        @if (mode === 'mobile') {
+          <div class="details">
+            <span class="email">{{ currentUser()?.email }}</span>
+            <span class="role">{{ currentUser()?.roles?.[0] }}</span>
+          </div>
+        }
+      </div>
+
+      @if (crmLink()) {
+        <a [routerLink]="crmLink()" (click)="closeMobileNav()" class="crm-link">
+          <span class="material-icons">dashboard</span>
+          <span class="text">Dashboard</span>
+        </a>
+      }
+
+      <button (click)="logout()" class="logout-btn">
+        <span class="material-icons">logout</span>
+        @if (mode === 'mobile') {
+          <span class="text">Log Out</span>
+        }
+      </button>
+    </div>
+  }
+</ng-template>

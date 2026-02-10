@@ -20,6 +20,12 @@ export class Header implements OnInit {
   currentUser = this.authService.currentUser;
   specialties = signal<SpecialtyDto[]>([]);
 
+  navLinks = signal([
+    { path: '/', label: 'Home' },
+    { path: '/doctors', label: 'Doctors' },
+    { path: '/contact', label: 'Contact' },
+  ]);
+
   crmLink = computed(() => {
     const user = this.currentUser();
     if (!user) return null;
