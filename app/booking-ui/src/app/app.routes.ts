@@ -13,8 +13,13 @@ import { AdminDashboard } from './admin/pages/admin-dashboard/admin-dashboard';
 
 export const routes: Routes = [
   { path: '', component: Home },
-  { path: 'login', component: LoginComponent },
-  { path: 'register', component: RegisterComponent },
+  {
+    path: 'auth',
+    children: [
+      { path: 'login', component: LoginComponent },
+      { path: 'register', component: RegisterComponent },
+    ],
+  },
   { path: 'doctors/:id', component: DoctorDetails },
   {
     path: 'doctor',

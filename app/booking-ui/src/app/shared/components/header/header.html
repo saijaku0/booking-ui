@@ -30,8 +30,8 @@
 
     <div class="mobile-actions">
       @if (!currentUser()) {
-        <a routerLink="/login" (click)="closeMobileNav()" class="login-button">Login</a>
-        <a routerLink="/register" (click)="closeMobileNav()" class="signup-button">Sign Up</a>
+        <a routerLink="/auth/login" (click)="closeMobileNav()" class="login-button">Login</a>
+        <a routerLink="/auth/register" (click)="closeMobileNav()" class="signup-button">Sign Up</a>
       } @else {
         <div class="mobile-user-info">
           <div class="avatar">
@@ -60,8 +60,8 @@
 
   <div class="desktop-actions">
     @if (!currentUser()) {
-      <a routerLink="/login" class="login-button">Login</a>
-      <a routerLink="/register" class="signup-button">Sign Up</a>
+      <a routerLink="/auth/login" class="login-button">Login</a>
+      <a routerLink="/auth/register" class="signup-button">Sign Up</a>
     } @else {
       @if (crmLink()) {
         <a [routerLink]="crmLink()" class="crm-button">
