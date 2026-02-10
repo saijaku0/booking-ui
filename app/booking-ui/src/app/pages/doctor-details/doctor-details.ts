@@ -1,12 +1,10 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { DoctorDetailsDto } from '../../../core/models/doctor.model';
-import { Doctor } from '../../../core/services/doctor';
 import { FormsModule } from '@angular/forms';
-import { CreateAppointmentRequest } from '../../../core/services/appointmnet.models';
-import { Appointment } from '../../../core/services/appointment';
-import { AuthService } from '../../../core/auth/auth';
+import { CommonModule } from '@angular/common';
+import { DoctorDetailsDto } from '@core/models/doctor.model';
+import { Component, OnInit, inject, signal } from '@angular/core';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { CreateAppointmentRequest } from '@core/models/appointmnet.models';
+import { DoctorService, AppointmentService, AuthService } from '@core/services/index';
 
 @Component({
   selector: 'app-doctor-details',
@@ -18,8 +16,8 @@ import { AuthService } from '../../../core/auth/auth';
 export class DoctorDetails implements OnInit {
   private route = inject(ActivatedRoute);
   private router = inject(Router);
-  private doctorService = inject(Doctor);
-  private appointmentService = inject(Appointment);
+  private doctorService = inject(DoctorService);
+  private appointmentService = inject(AppointmentService);
   private authService = inject(AuthService);
 
   doctor = signal<DoctorDetailsDto | null>(null);

@@ -7,6 +7,7 @@ export interface DoctorDetailsDto {
   description: string;
   averageRating: number;
   totalReviews: number;
+  bio: string;
 }
 
 export interface DoctorDto {
@@ -26,10 +27,14 @@ export interface DoctorDto {
 }
 
 export interface CreateDoctorRequest {
-  name: string;
-  lastname: string;
   email: string;
   password: string;
+  name: string;
+  lastname: string;
   specialtyId: string;
   isActive: boolean;
+  consultationFee: number;
+  experienceYears: number;
+  bio?: string | null;
+  imageUrl?: string | null;
 }

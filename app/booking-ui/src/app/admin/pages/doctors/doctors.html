@@ -43,7 +43,7 @@
             </td>
             <td>⭐ {{ doc.averageRating }} ({{ doc.reviewCount }})</td>
             <td>
-              <button class="icon-btn delete" (click)="deleteDoctor(doc.id)">
+              <button class="icon-btn delete" (click)="deleteDoctor()">
                 <span class="material-icons">delete</span>
               </button>
             </td>
@@ -105,6 +105,30 @@
             </select>
           </div>
 
+          <div class="form-row">
+            <div class="form-group">
+              <label for="doc-fee">Consultation Fee ($)</label>
+              <input
+                id="doc-fee"
+                type="number"
+                formControlName="consultationFee"
+                placeholder="50"
+                min="0"
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="doc-exp">Experience (Years)</label>
+              <input
+                id="doc-exp"
+                type="number"
+                formControlName="experienceYears"
+                placeholder="5"
+                min="0"
+              />
+            </div>
+          </div>
+
           <div class="form-group">
             <label for="doc-email">Email</label>
             <input
@@ -117,7 +141,52 @@
 
           <div class="form-group">
             <label for="doc-pass">Password</label>
-            <input id="doc-pass" formControlName="password" type="password" placeholder="******" />
+            <input
+              id="doc-pass"
+              type="text"
+              formControlName="password"
+              placeholder="Create a password"
+            />
+            <small class="hint">Password is visible to admin for setup.</small>
+          </div>
+
+          <div class="form-group">
+            <label for="upload-photo">Profile Photo</label>
+
+            <div class="image-upload-container">
+              <input
+                type="file"
+                id="upload-photo"
+                hidden
+                #fileInput
+                (change)="onFileSelected($event)"
+                accept="image/*"
+              />
+
+              <button type="button" class="upload-btn" (click)="fileInput.click()">
+                <span class="material-icons">cloud_upload</span>
+                Choose Image
+              </button>
+
+              @if (doctorForm.get('imageUrl')?.value) {
+                <div class="preview-box">
+                  <img [src]="doctorForm.get('imageUrl')?.value" alt="Preview" />
+                  <button type="button" class="remove-btn" (click)="removeImage()">
+                    <span class="material-icons">close</span>
+                  </button>
+                </div>
+              }
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="doc-bio">Biography</label>
+            <textarea
+              id="doc-bio"
+              formControlName="bio"
+              rows="4"
+              placeholder="Dr. Smith is an experienced specialist..."
+            ></textarea>
           </div>
 
           <div class="modal-actions">

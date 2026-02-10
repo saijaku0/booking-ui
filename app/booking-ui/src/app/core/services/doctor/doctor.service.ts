@@ -1,13 +1,13 @@
-import { inject, Injectable, signal } from '@angular/core';
+import { environment } from '@env/environment';
 import { HttpClient } from '@angular/common/http';
+import { inject, Injectable, signal } from '@angular/core';
 import { map, Observable, tap, catchError, of } from 'rxjs';
-import { environment } from '../../../environment/environment';
-import { CreateDoctorRequest, DoctorDetailsDto, DoctorDto } from '../models/doctor.model';
+import { CreateDoctorRequest, DoctorDetailsDto, DoctorDto } from '@core/models/doctor.model';
 
 @Injectable({
   providedIn: 'root',
 })
-export class Doctor {
+export class DoctorService {
   private http = inject(HttpClient);
   private apiUrl = `${environment.apiUrl}/Doctors`;
 
@@ -28,9 +28,9 @@ export class Doctor {
           averageRating: apiData.averageRating,
           experienceYears: apiData.experienceYears,
           totalReviews: apiData.reviewCount || 0,
-          description:
+          bio:
             apiData.bio ||
-            `Dr. ${apiData.lastname} is an experienced specialist in ${apiData.specialtyName}.`,
+            `Dr. ${apiData.lastname} is an experienced specialist committed to providing excellent medical care.`,
         } as DoctorDetailsDto;
       }),
     );

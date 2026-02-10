@@ -1,12 +1,12 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { environment } from '../../../environment/environment';
-import { CreateSpecialtyRequest, SpecialtyDto } from '../models/specialty.model';
+import { environment } from '@env/environment';
+import { CreateSpecialtyRequest, SpecialtyDto } from '@core/models/specialty.model';
 
 @Injectable({
   providedIn: 'root',
 })
-export class Specialty {
+export class SpecialtyService {
   private http = inject(HttpClient);
   private apiUrl = `${environment.apiUrl}/Specialties`;
 

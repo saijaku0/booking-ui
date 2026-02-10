@@ -61,6 +61,65 @@
       }
     }
   }
+
+  .image-upload-container {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-top: 8px;
+
+    .upload-btn {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 16px;
+      background: #f3f4f6;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 500;
+      color: #374151;
+      transition: background 0.2s;
+
+      &:hover {
+        background: #e5e7eb;
+      }
+    }
+
+    .preview-box {
+      position: relative;
+      width: 60px;
+      height: 60px;
+
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 8px;
+        border: 1px solid #d1d5db;
+      }
+
+      .remove-btn {
+        position: absolute;
+        top: -6px;
+        right: -6px;
+        background: #ef4444;
+        color: white;
+        border: none;
+        border-radius: 50%;
+        width: 20px;
+        height: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+
+        span {
+          font-size: 14px;
+        }
+      }
+    }
+  }
 }
 
 .doctor-info {
@@ -256,6 +315,28 @@
       }
     }
   }
+}
+
+textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  resize: vertical;
+  font-family: inherit;
+  min-height: 80px;
+
+  &:focus {
+    outline: 2px solid #2563eb;
+    border-color: transparent;
+  }
+}
+
+.hint {
+  font-size: 0.75rem;
+  color: #6b7280;
+  margin-top: 4px;
+  display: block;
 }
 
 @keyframes fadeIn {

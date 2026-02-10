@@ -43,14 +43,7 @@
         <div class="about-section card">
           <h2>About Doctor</h2>
           <p class="description">
-            {{
-              doc.description ||
-                'Dr. ' +
-                  doc.fullName +
-                  ' is a dedicated specialist committed to providing excellent medical care to patients. With years of experience in ' +
-                  doc.specialty +
-                  ', they offer a personalized approach to treatment.'
-            }}
+            {{ doc.bio }}
           </p>
         </div>
 

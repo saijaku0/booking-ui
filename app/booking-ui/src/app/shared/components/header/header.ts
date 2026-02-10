@@ -1,25 +1,30 @@
-import { Component, computed, inject, signal, OnInit } from '@angular/core';
-import { AuthService } from '../core/auth/auth';
-import { UserRole } from '../core/auth/auth.models';
-import { RouterLink, RouterLinkActive } from '@angular/router';
+import { RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { SpecialtyDto } from '../core/models/specialty.model';
-import { Specialty } from '../core/services/specialty';
+import { UserRole } from '@core/models/auth.model';
+import { SpecialtyDto } from '@core/models/specialty.model';
+import { AuthService, SpecialtyService } from '@core/services/index';
+import { Component, computed, inject, signal, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-header',
-  imports: [CommonModule, RouterLink, RouterLinkActive],
+  imports: [CommonModule, RouterLink],
   templateUrl: './header.html',
   styleUrl: './header.scss',
 })
 export class Header implements OnInit {
   menuOpen = signal(false);
   isMobileMenu = signal(false);
-  specialtyService = inject(Specialty);
+  specialtyService = inject(SpecialtyService);
 
   private authService = inject(AuthService);
   currentUser = this.authService.currentUser;
   specialties = signal<SpecialtyDto[]>([]);
+
+  navLinks = signal([
+    { path: '/', label: 'Home' },
+    { path: '/doctors', label: 'Doctors' },
+    { path: '/contact', label: 'Contact' },
+  ]);
 
   crmLink = computed(() => {
     const user = this.currentUser();

@@ -1,12 +1,12 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { environment } from '../../../environment/environment';
-import { AppointmentDto, CreateAppointmentRequest } from './appointmnet.models';
+import { environment } from '@env/environment';
+import { AppointmentDto, CreateAppointmentRequest } from '@core/models/appointmnet.models';
 
 @Injectable({
   providedIn: 'root',
 })
-export class Appointment {
+export class AppointmentService {
   private http = inject(HttpClient);
   private apiUrl = `${environment.apiUrl}/Appointments`;
 
