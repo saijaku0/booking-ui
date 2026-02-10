@@ -32,6 +32,10 @@ export class Doctors implements OnInit {
     email: ['', [Validators.required, Validators.email]],
     password: ['', [Validators.required, Validators.minLength(6)]],
     specialtyId: ['', Validators.required],
+    consultationFee: [50, [Validators.required, Validators.min(1)]],
+    experienceYears: [1, [Validators.required, Validators.min(0)]],
+    bio: [''],
+    imageUrl: [''],
   });
 
   ngOnInit() {
@@ -68,6 +72,37 @@ export class Doctors implements OnInit {
     this.doctorForm.reset();
   }
 
+  onFileSelected(event: Event) {
+    const input = event.target as HTMLInputElement;
+
+    if (input.files === null) {
+      console.error('file cannot be empty');
+      return;
+    }
+
+    const file = input.files[0];
+    if (file.size > 2 * 1024 * 1024) {
+      alert('File is too large! Max size is 2MB.');
+      return;
+    }
+
+    const reader = new FileReader();
+
+    reader.onload = () => {
+      setTimeout(() => {
+        this.doctorForm.patchValue({
+          imageUrl: reader.result as string,
+        });
+      }, 0);
+    };
+
+    reader.readAsDataURL(file);
+  }
+
+  removeImage() {
+    this.doctorForm.patchValue({ imageUrl: null });
+  }
+
   onSubmit() {
     if (this.doctorForm.invalid) return;
 
@@ -80,6 +115,10 @@ export class Doctors implements OnInit {
       password: formValue.password,
       specialtyId: formValue.specialtyId,
       isActive: true,
+      consultationFee: Number(formValue.consultationFee),
+      experienceYears: Number(formValue.experienceYears),
+      bio: formValue.bio || null,
+      imageUrl: formValue.imageUrl || null,
     };
 
     this.doctorService.createDoctor(request).subscribe({
@@ -95,9 +134,9 @@ export class Doctors implements OnInit {
     });
   }
 
-  // deleteDoctor(id: string) {
-  //   if (confirm('Are you sure?')) {
-  //     this.doctorService.delete(id).subscribe(() => this.loadDoctors());
-  //   }
-  // }
+  deleteDoctor() {
+    if (confirm('Are you sure?')) {
+      // this.doctorService.delete(id).subscribe(() => this.loadDoctors());
+    }
+  }
 }

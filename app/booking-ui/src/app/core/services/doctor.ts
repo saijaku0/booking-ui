@@ -28,9 +28,9 @@ export class Doctor {
           averageRating: apiData.averageRating,
           experienceYears: apiData.experienceYears,
           totalReviews: apiData.reviewCount || 0,
-          description:
+          bio:
             apiData.bio ||
-            `Dr. ${apiData.lastname} is an experienced specialist in ${apiData.specialtyName}.`,
+            `Dr. ${apiData.lastname} is an experienced specialist committed to providing excellent medical care.`,
         } as DoctorDetailsDto;
       }),
     );
