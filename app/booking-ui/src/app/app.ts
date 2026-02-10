@@ -1,12 +1,11 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { Header } from '../header/header';
+import { Header } from './header/header';
 import { ConfigService } from './app.config.service';
-import { Home } from './home/home';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, Header, Home],
+  imports: [RouterOutlet, Header],
   templateUrl: './app.html',
   styleUrl: './app.scss',
 })
@@ -16,14 +15,5 @@ export class App implements OnInit {
 
   ngOnInit() {
     console.log('Компонент загрузился, отправляю запрос...');
-
-    this.configService.getDoctors().subscribe({
-      next: (data) => {
-        console.log('data:', data);
-      },
-      error: (err) => {
-        console.error('error:', err);
-      },
-    });
   }
 }
