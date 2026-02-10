@@ -1,0 +1,62 @@
+<div class="auth-container">
+  <div class="auth-card">
+    <div class="header">
+      <h2>Create Account</h2>
+      <p>Join us to book appointments easily</p>
+    </div>
+
+    @if (errorMessage()) {
+      <div class="error-alert">
+        <span class="material-icons">error_outline</span>
+        <span>{{ errorMessage() }}</span>
+      </div>
+    }
+
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+      <div class="form-row">
+        <div class="form-group">
+          <label for="reg-firstname">First Name</label>
+          <input id="reg-firstname" type="text" formControlName="firstName" ... />
+        </div>
+
+        <div class="form-group">
+          <label for="reg-lastname">Last Name</label>
+          <input id="reg-lastname" type="text" formControlName="lastName" ... />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="reg-email">Email Address</label>
+        <div class="input-wrapper">
+          <input id="reg-email" type="email" formControlName="email" ... />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="reg-pass">Password</label>
+        <div class="input-wrapper">
+          <input id="reg-pass" type="password" formControlName="password" ... />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="reg-confirm">Confirm Password</label>
+        <div class="input-wrapper">
+          <input id="reg-confirm" type="password" formControlName="confirmPassword" ... />
+        </div>
+      </div>
+
+      <button type="submit" class="submit-btn" [disabled]="registerForm.invalid || isLoading()">
+        @if (isLoading()) {
+          <span class="loader"></span> Creating...
+        } @else {
+          Sign Up
+        }
+      </button>
+    </form>
+
+    <div class="footer">
+      <p>Already have an account? <a routerLink="/login">Sign In</a></p>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,133 @@
+<div class="admin-page-container">
+  <header class="page-header">
+    <h1>Doctors Management</h1>
+    <button class="add-btn" (click)="openModal()">
+      <span class="material-icons">add</span>
+      Add New Doctor
+    </button>
+  </header>
+
+  <div class="card-table">
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Specialty</th>
+          <th>Stats</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (doc of doctors(); track doc.id) {
+          <tr>
+            <td>
+              <div class="doctor-info">
+                @if (doc.imageUrl) {
+                  <img [src]="doc.imageUrl" class="avatar-img" alt="avatar" />
+                } @else {
+                  <div class="avatar-placeholder">
+                    {{ (doc.fullName || doc.name || '?').charAt(0).toUpperCase() }}
+                  </div>
+                }
+
+                <div class="details">
+                  <span class="name">
+                    {{ doc.fullName || doc.name + ' ' + doc.lastname }}
+                  </span>
+                  <span class="email-hint">{{ doc.specialtyName || 'No Specialty' }}</span>
+                </div>
+              </div>
+            </td>
+            <td>
+              <span class="specialty-badge">{{ doc.specialtyName }}</span>
+            </td>
+            <td>⭐ {{ doc.averageRating }} ({{ doc.reviewCount }})</td>
+            <td>
+              <button class="icon-btn delete" (click)="deleteDoctor(doc.id)">
+                <span class="material-icons">delete</span>
+              </button>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+
+  @if (isModalOpen()) {
+    <div
+      class="modal-backdrop"
+      (click)="closeModal()"
+      (keyup.enter)="closeModal()"
+      (keyup.escape)="closeModal()"
+      tabindex="0"
+      role="button"
+    >
+      <div
+        class="modal-content"
+        (click)="$event.stopPropagation()"
+        (keyup.enter)="$event.stopPropagation()"
+        (keyup.escape)="$event.stopPropagation()"
+        tabindex="1"
+        role="button"
+      >
+        <div class="modal-header">
+          <h2>Create New Doctor</h2>
+          <button
+            class="close-btn"
+            (click)="closeModal()"
+            (keyup.enter)="closeModal()"
+            (keyup.escape)="closeModal()"
+            tabindex="2"
+          >
+            <span class="material-icons">close</span>
+          </button>
+        </div>
+
+        <form [formGroup]="doctorForm" (ngSubmit)="onSubmit()">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="doc-name">First Name</label>
+              <input id="doc-name" formControlName="name" placeholder="John" />
+            </div>
+            <div class="form-group">
+              <label for="doc-lastname">Last Name</label>
+              <input id="doc-lastname" formControlName="lastname" placeholder="Doe" />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="doc-spec">Specialty</label>
+            <select id="doc-spec" formControlName="specialtyId">
+              <option value="" disabled selected>Select specialty...</option>
+              @for (spec of specialties(); track spec.id) {
+                <option [value]="spec.id">{{ spec.name }}</option>
+              }
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="doc-email">Email</label>
+            <input
+              id="doc-email"
+              formControlName="email"
+              type="email"
+              placeholder="doctor@clinic.com"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="doc-pass">Password</label>
+            <input id="doc-pass" formControlName="password" type="password" placeholder="******" />
+          </div>
+
+          <div class="modal-actions">
+            <button type="button" class="cancel-btn" (click)="closeModal()">Cancel</button>
+            <button type="submit" class="submit-btn" [disabled]="doctorForm.invalid">
+              Create Doctor
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  }
+</div>

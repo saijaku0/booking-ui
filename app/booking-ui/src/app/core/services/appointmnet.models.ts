@@ -26,4 +26,5 @@ export interface CreateReviewRequest {
 export interface CreateAppointmentRequest {
   doctorId: string;
   startTime: string; // UTC
+  endTime: string;
 }

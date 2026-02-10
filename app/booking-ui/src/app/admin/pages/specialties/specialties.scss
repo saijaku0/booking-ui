@@ -1,0 +1,75 @@
+.admin-page-container {
+  padding: 32px;
+  max-width: 1000px;
+  margin: 0 auto;
+
+  .page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 32px;
+
+    h1 {
+      margin: 0;
+      font-size: 1.5rem;
+      color: #333;
+    }
+
+    .add-btn {
+      background-color: #d32f2f;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 600;
+      &:hover {
+        background-color: #b71c1c;
+      }
+    }
+  }
+
+  .card-table {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+
+      th {
+        text-align: left;
+        padding: 16px 24px;
+        background-color: #f9fafb;
+        color: #666;
+        font-weight: 600;
+        font-size: 0.9rem;
+      }
+
+      td {
+        padding: 16px 24px;
+        border-bottom: 1px solid #eee;
+        color: #333;
+      }
+
+      tr:last-child td {
+        border-bottom: none;
+      }
+
+      .icon-btn.delete {
+        background: none;
+        border: none;
+        cursor: pointer;
+        color: #e57373;
+        &:hover {
+          color: #d32f2f;
+        }
+      }
+    }
+  }
+}

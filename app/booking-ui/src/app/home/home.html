@@ -18,7 +18,7 @@
   <h2 class="section-title">Top Rated Doctors</h2>
 
   <div class="doctors-grid">
-    @for (doc of doctors; track doc.id) {
+    @for (doc of doctors(); track doc.id) {
       <app-doctor-card [doctor]="doc"></app-doctor-card>
     }
   </div>

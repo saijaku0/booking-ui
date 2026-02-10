@@ -17,25 +17,65 @@ export class DoctorLayout implements OnInit {
   private router = inject(Router);
 
   currentUser = this.authService.currentUser;
-
   doctorProfile = signal<DoctorDetailsDto | null>(null);
+  isProfileLoading = signal(true);
+  isInitializing = signal(true);
 
   ngOnInit() {
-    this.loadDoctorProfile();
+    const user = this.authService.currentUser();
+
+    if (!user || !user.id) {
+      console.error('No user logged in');
+      this.router.navigate(['/auth/login']);
+      return;
+    }
+
+    this.doctorService.resolveDoctorId(user.id).subscribe({
+      next: (doctorId) => {
+        if (doctorId) {
+          this.loadProfile(doctorId);
+        } else {
+          console.error('This user is not a doctor!');
+        }
+        this.isInitializing.set(false);
+      },
+      error: () => this.isInitializing.set(false),
+    });
   }
 
-  loadDoctorProfile() {
+  initDoctorData() {
     const user = this.currentUser();
+
     if (user && user.id) {
-      this.doctorService.getDoctorProfile(user.id).subscribe({
-        next: (profile) => {
-          this.doctorProfile.set(profile);
+      console.log('Auth UserId (Token):', user.id);
+
+      this.doctorService.resolveDoctorId(user.id).subscribe({
+        next: (realDoctorId) => {
+          if (realDoctorId) {
+            console.log('Real DoctorId (DB PK):', realDoctorId);
+
+            this.loadProfile(realDoctorId);
+          } else {
+            console.error('Doctor entity not found for this User');
+            this.isProfileLoading.set(false);
+          }
         },
         error: (err) => {
-          console.error('Failed to load doctor profile', err);
+          console.error('Error resolving doctor ID', err);
+          this.isProfileLoading.set(false);
         },
       });
     }
+  }
+
+  loadProfile(doctorId: string) {
+    this.doctorService.getDoctorProfile(doctorId).subscribe({
+      next: (profile) => {
+        this.doctorProfile.set(profile);
+        this.isProfileLoading.set(false);
+      },
+      error: (err) => console.error(err),
+    });
   }
 
   logout() {

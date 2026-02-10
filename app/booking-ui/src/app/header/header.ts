@@ -1,23 +1,10 @@
-import { Component, computed, inject, signal } from '@angular/core';
+import { Component, computed, inject, signal, OnInit } from '@angular/core';
 import { AuthService } from '../core/auth/auth';
 import { UserRole } from '../core/auth/auth.models';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { CommonModule } from '@angular/common';
-
-interface Specialties {
-  id: number;
-  name: string;
-  link: string;
-}
-
-const mokedSpecialties: Specialties[] = [
-  { id: 1, name: 'Cardiology', link: '/specialties/cardiology' },
-  { id: 2, name: 'Dermatology', link: '/specialties/dermatology' },
-  { id: 3, name: 'Neurology', link: '/specialties/neurology' },
-  { id: 4, name: 'Pediatrics', link: '/specialties/pediatrics' },
-  { id: 5, name: 'Psychiatry', link: '/specialties/psychiatry' },
-  { id: 6, name: 'Radiology', link: '/specialties/radiology' },
-];
+import { SpecialtyDto } from '../core/models/specialty.model';
+import { Specialty } from '../core/services/specialty';
 
 @Component({
   selector: 'app-header',
@@ -25,13 +12,14 @@ const mokedSpecialties: Specialties[] = [
   templateUrl: './header.html',
   styleUrl: './header.scss',
 })
-export class Header {
+export class Header implements OnInit {
   menuOpen = signal(false);
   isMobileMenu = signal(false);
-  specialtiesOptions = signal<Specialties[]>(mokedSpecialties);
+  specialtyService = inject(Specialty);
 
   private authService = inject(AuthService);
   currentUser = this.authService.currentUser;
+  specialties = signal<SpecialtyDto[]>([]);
 
   crmLink = computed(() => {
     const user = this.currentUser();
@@ -42,6 +30,19 @@ export class Header {
 
     return null;
   });
+
+  ngOnInit() {
+    this.loadSpecialties();
+  }
+
+  loadSpecialties() {
+    this.specialtyService.getAll().subscribe({
+      next: (data) => {
+        this.specialties.set(data.slice(0, 10));
+      },
+      error: (err) => console.error('Failed to load menu specialties', err),
+    });
+  }
 
   toggleMobileMenu() {
     this.isMobileMenu.update((v) => !v);

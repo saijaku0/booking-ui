@@ -1,7 +1,8 @@
 import { Component, Input } from '@angular/core';
+import { RouterLink } from '@angular/router';
 
-export interface Doctor {
-  id: number;
+export interface DoctorCardDto {
+  id: string;
   name: string;
   specialty: string;
   rating: number;
@@ -10,10 +11,11 @@ export interface Doctor {
 
 @Component({
   selector: 'app-doctor-card',
-  imports: [],
+  standalone: true,
+  imports: [RouterLink],
   templateUrl: './doctor-card.html',
   styleUrl: './doctor-card.scss',
 })
 export class DoctorCard {
-  @Input({ required: true }) doctor!: Doctor;
+  @Input({ required: true }) doctor!: DoctorCardDto;
 }

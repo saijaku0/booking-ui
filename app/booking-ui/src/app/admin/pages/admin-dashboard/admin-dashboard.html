@@ -1,0 +1,80 @@
+<div class="dashboard-container">
+  <div class="header">
+    <h1>System Overview</h1>
+    <p class="subtitle">Welcome back, Admin</p>
+  </div>
+
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="icon-box red">
+        <span class="material-icons">medical_services</span>
+      </div>
+      <div class="info">
+        <h3>Total Doctors</h3>
+        <p class="value">
+          @if (isLoading()) {
+            ...
+          } @else {
+            {{ stats()?.totalDoctors }}
+          }
+        </p>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="icon-box blue">
+        <span class="material-icons">people</span>
+      </div>
+      <div class="info">
+        <h3>Active Patients</h3>
+        <p class="value">
+          @if (isLoading()) {
+            ...
+          } @else {
+            {{ stats()?.totalPatients }}
+          }
+        </p>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="icon-box orange">
+        <span class="material-icons">event_available</span>
+      </div>
+      <div class="info">
+        <h3>Appointments Today</h3>
+        <p class="value">
+          @if (isLoading()) {
+            ...
+          } @else {
+            {{ stats()?.appointmentsToday }}
+          }
+        </p>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="icon-box green">
+        <span class="material-icons">payments</span>
+      </div>
+      <div class="info">
+        <h3>Total Revenue</h3>
+        <p class="value">
+          @if (isLoading()) {
+            ...
+          } @else {
+            ${{ stats()?.totalRevenue | number }}
+          }
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div class="recent-section">
+    <h2>Recent Activity</h2>
+    <div class="empty-state">
+      <span class="material-icons">history</span>
+      <p>No recent system logs available.</p>
+    </div>
+  </div>
+</div>
