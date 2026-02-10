@@ -1,0 +1,85 @@
+<div class="dashboard-container">
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="icon-box blue">
+        <span class="material-icons">people</span>
+      </div>
+      <div class="stat-content">
+        <h3>Total Patients</h3>
+        <span class="value">{{ stats.totalPatients }}</span>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="icon-box orange">
+        <span class="material-icons">event_note</span>
+      </div>
+      <div class="stat-content">
+        <h3>Appointments</h3>
+        <span class="value">{{ stats.appointmentsToday }}</span>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="icon-box green">
+        <span class="material-icons">payments</span>
+      </div>
+      <div class="stat-content">
+        <h3>Earnings</h3>
+        <span class="value">$0</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-container">
+    <div class="section-header">
+      <h2>Upcoming Appointments</h2>
+      <a href="#" class="view-all-btn">View All</a>
+    </div>
+
+    <div class="table-responsive">
+      <table class="appointments-table">
+        <thead>
+          <tr>
+            <th>Time</th>
+            <th>Patient</th>
+            <th>Date</th>
+            <th>Status</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          @if (isLoading()) {
+            <tr>
+              <td colspan="5" style="text-align: center; padding: 30px; color: #888">Loading...</td>
+            </tr>
+          } @else if (appointments().length === 0) {
+            <tr>
+              <td colspan="5" style="text-align: center; padding: 30px; color: #888">
+                No appointments found.
+              </td>
+            </tr>
+          } @else {
+            @for (appt of appointments(); track appt.id) {
+              <tr>
+                <td class="time">{{ appt.startTime | date: 'shortTime' }}</td>
+                <td class="patient">Patient #{{ appt.id.substring(0, 4) }}</td>
+                <td>{{ appt.startTime | date: 'mediumDate' }}</td>
+                <td>
+                  <span class="status-badge" [class]="getStatusClass(appt.status).toLowerCase()">
+                    {{ appt.status }}
+                  </span>
+                </td>
+                <td>
+                  <button class="action-btn">
+                    <span class="material-icons">more_vert</span>
+                  </button>
+                </td>
+              </tr>
+            }
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

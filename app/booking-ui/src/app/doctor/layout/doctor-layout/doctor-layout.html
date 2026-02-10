@@ -1,0 +1,65 @@
+<div class="layout-container">
+  <aside class="sidebar">
+    <div class="brand">
+      <span class="material-icons logo-icon">medical_services</span>
+      <h2>DoctorPortal</h2>
+    </div>
+
+    <nav class="menu">
+      <a routerLink="/doctor/dashboard" routerLinkActive="active" class="menu-item">
+        <span class="material-icons">dashboard</span>
+        Dashboard
+      </a>
+      <a routerLink="/doctor/schedule" routerLinkActive="active" class="menu-item">
+        <span class="material-icons">calendar_today</span>
+        My Schedule
+      </a>
+      <a routerLink="/doctor/patients" routerLinkActive="active" class="menu-item">
+        <span class="material-icons">people</span>
+        Patients
+      </a>
+      <a routerLink="/doctor/settings" routerLinkActive="active" class="menu-item">
+        <span class="material-icons">settings</span>
+        Settings
+      </a>
+    </nav>
+
+    <div class="user-profile">
+      @if (doctorProfile()?.photoUrl) {
+        <img [src]="doctorProfile()?.photoUrl" alt="Avatar" class="avatar" />
+      } @else {
+        <div class="avatar-placeholder">
+          {{ initial }}
+        </div>
+      }
+
+      <div class="info">
+        <p class="name">
+          {{ doctorProfile()?.fullName || currentUser()?.email }}
+        </p>
+
+        <p class="role">
+          {{ doctorProfile()?.specialty || currentUser()?.roles?.[0] || 'Doctor' }}
+        </p>
+      </div>
+
+      <button (click)="logout()" class="logout-btn" title="Logout">
+        <span class="material-icons">logout</span>
+      </button>
+    </div>
+  </aside>
+
+  <main class="main-content">
+    <header class="top-bar">
+      <h3>Overview</h3>
+      <div class="actions">
+        <button class="icon-btn"><span class="material-icons">notifications</span></button>
+        <button class="icon-btn"><span class="material-icons">help_outline</span></button>
+      </div>
+    </header>
+
+    <div class="page-content">
+      <router-outlet></router-outlet>
+    </div>
+  </main>
+</div>
