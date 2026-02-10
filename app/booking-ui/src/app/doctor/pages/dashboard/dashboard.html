@@ -63,7 +63,17 @@
             @for (appt of appointments(); track appt.id) {
               <tr>
                 <td class="time">{{ appt.startTime | date: 'shortTime' }}</td>
-                <td class="patient">Patient #{{ appt.id.substring(0, 4) }}</td>
+                <td class="patient">
+                  <div class="patient-info">
+                    <div class="avatar-circle">
+                      {{ appt.patientName?.charAt(0)?.toUpperCase() || '?' }}
+                    </div>
+
+                    <span class="name">
+                      {{ appt.patientName || 'Unknown Patient' }}
+                    </span>
+                  </div>
+                </td>
                 <td>{{ appt.startTime | date: 'mediumDate' }}</td>
                 <td>
                   <span class="status-badge" [class]="getStatusClass(appt.status).toLowerCase()">
