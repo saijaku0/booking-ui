@@ -1,11 +1,9 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { CreateDoctorRequest, DoctorDto } from '../../../core/models/doctor.model';
+import { SpecialtyDto } from '@core/models/specialty.model';
+import { Component, OnInit, inject, signal } from '@angular/core';
+import { SpecialtyService, DoctorService } from '@core/services/index';
+import { CreateDoctorRequest, DoctorDto } from '@core/models/doctor.model';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { AuthService } from '../../../core/services/auth/auth.service';
-import { SpecialtyDto } from '../../../core/models/specialty.model';
-import { SpecialtyService } from '../../../core/services/specialty/specialty.service';
-import { DoctorService } from '../../../core/services/doctor/doctor.service';
 
 @Component({
   selector: 'app-admin-doctors',
@@ -14,10 +12,9 @@ import { DoctorService } from '../../../core/services/doctor/doctor.service';
   templateUrl: './doctors.html',
   styleUrl: './doctors.scss',
 })
-export class Doctors implements OnInit {
+export class DoctorsComponent implements OnInit {
   private doctorService = inject(DoctorService);
   private specialtyService = inject(SpecialtyService);
-  private authService = inject(AuthService);
   private fb = inject(FormBuilder);
 
   doctors = signal<DoctorDto[]>([]);

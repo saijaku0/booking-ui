@@ -1,19 +1,19 @@
 import { Routes } from '@angular/router';
-import { Login } from './pages/login/login';
-import { AdminLayout } from './admin/layout/admin-layout/admin-layout';
-import { Specialties } from './admin/pages/specialties/specialties';
-import { authGuard } from './core/services/auth/auth.guard';
-import { Doctors } from './admin/pages/doctors/doctors';
-import { AdminDashboard } from './admin/pages/admin-dashboard/admin-dashboard';
-import { RegisterComponent } from './pages/register/register';
-import { DoctorDetails } from './pages/doctor-details/doctor-details';
 import { Home } from './pages/home/home';
-import { DoctorLayout } from './doctor/layout/doctor-layout/doctor-layout';
+import { LoginComponent } from './pages/login/login';
+import { authGuard } from './core/services/auth/auth.guard';
+import { RegisterComponent } from './pages/register/register';
 import { Dashboard } from './doctor/pages/dashboard/dashboard';
+import { DoctorsComponent } from './admin/pages/doctors/doctors';
+import { DoctorDetails } from './pages/doctor-details/doctor-details';
+import { AdminLayout } from './admin/layout/admin-layout/admin-layout';
+import { DoctorLayout } from './doctor/layout/doctor-layout/doctor-layout';
+import { SpecialtiesComponent } from './admin/pages/specialties/specialties';
+import { AdminDashboard } from './admin/pages/admin-dashboard/admin-dashboard';
 
 export const routes: Routes = [
   { path: '', component: Home },
-  { path: 'login', component: Login },
+  { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
   { path: 'doctors/:id', component: DoctorDetails },
   {
@@ -34,8 +34,8 @@ export const routes: Routes = [
     children: [
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
       { path: 'dashboard', component: AdminDashboard },
-      { path: 'specialties', component: Specialties },
-      { path: 'doctors', component: Doctors },
+      { path: 'specialties', component: SpecialtiesComponent },
+      { path: 'doctors', component: DoctorsComponent },
     ],
   },
   { path: '**', redirectTo: '' },

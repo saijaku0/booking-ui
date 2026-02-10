@@ -1,9 +1,8 @@
 import { CommonModule } from '@angular/common';
+import { DoctorDetailsDto } from '@core/models/doctor.model';
+import { AuthService, DoctorService } from '@core/services/index';
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
-import { AuthService } from '../../../core/services/auth/auth.service';
-import { DoctorService } from '../../../core/services/doctor/doctor.service';
-import { DoctorDetailsDto } from '../../../core/models/doctor.model';
 
 @Component({
   selector: 'app-doctor-layout',

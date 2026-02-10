@@ -1,12 +1,10 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { DoctorService } from '../../core/services/doctor/doctor.service';
-import { AppointmentService } from '../../core/services/appointment/appointment.service';
-import { AuthService } from '../../core/services/auth/auth.service';
-import { DoctorDetailsDto } from '../../core/models/doctor.model';
-import { CreateAppointmentRequest } from '../../core/models/appointmnet.models';
+import { CommonModule } from '@angular/common';
+import { DoctorDetailsDto } from '@core/models/doctor.model';
+import { Component, OnInit, inject, signal } from '@angular/core';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { CreateAppointmentRequest } from '@core/models/appointmnet.models';
+import { DoctorService, AppointmentService, AuthService } from '@core/services/index';
 
 @Component({
   selector: 'app-doctor-details',

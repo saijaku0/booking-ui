@@ -1,8 +1,8 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { DoctorCard, DoctorCardDto } from '../../components/doctor-card/doctor-card';
-import { DoctorService } from '../../core/services/doctor/doctor.service';
-import { DoctorDto } from '../../core/models/doctor.model';
+import { DoctorCard, DoctorCardDto } from '@shared/components/doctor-card/doctor-card';
+import { DoctorService } from '@core/services/doctor/doctor.service';
+import { DoctorDto } from '@core/models/doctor.model';
 
 @Component({
   selector: 'app-home',

@@ -1,8 +1,7 @@
-import { Component, effect, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { AppointmentService } from '../../../core/services/appointment/appointment.service';
-import { DoctorService } from '../../../core/services/doctor/doctor.service';
-import { AppointmentDto, AppointmentStatus } from '../../../core/models/appointmnet.models';
+import { Component, effect, inject, signal } from '@angular/core';
+import { AppointmentService, DoctorService } from '@core/services/index';
+import { AppointmentDto, AppointmentStatus } from '@core/models/appointmnet.models';
 
 @Component({
   selector: 'app-dashboard',
