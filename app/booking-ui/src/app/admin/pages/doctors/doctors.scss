@@ -1,0 +1,278 @@
+.admin-page-container {
+  padding: 32px;
+  max-width: 1200px;
+  margin: 0 auto;
+
+  .page-header {
+    margin-bottom: 32px;
+    h1 {
+      margin: 10px 0;
+      font-size: 1.5rem;
+      color: #333;
+    }
+    .add-btn {
+      background-color: #d32f2f;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 600;
+      &:hover {
+        background-color: #b71c1c;
+      }
+    }
+  }
+
+  .card-table {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+    overflow-x: auto;
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 800px;
+
+      th {
+        text-align: left;
+        padding: 16px 24px;
+        background-color: #f9fafb;
+        color: #666;
+        font-weight: 600;
+        font-size: 0.85rem;
+        text-transform: uppercase;
+      }
+
+      td {
+        padding: 16px 24px;
+        border-bottom: 1px solid #eee;
+        color: #333;
+        vertical-align: middle;
+      }
+
+      tr:last-child td {
+        border-bottom: none;
+      }
+    }
+  }
+}
+
+.doctor-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  .avatar-img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+
+  .avatar-placeholder {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: #e0e7ff;
+    color: #4338ca;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+  }
+
+  .details {
+    display: flex;
+    flex-direction: column;
+    .name {
+      font-weight: 600;
+      font-size: 0.95rem;
+    }
+    .email-hint {
+      font-size: 0.75rem;
+      color: #999;
+    }
+  }
+}
+
+.specialty-badge {
+  background-color: #f3f4f6;
+  color: #374151;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.rating {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-weight: 600;
+
+  .star {
+    font-size: 18px;
+    color: #fbbf24;
+  }
+  .count {
+    color: #9ca3af;
+    font-weight: 400;
+    font-size: 0.85rem;
+    margin-left: 2px;
+  }
+}
+
+.icon-btn.delete {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #e57373;
+  &:hover {
+    color: #d32f2f;
+  }
+}
+
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: fadeIn 0.2s ease-out;
+
+  .modal-content {
+    background: white;
+    width: 100%;
+    max-width: 500px;
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+    animation: slideUp 0.3s ease-out;
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+
+      h2 {
+        margin: 0;
+        font-size: 1.25rem;
+        color: #333;
+      }
+      .close-btn {
+        background: none;
+        border: none;
+        cursor: pointer;
+        color: #999;
+        &:hover {
+          color: #333;
+        }
+      }
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+
+      .form-row {
+        display: flex;
+        gap: 16px;
+        .form-group {
+          flex: 1;
+        }
+      }
+
+      .form-group {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        label {
+          font-size: 0.85rem;
+          font-weight: 500;
+          color: #555;
+        }
+
+        input,
+        select {
+          padding: 10px;
+          border: 1px solid #ddd;
+          border-radius: 8px;
+          font-size: 0.95rem;
+          &:focus {
+            outline: 2px solid #d32f2f;
+            border-color: transparent;
+          }
+        }
+      }
+
+      .modal-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 12px;
+        margin-top: 16px;
+
+        .cancel-btn {
+          padding: 10px 20px;
+          border: none;
+          background: #f5f5f5;
+          border-radius: 8px;
+          cursor: pointer;
+          font-weight: 500;
+          &:hover {
+            background: #e0e0e0;
+          }
+        }
+
+        .submit-btn {
+          padding: 10px 20px;
+          border: none;
+          background: #d32f2f;
+          color: white;
+          border-radius: 8px;
+          cursor: pointer;
+          font-weight: 600;
+          &:disabled {
+            background: #ffcdd2;
+            cursor: not-allowed;
+          }
+          &:hover:not(:disabled) {
+            background: #b71c1c;
+          }
+        }
+      }
+    }
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes slideUp {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}

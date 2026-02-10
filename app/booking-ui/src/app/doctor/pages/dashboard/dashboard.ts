@@ -1,7 +1,8 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, effect, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Appointment } from '../../../core/services/appointment';
 import { AppointmentDto, AppointmentStatus } from '../../../core/services/appointmnet.models';
+import { Doctor } from '../../../core/services/doctor';
 
 @Component({
   selector: 'app-dashboard',
@@ -10,8 +11,9 @@ import { AppointmentDto, AppointmentStatus } from '../../../core/services/appoin
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.scss',
 })
-export class Dashboard implements OnInit {
+export class Dashboard {
   private appointmentService = inject(Appointment);
+  private doctorService = inject(Doctor);
 
   appointments = signal<AppointmentDto[]>([]);
   isLoading = signal(true);
@@ -22,21 +24,25 @@ export class Dashboard implements OnInit {
     earnings: 0,
   };
 
-  ngOnInit() {
-    this.loadSchedule();
+  constructor() {
+    effect(() => {
+      const doctorId = this.doctorService.currentDoctorId();
+
+      if (doctorId) {
+        this.loadSchedule(doctorId);
+      }
+    });
   }
 
-  loadSchedule() {
+  loadSchedule(doctorId: string) {
     this.isLoading.set(true);
-
-    this.appointmentService.getDoctorSchedule().subscribe({
+    this.appointmentService.getDoctorSchedule(doctorId).subscribe({
       next: (data) => {
         this.appointments.set(data);
         this.calculateStats(data);
         this.isLoading.set(false);
       },
-      error: (err) => {
-        console.error('Failed to load schedule', err);
+      error: () => {
         this.isLoading.set(false);
       },
     });
@@ -44,7 +50,6 @@ export class Dashboard implements OnInit {
 
   private calculateStats(data: AppointmentDto[]) {
     const today = new Date().toISOString().split('T')[0];
-
     this.stats.appointmentsToday = data.filter((a) => a.startTime.startsWith(today)).length;
     this.stats.totalPatients = data.length;
   }

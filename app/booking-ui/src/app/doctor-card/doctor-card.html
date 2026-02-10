@@ -1,4 +1,4 @@
-<article class="doctor-card">
+<article class="doctor-card" [routerLink]="['/doctors', doctor.id]">
   <div class="card-image-wrapper">
     <img [src]="doctor.image" [alt]="doctor.name" class="avatar" />
     <div class="rating-badge">

@@ -10,10 +10,10 @@ export interface LoginRequest {
 }
 
 export interface RegisterRequest {
-  email: string;
-  password: string;
-  firstName: string;
-  lastName: string;
+  UserEmail: string;
+  UserPassword: string;
+  UserName: string;
+  UserSurname: string;
 }
 
 export interface AuthResponse {

@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { environment } from '../../../environment/environment';
 import { AppointmentDto, CreateAppointmentRequest } from './appointmnet.models';
@@ -10,8 +10,13 @@ export class Appointment {
   private http = inject(HttpClient);
   private apiUrl = `${environment.apiUrl}/Appointments`;
 
-  getDoctorSchedule() {
-    return this.http.get<AppointmentDto[]>(`${this.apiUrl}/doctor-schedule`);
+  getDoctorSchedule(doctorId?: string) {
+    let params = new HttpParams();
+    if (doctorId) {
+      params = params.set('doctorId', doctorId);
+    }
+
+    return this.http.get<AppointmentDto[]>(`${this.apiUrl}/doctor-schedule`, { params });
   }
 
   getPatientHistory() {

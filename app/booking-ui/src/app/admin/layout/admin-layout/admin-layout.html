@@ -1,0 +1,47 @@
+<div class="layout-container">
+  <aside class="sidebar" style="border-right-color: #d32f2f">
+    <div class="brand">
+      <span class="material-icons logo-icon" style="color: #d32f2f">admin_panel_settings</span>
+      <h2>AdminPanel</h2>
+    </div>
+
+    <nav class="menu">
+      <a routerLink="/admin/dashboard" routerLinkActive="active" class="menu-item">
+        <span class="material-icons">analytics</span>
+        Overview
+      </a>
+
+      <a routerLink="/admin/specialties" routerLinkActive="active" class="menu-item">
+        <span class="material-icons">category</span>
+        Specialties
+      </a>
+
+      <a routerLink="/admin/doctors" routerLinkActive="active" class="menu-item">
+        <span class="material-icons">medical_services</span>
+        Doctors
+      </a>
+
+      <a routerLink="/admin/users" routerLinkActive="active" class="menu-item">
+        <span class="material-icons">group</span>
+        Users
+      </a>
+    </nav>
+
+    <div class="user-profile">
+      <div class="avatar-placeholder" style="background-color: #d32f2f">A</div>
+      <div class="info">
+        <p class="name">{{ currentUser()?.email }}</p>
+        <p class="role">System Admin</p>
+      </div>
+      <button (click)="logout()" class="logout-btn">
+        <span class="material-icons">logout</span>
+      </button>
+    </div>
+  </aside>
+
+  <main class="main-content">
+    <div class="page-content">
+      <router-outlet></router-outlet>
+    </div>
+  </main>
+</div>

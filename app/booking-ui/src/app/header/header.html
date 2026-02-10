@@ -12,7 +12,7 @@
   <nav class="navigation-bar" [class.open]="isMobileMenu()">
     <ul>
       <li><a href="/" (click)="closeMobileNav()">Home</a></li>
-      <li><a href="/bookings" (click)="closeMobileNav()">Bookings</a></li>
+      <li><a href="/doctors" (click)="closeMobileNav()">Doctors</a></li>
       <li><a href="/contact" (click)="closeMobileNav()">Contact</a></li>
       <li class="dropdown-container">
         <button
@@ -110,9 +110,14 @@
         <div class="menu-content">
           <h3>All Specialties</h3>
           <div class="specialties-grid">
-            @for (specialty of specialtiesOptions(); track specialty.id) {
-              <a [href]="specialty.link" class="specialty-item" (click)="toggleMenu()">
-                {{ specialty.name }}
+            @for (spec of specialties(); track spec.id) {
+              <a
+                [routerLink]="['/search']"
+                [queryParams]="{ specialtyId: spec.id }"
+                class="specialty-item"
+                (click)="toggleMenu()"
+              >
+                {{ spec.name }}
               </a>
             }
           </div>

@@ -1,0 +1,38 @@
+<div class="admin-page-container">
+  <header class="page-header">
+    <h1>Specialties Management</h1>
+    <button class="add-btn" (click)="addSpecialty()">
+      <span class="material-icons">add</span>
+      New Specialty
+    </button>
+  </header>
+
+  <div class="card-table">
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>ID</th>
+          <th style="text-align: right">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (item of specialties(); track item.id) {
+          <tr>
+            <td style="font-weight: 500">{{ item.name }}</td>
+            <td style="color: #888; font-size: 0.85rem">{{ item.id }}</td>
+            <td style="text-align: right">
+              <button class="icon-btn delete" (click)="deleteSpecialty(item.id)">
+                <span class="material-icons">delete</span>
+              </button>
+            </td>
+          </tr>
+        } @empty {
+          <tr>
+            <td colspan="3" style="text-align: center; padding: 20px">No specialties found.</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</div>
