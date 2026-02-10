@@ -29,14 +29,60 @@
     </ul>
 
     <div class="mobile-actions">
-      <button class="login-button">Login</button>
-      <button class="signup-button">Sign Up</button>
+      @if (!currentUser()) {
+        <a routerLink="/login" (click)="closeMobileNav()" class="login-button">Login</a>
+        <a routerLink="/register" (click)="closeMobileNav()" class="signup-button">Sign Up</a>
+      } @else {
+        <div class="mobile-user-info">
+          <div class="avatar">
+            {{ currentUser()?.email?.charAt(0)?.toUpperCase() }}
+          </div>
+          <div class="info">
+            <span class="email">{{ currentUser()?.email }}</span>
+            <span class="role">{{ currentUser()?.roles?.[0] }}</span>
+          </div>
+        </div>
+
+        @if (crmLink()) {
+          <a [routerLink]="crmLink()" (click)="closeMobileNav()" class="crm-button full-width">
+            <span class="material-icons">dashboard</span>
+            Go to Dashboard
+          </a>
+        }
+
+        <button (click)="logout()" class="logout-button full-width">
+          <span class="material-icons">logout</span>
+          Log Out
+        </button>
+      }
     </div>
   </nav>
 
   <div class="desktop-actions">
-    <button class="login-button">Login</button>
-    <button class="signup-button">Sign Up</button>
+    @if (!currentUser()) {
+      <a routerLink="/login" class="login-button">Login</a>
+      <a routerLink="/register" class="signup-button">Sign Up</a>
+    } @else {
+      @if (crmLink()) {
+        <a [routerLink]="crmLink()" class="crm-button">
+          <span class="material-icons">dashboard</span>
+          CRM Panel
+        </a>
+      }
+
+      <div class="user-profile">
+        <div class="avatar">
+          {{ currentUser()?.email?.charAt(0)?.toUpperCase() }}
+        </div>
+        <span class="user-name">
+          {{ currentUser()?.roles?.[0] || 'User' }}
+        </span>
+
+        <button (click)="logout()" class="logout-icon-btn" title="Logout">
+          <span class="material-icons">logout</span>
+        </button>
+      </div>
+    }
   </div>
 
   @if (menuOpen() && !isMobileMenu()) {
