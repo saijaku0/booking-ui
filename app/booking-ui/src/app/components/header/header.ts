@@ -1,10 +1,10 @@
 import { Component, computed, inject, signal, OnInit } from '@angular/core';
-import { AuthService } from '../core/auth/auth';
-import { UserRole } from '../core/auth/auth.models';
+import { AuthService } from '../../core/services/auth/auth.service';
+import { UserRole } from '../../core/models/auth.model';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { SpecialtyDto } from '../core/models/specialty.model';
-import { Specialty } from '../core/services/specialty';
+import { SpecialtyDto } from '../../core/models/specialty.model';
+import { SpecialtyService } from '../../core/services/specialty/specialty.service';
 
 @Component({
   selector: 'app-header',
@@ -15,7 +15,7 @@ import { Specialty } from '../core/services/specialty';
 export class Header implements OnInit {
   menuOpen = signal(false);
   isMobileMenu = signal(false);
-  specialtyService = inject(Specialty);
+  specialtyService = inject(SpecialtyService);
 
   private authService = inject(AuthService);
   currentUser = this.authService.currentUser;

@@ -1,7 +1,7 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Specialty } from '../../../core/services/specialty';
 import { SpecialtyDto } from '../../../core/models/specialty.model';
+import { SpecialtyService } from '../../../core/services/specialty/specialty.service';
 
 @Component({
   selector: 'app-specialties',
@@ -11,7 +11,7 @@ import { SpecialtyDto } from '../../../core/models/specialty.model';
   styleUrl: './specialties.scss',
 })
 export class Specialties implements OnInit {
-  private specialtyService = inject(Specialty);
+  private specialtyService = inject(SpecialtyService);
 
   specialties = signal<SpecialtyDto[]>([]);
   isLoading = signal(false);

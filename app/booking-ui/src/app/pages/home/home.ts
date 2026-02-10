@@ -1,8 +1,8 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Doctor } from '../core/services/doctor';
-import { DoctorCard, DoctorCardDto } from '../doctor-card/doctor-card';
-import { DoctorDto } from '../core/models/doctor.model';
+import { DoctorCard, DoctorCardDto } from '../../components/doctor-card/doctor-card';
+import { DoctorService } from '../../core/services/doctor/doctor.service';
+import { DoctorDto } from '../../core/models/doctor.model';
 
 @Component({
   selector: 'app-home',
@@ -12,7 +12,7 @@ import { DoctorDto } from '../core/models/doctor.model';
   styleUrl: './home.scss',
 })
 export class Home implements OnInit {
-  private doctorService = inject(Doctor);
+  private doctorService = inject(DoctorService);
 
   doctors = signal<DoctorCardDto[]>([]);
   isLoading = signal(true);

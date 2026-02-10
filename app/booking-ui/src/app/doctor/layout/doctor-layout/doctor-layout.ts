@@ -1,8 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
-import { AuthService } from '../../../core/auth/auth';
-import { Doctor } from '../../../core/services/doctor';
+import { AuthService } from '../../../core/services/auth/auth.service';
+import { DoctorService } from '../../../core/services/doctor/doctor.service';
 import { DoctorDetailsDto } from '../../../core/models/doctor.model';
 
 @Component({
@@ -13,7 +13,7 @@ import { DoctorDetailsDto } from '../../../core/models/doctor.model';
 })
 export class DoctorLayout implements OnInit {
   private authService = inject(AuthService);
-  private doctorService = inject(Doctor);
+  private doctorService = inject(DoctorService);
   private router = inject(Router);
 
   currentUser = this.authService.currentUser;

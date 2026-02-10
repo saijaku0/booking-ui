@@ -1,13 +1,13 @@
 import { inject, Injectable, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { map, Observable, tap, catchError, of } from 'rxjs';
-import { environment } from '../../../environment/environment';
-import { CreateDoctorRequest, DoctorDetailsDto, DoctorDto } from '../models/doctor.model';
+import { environment } from '../../../../environment/environment';
+import { CreateDoctorRequest, DoctorDetailsDto, DoctorDto } from '../../models/doctor.model';
 
 @Injectable({
   providedIn: 'root',
 })
-export class Doctor {
+export class DoctorService {
   private http = inject(HttpClient);
   private apiUrl = `${environment.apiUrl}/Doctors`;
 

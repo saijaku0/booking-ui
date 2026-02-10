@@ -1,4 +1,4 @@
-import { environment } from '../../../environment/environment';
+import { environment } from '../../../../environment/environment';
 import { inject, Injectable, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
@@ -11,7 +11,7 @@ import {
   UserRole,
   CurrentUser,
   JwtCustomPayload,
-} from './auth.models';
+} from '../../models/auth.model';
 
 @Injectable({
   providedIn: 'root',

@@ -1,5 +1,5 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
-import { AdminService, AdminStats } from '../../../core/services/admin.service';
+import { AdminService, AdminStats } from '../../../core/services/admin/admin.service';
 import { CommonModule } from '@angular/common';
 
 @Component({

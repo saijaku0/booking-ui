@@ -1,8 +1,8 @@
 import { Component, effect, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Appointment } from '../../../core/services/appointment';
-import { AppointmentDto, AppointmentStatus } from '../../../core/services/appointmnet.models';
-import { Doctor } from '../../../core/services/doctor';
+import { AppointmentService } from '../../../core/services/appointment/appointment.service';
+import { DoctorService } from '../../../core/services/doctor/doctor.service';
+import { AppointmentDto, AppointmentStatus } from '../../../core/models/appointmnet.models';
 
 @Component({
   selector: 'app-dashboard',
@@ -12,8 +12,8 @@ import { Doctor } from '../../../core/services/doctor';
   styleUrl: './dashboard.scss',
 })
 export class Dashboard {
-  private appointmentService = inject(Appointment);
-  private doctorService = inject(Doctor);
+  private appointmentService = inject(AppointmentService);
+  private doctorService = inject(DoctorService);
 
   appointments = signal<AppointmentDto[]>([]);
   isLoading = signal(true);

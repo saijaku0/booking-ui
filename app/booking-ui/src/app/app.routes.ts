@@ -1,15 +1,15 @@
 import { Routes } from '@angular/router';
-import { Home } from './home/home';
-import { DoctorLayout } from './doctor/layout/doctor-layout/doctor-layout';
-import { Dashboard } from './doctor/pages/dashboard/dashboard';
 import { Login } from './pages/login/login';
 import { AdminLayout } from './admin/layout/admin-layout/admin-layout';
 import { Specialties } from './admin/pages/specialties/specialties';
-import { authGuard } from './core/auth/auth.guard';
+import { authGuard } from './core/services/auth/auth.guard';
 import { Doctors } from './admin/pages/doctors/doctors';
 import { AdminDashboard } from './admin/pages/admin-dashboard/admin-dashboard';
 import { RegisterComponent } from './pages/register/register';
-import { DoctorDetails } from './public/pages/doctor-details/doctor-details';
+import { DoctorDetails } from './pages/doctor-details/doctor-details';
+import { Home } from './pages/home/home';
+import { DoctorLayout } from './doctor/layout/doctor-layout/doctor-layout';
+import { Dashboard } from './doctor/pages/dashboard/dashboard';
 
 export const routes: Routes = [
   { path: '', component: Home },
