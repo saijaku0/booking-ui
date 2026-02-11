@@ -89,31 +89,85 @@ export class Dashboard {
   performAction(action: string, id: string) {
     this.closeMenu();
 
-    if (action === 'cancel') {
-      if (!confirm('Are you sure you want to cancel this appointment?')) {
-        return;
-      }
-
-      this.appointmentService.cancelAppointment(id).subscribe({
-        next: () => {
-          this.appointments.update((currentList) =>
-            currentList.map((appt) => {
-              if (appt.id === id) {
-                return { ...appt, status: AppointmentStatus.Canceled };
-              }
-              return appt;
-            }),
-          );
-        },
-        error: (err) => {
-          console.error('Failed to cancel', err);
-          alert('Error cancelling appointment');
-        },
-      });
-    }
     if (action === 'view') {
       console.log('Open details for', id);
     }
+    if (action === 'cancel') {
+      this.cancelAppointment(id);
+    }
+    if (action === 'confirm') {
+      this.confirmAppointment(id);
+    }
+    if (action === 'complete') {
+      this.completeAppointment(id);
+    }
+  }
+
+  confirmAppointment(id: string) {
+    this.appointmentService.confirmAppointment(id).subscribe({
+      next: () => {
+        this.appointments.update((list) =>
+          list.map((a) => {
+            if (a.id === id) {
+              return { ...a, status: AppointmentStatus.Confirmed };
+            }
+            return a;
+          }),
+        );
+      },
+      error: (err) => {
+        console.error('Failed to confirm', err);
+        alert('Could not confirm appointment');
+      },
+    });
+  }
+
+  cancelAppointment(id: string) {
+    if (!confirm('Are you sure you want to cancel this appointment?')) {
+      return;
+    }
+
+    this.appointmentService.cancelAppointment(id).subscribe({
+      next: () => {
+        this.appointments.update((currentList) =>
+          currentList.map((appt) => {
+            if (appt.id === id) {
+              return { ...appt, status: AppointmentStatus.Canceled };
+            }
+            return appt;
+          }),
+        );
+      },
+      error: (err) => {
+        console.error('Failed to cancel', err);
+        alert('Error cancelling appointment');
+      },
+    });
+  }
+
+  completeAppointment(id: string) {
+    const appt = this.appointments().find((a) => a.id === id);
+    if (!appt) return;
+
+    const notes = prompt('Enter medical notes for completion:');
+    if (notes === null) return;
+
+    this.appointmentService.completeAppointment(id, notes).subscribe({
+      next: () => {
+        this.appointments.update((currentList) =>
+          currentList.map((a) => {
+            if (a.id === id) {
+              return { ...a, status: AppointmentStatus.Completed };
+            }
+            return a;
+          }),
+        );
+      },
+      error: (err) => {
+        console.error('Failed to complete appointment', err);
+        alert('Error completing appointment');
+      },
+    });
   }
 
   getInitials(name: string): string {
