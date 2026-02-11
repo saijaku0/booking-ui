@@ -4,11 +4,12 @@ import { AppointmentService, DoctorService } from '@core/services/index';
 import { AppointmentDto, AppointmentStatus } from '@core/models/appointmnet.models';
 import { StatsCards } from '../../components/stats-cards/stats-cards';
 import { AppointmentsTable } from '../../components/appointments-table/appointments-table';
+import { AppointmentCompletionModal } from '../../components/appointment-completion-modal/appointment-completion-modal';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, StatsCards, AppointmentsTable],
+  imports: [CommonModule, StatsCards, AppointmentsTable, AppointmentCompletionModal],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.scss',
 })
@@ -17,6 +18,8 @@ export class Dashboard {
   private doctorService = inject(DoctorService);
   readonly filterOptions = signal(['all', 'pending', 'confirmed', 'canceled', 'completed']);
   @ViewChild(AppointmentsTable) appointmentsTable!: AppointmentsTable;
+  isCompleteModalOpen = signal(false);
+  selectedAppointmentForCompletion = signal<{ id: string; name: string } | null>(null);
 
   appointments = signal<AppointmentDto[]>([]);
   isLoading = signal(true);
@@ -142,25 +145,34 @@ export class Dashboard {
     const appt = this.appointments().find((a) => a.id === id);
     if (!appt) return;
 
-    const notes = prompt('Enter medical notes for completion:');
-    if (notes === null) return;
+    this.selectedAppointmentForCompletion.set({ id: appt.id, name: appt.patientName });
 
-    this.appointmentService.completeAppointment(id, notes).subscribe({
+    this.isCompleteModalOpen.set(true);
+  }
+
+  onModalConfirm(notes: string) {
+    const selected = this.selectedAppointmentForCompletion();
+    if (!selected) return;
+
+    this.appointmentService.completeAppointment(selected.id, notes).subscribe({
       next: () => {
-        this.appointments.update((currentList) =>
-          currentList.map((a) => {
-            if (a.id === id) {
-              return { ...a, status: AppointmentStatus.Completed };
-            }
-            return a;
-          }),
+        this.appointments.update((list) =>
+          list.map((a) =>
+            a.id === selected.id ? { ...a, status: AppointmentStatus.Completed } : a,
+          ),
         );
+        this.closeCompleteModal();
       },
       error: (err) => {
-        console.error('Failed to complete appointment', err);
+        console.error('Error', err);
         alert('Error completing appointment');
       },
     });
+  }
+
+  closeCompleteModal() {
+    this.isCompleteModalOpen.set(false);
+    this.selectedAppointmentForCompletion.set(null);
   }
 
   loadSchedule(doctorId: string) {

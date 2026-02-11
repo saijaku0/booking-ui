@@ -57,3 +57,10 @@
     ></app-appointments-table>
   </div>
 </div>
+
+<app-completion-modal
+  [isOpen]="isCompleteModalOpen()"
+  [patientName]="selectedAppointmentForCompletion()?.name || ''"
+  (close)="closeCompleteModal()"
+  (confirm)="onModalConfirm($any($event))"
+></app-completion-modal>
