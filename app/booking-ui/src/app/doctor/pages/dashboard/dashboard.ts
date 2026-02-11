@@ -1,21 +1,30 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, effect, inject, signal } from '@angular/core';
+import { Component, computed, effect, inject, signal, ViewChild } from '@angular/core';
 import { AppointmentService, DoctorService } from '@core/services/index';
 import { AppointmentDto, AppointmentStatus } from '@core/models/appointmnet.models';
+import { StatsCards } from '../../components/stats-cards/stats-cards';
+import { AppointmentsTable } from '../../components/appointments-table/appointments-table';
+import { AppointmentCompletionModal } from '../../components/appointment-completion-modal/appointment-completion-modal';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, StatsCards, AppointmentsTable, AppointmentCompletionModal],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.scss',
 })
 export class Dashboard {
   private appointmentService = inject(AppointmentService);
   private doctorService = inject(DoctorService);
+  readonly filterOptions = signal(['all', 'pending', 'confirmed', 'canceled', 'completed']);
+  @ViewChild(AppointmentsTable) appointmentsTable!: AppointmentsTable;
+  isCompleteModalOpen = signal(false);
+  selectedAppointmentForCompletion = signal<{ id: string; name: string } | null>(null);
 
   appointments = signal<AppointmentDto[]>([]);
   isLoading = signal(true);
+  searchQuery = signal('');
+  statusFilter = signal('all');
 
   stats = {
     totalPatients: 0,
@@ -31,6 +40,18 @@ export class Dashboard {
     return 'Doctor';
   });
 
+  filteredAppointments = computed(() => {
+    const all = this.appointments();
+    const query = this.searchQuery().toLowerCase();
+    const filter = this.statusFilter().toLowerCase();
+
+    return all.filter((a) => {
+      const matchesName = (a.patientName || '').toLowerCase().includes(query);
+      const matchesStatus = filter === 'all' ? true : a.status.toLowerCase() === filter;
+      return matchesName && matchesStatus;
+    });
+  });
+
   constructor() {
     effect(() => {
       const doctorId = this.doctorService.currentDoctorId();
@@ -41,42 +62,117 @@ export class Dashboard {
     });
   }
 
-  getInitials(name: string): string {
-    if (!name) return '';
-    const parts = name.split(' ');
-    if (parts.length === 1) return parts[0].substring(0, 2).toUpperCase();
-    return (parts[0][0] + parts[1][0]).toUpperCase();
+  setFilter(filter: string) {
+    this.statusFilter.set(filter);
   }
 
-  generateColor(name: string | undefined): string {
-    if (!name) return '#e0e0e0';
+  closeAllMenus() {
+    if (this.appointmentsTable) {
+      this.appointmentsTable.closeMenu();
+    }
+  }
 
-    const colors = [
-      '#FFCDD2',
-      '#F8BBD0',
-      '#E1BEE7',
-      '#D1C4E9',
-      '#C5CAE9',
-      '#BBDEFB',
-      '#B3E5FC',
-      '#B2EBF2',
-      '#B2DFDB',
-      '#C8E6C9',
-      '#DCEDC8',
-      '#F0F4C3',
-      '#FFECB3',
-      '#FFE0B2',
-      '#FFCCBC',
-    ];
+  updateFilter(filter: string, event: Event) {
+    event.stopPropagation();
+    this.setFilter(filter);
+  }
 
-    let hash = 0;
-    for (let i = 0; i < name.length; i++) {
-      hash = name.charCodeAt(i) + ((hash << 5) - hash);
+  onSearch(event: Event) {
+    const input = event.target as HTMLInputElement;
+    this.searchQuery.set(input.value);
+  }
+
+  handleTableAction(event: { type: string; id: string }) {
+    const { type, id } = event;
+
+    if (type === 'view') {
+      console.log('Open details for', id);
+    }
+    if (type === 'cancel') {
+      this.cancelAppointment(id);
+    }
+    if (type === 'confirm') {
+      this.confirmAppointment(id);
+    }
+    if (type === 'complete') {
+      this.completeAppointment(id);
+    }
+  }
+
+  confirmAppointment(id: string) {
+    this.appointmentService.confirmAppointment(id).subscribe({
+      next: () => {
+        this.appointments.update((list) =>
+          list.map((a) => {
+            if (a.id === id) {
+              return { ...a, status: AppointmentStatus.Confirmed };
+            }
+            return a;
+          }),
+        );
+      },
+      error: (err) => {
+        console.error('Failed to confirm', err);
+        alert('Could not confirm appointment');
+      },
+    });
+  }
+
+  cancelAppointment(id: string) {
+    if (!confirm('Are you sure you want to cancel this appointment?')) {
+      return;
     }
 
-    const index = Math.abs(hash % colors.length);
+    this.appointmentService.cancelAppointment(id).subscribe({
+      next: () => {
+        this.appointments.update((currentList) =>
+          currentList.map((appt) => {
+            if (appt.id === id) {
+              return { ...appt, status: AppointmentStatus.Canceled };
+            }
+            return appt;
+          }),
+        );
+      },
+      error: (err) => {
+        console.error('Failed to cancel', err);
+        alert('Error cancelling appointment');
+      },
+    });
+  }
 
-    return colors[index];
+  completeAppointment(id: string) {
+    const appt = this.appointments().find((a) => a.id === id);
+    if (!appt) return;
+
+    this.selectedAppointmentForCompletion.set({ id: appt.id, name: appt.patientName });
+
+    this.isCompleteModalOpen.set(true);
+  }
+
+  onModalConfirm(notes: string) {
+    const selected = this.selectedAppointmentForCompletion();
+    if (!selected) return;
+
+    this.appointmentService.completeAppointment(selected.id, notes).subscribe({
+      next: () => {
+        this.appointments.update((list) =>
+          list.map((a) =>
+            a.id === selected.id ? { ...a, status: AppointmentStatus.Completed } : a,
+          ),
+        );
+        this.closeCompleteModal();
+      },
+      error: (err) => {
+        console.error('Error', err);
+        alert('Error completing appointment');
+      },
+    });
+  }
+
+  closeCompleteModal() {
+    this.isCompleteModalOpen.set(false);
+    this.selectedAppointmentForCompletion.set(null);
   }
 
   loadSchedule(doctorId: string) {
@@ -97,20 +193,5 @@ export class Dashboard {
     const today = new Date().toISOString().split('T')[0];
     this.stats.appointmentsToday = data.filter((a) => a.startTime.startsWith(today)).length;
     this.stats.totalPatients = data.length;
-  }
-
-  getStatusClass(status: AppointmentStatus): string {
-    switch (status) {
-      case AppointmentStatus.Confirmed:
-        return 'confirmed';
-      case AppointmentStatus.Scheduled:
-        return 'pending';
-      case AppointmentStatus.Canceled:
-        return 'cancelled';
-      case AppointmentStatus.Completed:
-        return 'completed';
-      default:
-        return '';
-    }
   }
 }

@@ -28,6 +28,16 @@ export class AppointmentService {
   }
 
   completeAppointment(id: string, medicalNotes: string) {
-    return this.http.post<void>(`${this.apiUrl}/${id}/complete`, { medicalNotes });
+    return this.http.post<void>(`${this.apiUrl}/${id}/complete`, JSON.stringify(medicalNotes), {
+      headers: { 'Content-Type': 'application/json' },
+    });
+  }
+
+  confirmAppointment(id: string) {
+    return this.http.post<void>(`${this.apiUrl}/${id}/confirm`, {});
+  }
+
+  cancelAppointment(id: string) {
+    return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
 }

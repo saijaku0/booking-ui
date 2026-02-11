@@ -1,110 +1,66 @@
-<div class="dashboard-container">
+<div
+  class="dashboard-container"
+  (click)="closeAllMenus()"
+  (keydown.escape)="closeAllMenus()"
+  tabindex="-1"
+>
   <div class="page-header">
     <div class="header-titles">
       <h2>Dashboard</h2>
-      <p class="subtitle">Welcome back, {{ doctorFullName() }}</p>
+      <p class="subtitle">Welcome back, Dr. {{ doctorFullName() }}</p>
     </div>
   </div>
 
-  <div class="stats-grid">
-    <div class="stat-card">
-      <div class="stat-icon blue">
-        <span class="material-icons">people</span>
-      </div>
-      <div class="stat-info">
-        <span class="label">Total Patients</span>
-        <h3 class="value">{{ stats.totalPatients }}</h3>
-      </div>
-    </div>
-
-    <div class="stat-card">
-      <div class="stat-icon orange">
-        <span class="material-icons">event_note</span>
-      </div>
-      <div class="stat-info">
-        <span class="label">Appointments</span>
-        <h3 class="value">{{ stats.appointmentsToday }}</h3>
-        <span class="trend neutral">Today</span>
-      </div>
-    </div>
-
-    <div class="stat-card">
-      <div class="stat-icon green">
-        <span class="material-icons">payments</span>
-      </div>
-      <div class="stat-info">
-        <span class="label">Earnings</span>
-        <h3 class="value">$2,450</h3>
-      </div>
-    </div>
-  </div>
+  <app-stats-cards [stats]="stats"></app-stats-cards>
 
   <div class="section-container">
     <div class="section-header">
-      <h3>Upcoming Appointments</h3>
-      <a href="#" class="view-all-link">View All</a>
-    </div>
+      <div class="header-left">
+        <h3>Upcoming Appointments</h3>
+        <span class="count-badge">{{ filteredAppointments().length }}</span>
+      </div>
 
-    <div class="table-wrapper">
-      <table class="appointments-table">
-        <thead>
-          <tr>
-            <th width="15%">Time</th>
-            <th width="35%">Patient</th>
-            <th width="20%">Date</th>
-            <th width="20%">Status</th>
-            <th width="10%" class="text-right">Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          @if (isLoading()) {
-            <tr>
-              <td colspan="5" class="empty-state">Loading...</td>
-            </tr>
-          } @else if (appointments().length === 0) {
-            <tr>
-              <td colspan="5" class="empty-state">No appointments found.</td>
-            </tr>
-          } @else {
-            @for (appt of appointments(); track appt.id) {
-              <tr>
-                <td class="time-cell">
-                  <span class="material-icons icon-clock">schedule</span>
-                  {{ appt.startTime | date: 'shortTime' }}
-                </td>
+      <div class="table-controls">
+        <div
+          class="search-box"
+          (click)="$event.stopPropagation()"
+          (keydown)="$event.stopPropagation()"
+          tabindex="-1"
+        >
+          <span class="material-icons">search</span>
+          <input
+            type="text"
+            placeholder="Search patient..."
+            [value]="searchQuery()"
+            (input)="onSearch($event)"
+          />
+        </div>
 
-                <td>
-                  <div class="patient-profile">
-                    <div
-                      class="avatar-circle"
-                      [style.background-color]="generateColor(appt.patientName)"
-                    >
-                      {{ getInitials(appt.patientName) }}
-                    </div>
-                    <div class="patient-text">
-                      <span class="name">{{ appt.patientName }}</span>
-                    </div>
-                  </div>
-                </td>
-
-                <td class="date-cell">{{ appt.startTime | date: 'mediumDate' }}</td>
-
-                <td>
-                  <span class="status-badge" [class]="appt.status.toLowerCase()">
-                    {{ appt.status }}
-                  </span>
-                </td>
-
-                <td class="text-right">
-                  <button class="action-btn">
-                    <span class="material-icons">more_horiz</span>
-                  </button>
-                </td>
-              </tr>
-            }
+        <div class="filter-tabs">
+          @for (filter of filterOptions(); track filter) {
+            <button
+              [class.active]="statusFilter() === filter"
+              (click)="updateFilter(filter, $event)"
+              style="text-transform: capitalize"
+            >
+              {{ filter }}
+            </button>
           }
-        </tbody>
-      </table>
+        </div>
+      </div>
     </div>
+
+    <app-appointments-table
+      [appointments]="filteredAppointments()"
+      [isLoading]="isLoading()"
+      (action)="handleTableAction($event)"
+    ></app-appointments-table>
   </div>
 </div>
+
+<app-completion-modal
+  [isOpen]="isCompleteModalOpen()"
+  [patientName]="selectedAppointmentForCompletion()?.name || ''"
+  (close)="closeCompleteModal()"
+  (confirm)="onModalConfirm($any($event))"
+></app-completion-modal>

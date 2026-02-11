@@ -1,0 +1,98 @@
+<div class="table-wrapper">
+  <table class="appointments-table">
+    <thead>
+      <tr>
+        <th width="15%">Time</th>
+        <th width="35%">Patient</th>
+        <th width="20%">Date</th>
+        <th width="20%">Status</th>
+        <th width="10%" class="text-right">Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      @if (isLoading) {
+        <tr>
+          <td colspan="5" class="empty-state">Loading...</td>
+        </tr>
+      } @else if (appointments.length === 0) {
+        <tr>
+          <td colspan="5" class="empty-state">No appointments found matching your filters.</td>
+        </tr>
+      } @else {
+        @for (appt of appointments; track appt.id) {
+          <tr>
+            <td class="time-cell">
+              <span class="material-icons icon-clock">schedule</span>
+              {{ appt.startTime | date: 'shortTime' }}
+            </td>
+
+            <td>
+              <div class="patient-profile">
+                <div
+                  class="avatar-circle"
+                  [style.background-color]="generateColor(appt.patientName)"
+                >
+                  {{ getInitials(appt.patientName) }}
+                </div>
+                <div class="patient-text">
+                  <span class="name">{{ appt.patientName }}</span>
+                </div>
+              </div>
+            </td>
+
+            <td class="date-cell">{{ appt.startTime | date: 'mediumDate' }}</td>
+
+            <td>
+              <span class="status-badge" [class]="appt.status.toLowerCase()">
+                {{ appt.status }}
+              </span>
+            </td>
+
+            <td class="text-right action-cell">
+              <div class="action-menu-container">
+                <button class="action-btn" (click)="toggleMenu(appt.id.toString(), $event)">
+                  <span class="material-icons">more_horiz</span>
+                </button>
+
+                @if (activeMenuId() === appt.id.toString()) {
+                  <div
+                    class="dropdown-menu"
+                    (click)="$event.stopPropagation()"
+                    role="dropdown-menu"
+                    tabindex="-1"
+                    (click)="$event.stopPropagation()"
+                    (keydown)="$event.stopPropagation()"
+                  >
+                    <button (click)="onActionClick('view', appt.id.toString())">
+                      <span class="material-icons">visibility</span> View Details
+                    </button>
+                    <button (click)="onActionClick('reschedule', appt.id.toString())">
+                      <span class="material-icons">edit_calendar</span> Reschedule
+                    </button>
+                    <div class="divider"></div>
+                    @if (appt.status.toLowerCase() === 'pending') {
+                      <button (click)="onActionClick('confirm', appt.id.toString())">
+                        <span class="material-icons">check_circle</span> Confirm
+                      </button>
+                    }
+                    @if (appt.status.toLowerCase() === 'confirmed') {
+                      <button
+                        class="success"
+                        (click)="onActionClick('complete', appt.id.toString())"
+                      >
+                        <span class="material-icons">done_all</span> Complete
+                      </button>
+                    }
+                    <button class="danger" (click)="onActionClick('cancel', appt.id.toString())">
+                      <span class="material-icons">cancel</span> Cancel
+                    </button>
+                  </div>
+                }
+              </div>
+            </td>
+          </tr>
+        }
+      }
+    </tbody>
+  </table>
+</div>
