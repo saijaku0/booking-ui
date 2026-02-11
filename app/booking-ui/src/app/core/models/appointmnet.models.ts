@@ -9,7 +9,7 @@ export interface AppointmentDto {
   id: string;
   doctorId: string;
   doctorName: string;
-  patientId: string;
+  customerId: string;
   patientName: string;
   startTime: string; // Date ISO
   endTime: string; // Date ISO

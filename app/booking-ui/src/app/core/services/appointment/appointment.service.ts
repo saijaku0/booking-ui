@@ -40,4 +40,19 @@ export class AppointmentService {
   cancelAppointment(id: string) {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
+
+  getAppointmentList(doctorId?: string, start?: string, end?: string) {
+    let params = new HttpParams();
+    if (doctorId) {
+      params = params.set('doctorId', doctorId);
+    }
+    if (start) {
+      params = params.set('start', start);
+    }
+    if (end) {
+      params = params.set('end', end);
+    }
+
+    return this.http.get<AppointmentDto[]>(`${this.apiUrl}`, { params });
+  }
 }

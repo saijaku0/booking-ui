@@ -1,0 +1,49 @@
+<div class="details-panel" id="appointment-details">
+  <div class="details-header">
+    <div class="header-left">
+      <h3>
+        @if (appointment.patientName) {
+          {{ appointment.patientName }}
+        } @else {
+          Patient #{{ appointment.customerId | slice: 0 : 5 }}
+        }
+      </h3>
+
+      <span class="status-badge" [class]="(appointment.status || 'pending').toLowerCase()">
+        {{ appointment.status || 'Pending' }}
+      </span>
+    </div>
+
+    <button class="close-btn" (click)="closeDetails.emit()">
+      <span class="material-icons">close</span>
+    </button>
+  </div>
+
+  <div class="details-body">
+    <div class="info-grid">
+      <div class="info-item">
+        <span class="label">Appointment Time</span>
+        <div class="value-with-icon">
+          <span class="material-icons">schedule</span>
+          <span>
+            {{ appointment.startTime | date: 'fullDate' }}
+            at <strong>{{ appointment.startTime | date: 'shortTime' }}</strong>
+          </span>
+        </div>
+      </div>
+
+      <div class="info-item">
+        <span class="label">Medical Notes</span>
+        <p class="value notes">
+          {{ appointment.medicalNotes || 'No notes provided yet.' }}
+        </p>
+      </div>
+    </div>
+
+    <div class="actions-row">
+      <button class="action-btn secondary">
+        <span class="material-icons">history</span> Patient History
+      </button>
+    </div>
+  </div>
+</div>
