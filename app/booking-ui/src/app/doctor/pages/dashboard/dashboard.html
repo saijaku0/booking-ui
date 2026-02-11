@@ -1,88 +1,103 @@
 <div class="dashboard-container">
+  <div class="page-header">
+    <div class="header-titles">
+      <h2>Dashboard</h2>
+      <p class="subtitle">Welcome back, {{ doctorFullName() }}</p>
+    </div>
+  </div>
+
   <div class="stats-grid">
     <div class="stat-card">
-      <div class="icon-box blue">
+      <div class="stat-icon blue">
         <span class="material-icons">people</span>
       </div>
-      <div class="stat-content">
-        <h3>Total Patients</h3>
-        <span class="value">{{ stats.totalPatients }}</span>
+      <div class="stat-info">
+        <span class="label">Total Patients</span>
+        <h3 class="value">{{ stats.totalPatients }}</h3>
       </div>
     </div>
 
     <div class="stat-card">
-      <div class="icon-box orange">
+      <div class="stat-icon orange">
         <span class="material-icons">event_note</span>
       </div>
-      <div class="stat-content">
-        <h3>Appointments</h3>
-        <span class="value">{{ stats.appointmentsToday }}</span>
+      <div class="stat-info">
+        <span class="label">Appointments</span>
+        <h3 class="value">{{ stats.appointmentsToday }}</h3>
+        <span class="trend neutral">Today</span>
       </div>
     </div>
 
     <div class="stat-card">
-      <div class="icon-box green">
+      <div class="stat-icon green">
         <span class="material-icons">payments</span>
       </div>
-      <div class="stat-content">
-        <h3>Earnings</h3>
-        <span class="value">$0</span>
+      <div class="stat-info">
+        <span class="label">Earnings</span>
+        <h3 class="value">$2,450</h3>
       </div>
     </div>
   </div>
 
   <div class="section-container">
     <div class="section-header">
-      <h2>Upcoming Appointments</h2>
-      <a href="#" class="view-all-btn">View All</a>
+      <h3>Upcoming Appointments</h3>
+      <a href="#" class="view-all-link">View All</a>
     </div>
 
-    <div class="table-responsive">
+    <div class="table-wrapper">
       <table class="appointments-table">
         <thead>
           <tr>
-            <th>Time</th>
-            <th>Patient</th>
-            <th>Date</th>
-            <th>Status</th>
-            <th>Action</th>
+            <th width="15%">Time</th>
+            <th width="35%">Patient</th>
+            <th width="20%">Date</th>
+            <th width="20%">Status</th>
+            <th width="10%" class="text-right">Action</th>
           </tr>
         </thead>
         <tbody>
           @if (isLoading()) {
             <tr>
-              <td colspan="5" style="text-align: center; padding: 30px; color: #888">Loading...</td>
+              <td colspan="5" class="empty-state">Loading...</td>
             </tr>
           } @else if (appointments().length === 0) {
             <tr>
-              <td colspan="5" style="text-align: center; padding: 30px; color: #888">
-                No appointments found.
-              </td>
+              <td colspan="5" class="empty-state">No appointments found.</td>
             </tr>
           } @else {
             @for (appt of appointments(); track appt.id) {
               <tr>
-                <td class="time">{{ appt.startTime | date: 'shortTime' }}</td>
-                <td class="patient">
-                  <div class="patient-info">
-                    <div class="avatar-circle">
-                      {{ appt.patientName || '?' }}
-                    </div>
+                <td class="time-cell">
+                  <span class="material-icons icon-clock">schedule</span>
+                  {{ appt.startTime | date: 'shortTime' }}
+                </td>
 
-                    <span class="name">
-                      {{ appt.patientName || 'Unknown Patient' }}
-                    </span>
+                <td>
+                  <div class="patient-profile">
+                    <div
+                      class="avatar-circle"
+                      [style.background-color]="generateColor(appt.patientName)"
+                    >
+                      {{ getInitials(appt.patientName) }}
+                    </div>
+                    <div class="patient-text">
+                      <span class="name">{{ appt.patientName }}</span>
+                    </div>
                   </div>
                 </td>
-                <td>{{ appt.startTime | date: 'mediumDate' }}</td>
+
+                <td class="date-cell">{{ appt.startTime | date: 'mediumDate' }}</td>
+
                 <td>
-                  <span class="status-badge" [class]="getStatusClass(appt.status).toLowerCase()">
+                  <span class="status-badge" [class]="appt.status.toLowerCase()">
                     {{ appt.status }}
                   </span>
                 </td>
-                <td>
+
+                <td class="text-right">
                   <button class="action-btn">
-                    <span class="material-icons">more_vert</span>
+                    <span class="material-icons">more_horiz</span>
                   </button>
                 </td>
               </tr>
