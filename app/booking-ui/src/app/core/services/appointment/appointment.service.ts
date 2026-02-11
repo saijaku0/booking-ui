@@ -30,4 +30,8 @@ export class AppointmentService {
   completeAppointment(id: string, medicalNotes: string) {
     return this.http.post<void>(`${this.apiUrl}/${id}/complete`, { medicalNotes });
   }
+
+  cancelAppointment(id: string) {
+    return this.http.delete<void>(`${this.apiUrl}/${id}`);
+  }
 }

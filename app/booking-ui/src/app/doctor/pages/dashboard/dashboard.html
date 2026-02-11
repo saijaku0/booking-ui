@@ -1,8 +1,14 @@
-<div class="dashboard-container">
+<div
+  class="dashboard-container"
+  role="button"
+  tabindex="0"
+  (click)="closeMenu()"
+  (keydown.enter)="closeMenu()"
+>
   <div class="page-header">
     <div class="header-titles">
       <h2>Dashboard</h2>
-      <p class="subtitle">Welcome back, {{ doctorFullName() }}</p>
+      <p class="subtitle">Welcome back, Dr. {{ doctorFullName() }}</p>
     </div>
   </div>
 
@@ -41,8 +47,40 @@
 
   <div class="section-container">
     <div class="section-header">
-      <h3>Upcoming Appointments</h3>
-      <a href="#" class="view-all-link">View All</a>
+      <div class="header-left">
+        <h3>Upcoming Appointments</h3>
+        <span class="count-badge">{{ filteredAppointments().length }}</span>
+      </div>
+
+      <div class="table-controls">
+        <div
+          class="search-box"
+          role="status"
+          tabindex="-1"
+          (click)="$event.stopPropagation()"
+          (keydown)="$event.stopPropagation()"
+        >
+          <span class="material-icons">search</span>
+          <input
+            type="text"
+            placeholder="Search patient..."
+            [value]="searchQuery()"
+            (input)="onSearch($event)"
+          />
+        </div>
+
+        <div class="filter-tabs">
+          @for (filter of filterOptions(); track filter) {
+            <button
+              [class.active]="statusFilter() === filter"
+              (click)="updateFilter(filter, $event)"
+              style="text-transform: capitalize"
+            >
+              {{ filter }}
+            </button>
+          }
+        </div>
+      </div>
     </div>
 
     <div class="table-wrapper">
@@ -61,12 +99,12 @@
             <tr>
               <td colspan="5" class="empty-state">Loading...</td>
             </tr>
-          } @else if (appointments().length === 0) {
+          } @else if (filteredAppointments().length === 0) {
             <tr>
-              <td colspan="5" class="empty-state">No appointments found.</td>
+              <td colspan="5" class="empty-state">No appointments found matching your filters.</td>
             </tr>
           } @else {
-            @for (appt of appointments(); track appt.id) {
+            @for (appt of filteredAppointments(); track appt.id) {
               <tr>
                 <td class="time-cell">
                   <span class="material-icons icon-clock">schedule</span>
@@ -95,10 +133,37 @@
                   </span>
                 </td>
 
-                <td class="text-right">
-                  <button class="action-btn">
-                    <span class="material-icons">more_horiz</span>
-                  </button>
+                <td class="text-right action-cell">
+                  <div class="action-menu-container">
+                    <button class="action-btn" (click)="toggleMenu(appt.id.toString(), $event)">
+                      <span class="material-icons">more_horiz</span>
+                    </button>
+
+                    @if (activeMenuId() === appt.id.toString()) {
+                      <div
+                        class="dropdown-menu"
+                        (click)="$event.stopPropagation()"
+                        role="dropdown-menu"
+                        tabindex="-1"
+                        (click)="$event.stopPropagation()"
+                        (keydown)="$event.stopPropagation()"
+                      >
+                        <button (click)="performAction('view', appt.id.toString())">
+                          <span class="material-icons">visibility</span> View Details
+                        </button>
+                        <button (click)="performAction('reschedule', appt.id.toString())">
+                          <span class="material-icons">edit_calendar</span> Reschedule
+                        </button>
+                        <div class="divider"></div>
+                        <button
+                          class="danger"
+                          (click)="performAction('cancel', appt.id.toString())"
+                        >
+                          <span class="material-icons">cancel</span> Cancel
+                        </button>
+                      </div>
+                    }
+                  </div>
                 </td>
               </tr>
             }

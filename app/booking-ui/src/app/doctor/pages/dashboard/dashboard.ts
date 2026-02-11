@@ -14,8 +14,13 @@ export class Dashboard {
   private appointmentService = inject(AppointmentService);
   private doctorService = inject(DoctorService);
 
+  readonly filterOptions = signal(['all', 'Pending', 'Confirmed', 'Canceled', 'Completed']);
+
   appointments = signal<AppointmentDto[]>([]);
   isLoading = signal(true);
+  searchQuery = signal('');
+  statusFilter = signal('all');
+  activeMenuId = signal<string | null>(null);
 
   stats = {
     totalPatients: 0,
@@ -31,6 +36,18 @@ export class Dashboard {
     return 'Doctor';
   });
 
+  filteredAppointments = computed(() => {
+    const all = this.appointments();
+    const query = this.searchQuery().toLowerCase();
+    const filter = this.statusFilter();
+
+    return all.filter((a) => {
+      const matchesName = (a.patientName || '').toLowerCase().includes(query);
+      const matchesStatus = filter === 'all' ? true : a.status === filter;
+      return matchesName && matchesStatus;
+    });
+  });
+
   constructor() {
     effect(() => {
       const doctorId = this.doctorService.currentDoctorId();
@@ -39,6 +56,64 @@ export class Dashboard {
         this.loadSchedule(doctorId);
       }
     });
+  }
+
+  setFilter(filter: string) {
+    this.statusFilter.set(filter);
+    this.activeMenuId.set(null);
+  }
+
+  updateFilter(filter: string, event: Event) {
+    event.stopPropagation();
+    this.setFilter(filter);
+  }
+
+  onSearch(event: Event) {
+    const input = event.target as HTMLInputElement;
+    this.searchQuery.set(input.value);
+  }
+
+  toggleMenu(id: string, event: Event) {
+    event.stopPropagation();
+    if (this.activeMenuId() === id) {
+      this.activeMenuId.set(null);
+    } else {
+      this.activeMenuId.set(id);
+    }
+  }
+
+  closeMenu() {
+    this.activeMenuId.set(null);
+  }
+
+  performAction(action: string, id: string) {
+    this.closeMenu();
+
+    if (action === 'cancel') {
+      if (!confirm('Are you sure you want to cancel this appointment?')) {
+        return;
+      }
+
+      this.appointmentService.cancelAppointment(id).subscribe({
+        next: () => {
+          this.appointments.update((currentList) =>
+            currentList.map((appt) => {
+              if (appt.id === id) {
+                return { ...appt, status: AppointmentStatus.Canceled };
+              }
+              return appt;
+            }),
+          );
+        },
+        error: (err) => {
+          console.error('Failed to cancel', err);
+          alert('Error cancelling appointment');
+        },
+      });
+    }
+    if (action === 'view') {
+      console.log('Open details for', id);
+    }
   }
 
   getInitials(name: string): string {
@@ -103,7 +178,7 @@ export class Dashboard {
     switch (status) {
       case AppointmentStatus.Confirmed:
         return 'confirmed';
-      case AppointmentStatus.Scheduled:
+      case AppointmentStatus.Pending:
         return 'pending';
       case AppointmentStatus.Canceled:
         return 'cancelled';
