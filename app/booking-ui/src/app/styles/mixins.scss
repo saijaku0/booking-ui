@@ -1,0 +1,26 @@
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+}
+
+@mixin button-base($bg, $color, $padding: 0.5rem 1.5rem) {
+  @include flex-center;
+  justify-content: center;
+  background-color: var($bg);
+  color: var($color);
+  border: none;
+  padding: $padding;
+  border-radius: 10px;
+  font-weight: 500;
+  cursor: pointer;
+  transition:
+    opacity 0.2s,
+    transform 0.1s;
+  text-decoration: none;
+  &:hover {
+    opacity: 0.9;
+  }
+  &:active {
+    transform: scale(0.98);
+  }
+}

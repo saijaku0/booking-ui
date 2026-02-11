@@ -1,164 +1,128 @@
-/* --- Mixins --- */
-@mixin button-base($bg, $color, $padding: 0.5rem 1.5rem) {
-  background-color: var($bg);
-  color: var($color);
-  border: none;
-  padding: $padding;
-  border-radius: 10px;
-  font-weight: 500;
-  cursor: pointer;
-  transition:
-    opacity 0.2s,
-    transform 0.1s;
-  text-decoration: none;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-
-  &:hover {
-    opacity: 0.9;
-  }
-  &:active {
-    transform: scale(0.98);
-  }
-}
+@use '../../../styles/mixins.scss' as *;
+@use '../../../styles/variables.scss' as *;
 
 .header {
-  display: flex;
+  @include flex-center;
   justify-content: space-between;
-  align-items: center;
   position: sticky;
   top: 0;
   z-index: 1000;
   height: 4rem;
   padding: 0 1.5rem;
-
   background: color-mix(in srgb, var(--mat-sys-surface-container-low), transparent 20%);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 
-  @media (max-width: 768px) {
+  @media ($mobile) {
     position: fixed;
     width: 100%;
     box-sizing: border-box;
   }
 }
 
-a {
+a,
+.nav-link,
+button.nav-link {
+  display: flex;
+  align-items: center;
+  padding: 0;
   text-decoration: none;
+  color: var(--mat-sys-on-surface-variant);
+  font-weight: 500;
+  transition: color 0.2s;
+  &:hover,
+  &.active {
+    color: var(--mat-sys-primary);
+  }
 }
 
 .logo h1 {
   margin: 0;
   font-size: 1.5rem;
   font-weight: 500;
-  letter-spacing: -0.5px;
   color: var(--mat-sys-on-surface);
 }
 
 .navigation-bar {
-  display: flex;
-  align-items: center;
+  @include flex-center;
   margin: 0 auto;
 
-  @media (max-width: 768px) {
+  @media ($mobile) {
     position: fixed;
     top: 0;
     right: -100%;
     width: 280px;
     height: 100dvh;
-    background-color: var(--mat-sys-surface);
-    box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
+    background: var(--mat-sys-surface);
     flex-direction: column;
     align-items: flex-start;
     padding-top: 5rem;
-    transition: right 0.3s ease-in-out;
-
+    transition: right 0.3s ease;
+    z-index: 1200;
     &.open {
       right: 0;
+      box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
     }
   }
 }
 
 .nav-links {
+  @include flex-center;
   list-style: none;
-  display: flex;
-  align-items: center;
   gap: 2rem;
   padding: 0;
-  margin: 0;
 
-  a,
   button {
-    text-decoration: none;
-    color: var(--mat-sys-on-surface-variant);
-    font-weight: 500;
     background: none;
     border: none;
-    font-size: 1rem;
+    font: inherit;
     cursor: pointer;
-    font-family: inherit;
-    transition: color 0.2s;
-
-    &:hover,
-    &.active {
-      color: var(--mat-sys-primary);
-    }
   }
 
-  .arrow-icon {
-    font-size: 18px;
-    vertical-align: middle;
-  }
-
-  @media (max-width: 768px) {
+  @media ($mobile) {
     flex-direction: column;
     width: 100%;
-    align-items: flex-start;
     padding: 0 20px;
-
-    .dropdown-container {
-      width: 100%;
-    }
-
+    align-items: flex-start;
+    .dropdown-container,
     .dropdown-trigger {
       width: 100%;
-      justify-content: space-between;
       display: flex;
-      padding: 0;
+      justify-content: space-between;
     }
-  }
-}
-
-.auth-buttons {
-  display: flex;
-  gap: 0.5rem;
-  @media (max-width: 768px) {
-    display: flex;
-    flex-direction: column;
   }
 }
 
 .desktop-actions {
-  @media (max-width: 768px) {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+
+  @media ($mobile) {
     display: none;
   }
 }
 
 .mobile-actions {
   display: none;
-  .btn-login,
-  .btn-signup {
-    width: 100%;
-  }
 
-  @media (max-width: 768px) {
+  @media ($mobile) {
     display: flex;
     flex-direction: column;
     width: 100%;
     padding: 20px;
-    margin-top: auto;
+    gap: 0.5rem;
+  }
+}
+
+.auth-buttons {
+  display: flex;
+  gap: 0.5rem;
+
+  @media ($mobile) {
+    flex-direction: column;
+    width: 100%;
   }
 }
 
@@ -170,10 +134,8 @@ a {
 }
 
 .user-panel {
-  display: flex;
-  align-items: center;
+  @include flex-center;
   gap: 12px;
-
   &.mobile-user {
     flex-direction: column;
     align-items: flex-start;
@@ -185,10 +147,8 @@ a {
 }
 
 .user-info {
-  display: flex;
-  align-items: center;
+  @include flex-center;
   gap: 10px;
-
   .avatar {
     width: 36px;
     height: 36px;
@@ -199,7 +159,6 @@ a {
     place-items: center;
     font-weight: bold;
   }
-
   .details {
     display: flex;
     flex-direction: column;
@@ -216,16 +175,13 @@ a {
 }
 
 .crm-link {
-  display: flex;
-  align-items: center;
+  @include flex-center;
   gap: 8px;
   padding: 8px 16px;
   background: var(--mat-sys-primary-container);
   color: var(--mat-sys-on-primary-container);
   border-radius: 20px;
-  text-decoration: none;
   font-weight: 600;
-
   .mobile-user & {
     width: 100%;
     justify-content: center;
@@ -234,15 +190,13 @@ a {
 }
 
 .logout-btn {
-  background: none;
-  border: none;
-  cursor: pointer;
-  color: #d32f2f;
-  display: flex;
-  align-items: center;
+  @include flex-center;
   gap: 8px;
   padding: 8px;
-
+  background: none;
+  border: none;
+  color: #d32f2f;
+  cursor: pointer;
   .mobile-user & {
     width: 100%;
     justify-content: center;
@@ -252,70 +206,32 @@ a {
   }
 }
 
-.hamburger-btn {
-  display: none;
-  background: none;
-  border: none;
-  cursor: pointer;
-  color: var(--mat-sys-on-surface);
-
-  @media (max-width: 768px) {
-    display: block;
-    z-index: 1100;
-  }
-}
-
 .mega-menu-panel {
   position: absolute;
   top: 100%;
   left: 0;
   width: 100%;
-  background-color: #ffffff;
-  border-top: 1px solid #e0e0e0;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  background: #fff;
   padding: 32px 28px;
   z-index: 1100;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
   animation: slideDown 0.2s ease-out;
 
   .mobile-menu-header {
     display: none;
-
-    @media (max-width: 768px) {
-      display: flex;
-      align-items: center;
+    @media ($mobile) {
+      @include flex-center;
       justify-content: space-between;
       position: sticky;
       top: 0;
-      z-index: 10;
-
+      background: #fff;
       padding: 16px;
       border-bottom: 1px solid #eee;
-      margin-bottom: 16px;
-
-      h3 {
-        margin: 0;
-        font-size: 1.1rem;
-        font-weight: 600;
-        color: #333;
-      }
-
       button {
         background: none;
         border: none;
-        padding: 8px;
         display: flex;
-        align-items: center;
-        justify-content: center;
         color: #555;
-        border-radius: 50%;
-
-        &:hover {
-          background-color: #f5f5f5;
-        }
-
-        .material-icons {
-          font-size: 24px;
-        }
       }
     }
   }
@@ -324,35 +240,23 @@ a {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
     gap: 16px;
-    padding: 0 24px;
-    margin: 0 auto;
-
     a {
-      text-decoration: none;
       color: #333;
-      font-weight: 500;
       padding: 8px 0;
       display: block;
-      transition: color 0.2s;
-
       &:hover {
-        color: var(--mat-sys-primary, #1976d2);
-        text-decoration: underline;
+        color: var(--mat-sys-primary);
       }
     }
   }
 
-  @media (max-width: 768px) {
+  @media ($mobile) {
     position: fixed;
     top: 0;
     height: 100vh;
     overflow-y: auto;
     z-index: 2000;
     padding-top: 80px;
-
-    .menu-content {
-      padding: 0 16px 40px 16px;
-    }
     .specialties-grid {
       grid-template-columns: 1fr;
       a {
@@ -363,31 +267,32 @@ a {
   }
 }
 
-.mega-menu-backdrop {
+.mega-menu-backdrop,
+.overlay {
   position: fixed;
-  top: 64px;
   left: 0;
   width: 100vw;
-  height: calc(100vh - 64px);
-  background-color: rgba(0, 0, 0, 0.4);
+  background: rgba(0, 0, 0, 0.4);
   backdrop-filter: blur(4px);
-  z-index: -1;
-  cursor: default;
+}
 
-  @media (max-width: 768px) {
+.mega-menu-backdrop {
+  top: 64px;
+  height: calc(100vh - 64px);
+  z-index: -1;
+  @media ($mobile) {
     display: none;
   }
 }
 
 .overlay {
   display: none;
-  @media (max-width: 768px) {
+  @media ($mobile) {
     display: block;
-    position: fixed;
     inset: 0;
-    background-color: rgba(0, 0, 0, 0.5);
-    backdrop-filter: blur(2px);
     z-index: 900;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(2px);
   }
 }
 
@@ -399,5 +304,17 @@ a {
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+.hamburger-btn {
+  display: none;
+  background: none;
+  border: none;
+  color: var(--mat-sys-on-surface);
+  @media ($mobile) {
+    display: block;
+    z-index: 1100;
+    cursor: pointer;
   }
 }
