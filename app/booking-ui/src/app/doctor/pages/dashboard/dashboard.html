@@ -1,9 +1,8 @@
 <div
   class="dashboard-container"
-  role="button"
-  tabindex="0"
-  (click)="closeMenu()"
-  (keydown.enter)="closeMenu()"
+  (click)="closeAllMenus()"
+  (keydown.escape)="closeAllMenus()"
+  tabindex="-1"
 >
   <div class="page-header">
     <div class="header-titles">
@@ -12,38 +11,7 @@
     </div>
   </div>
 
-  <div class="stats-grid">
-    <div class="stat-card">
-      <div class="stat-icon blue">
-        <span class="material-icons">people</span>
-      </div>
-      <div class="stat-info">
-        <span class="label">Total Patients</span>
-        <h3 class="value">{{ stats.totalPatients }}</h3>
-      </div>
-    </div>
-
-    <div class="stat-card">
-      <div class="stat-icon orange">
-        <span class="material-icons">event_note</span>
-      </div>
-      <div class="stat-info">
-        <span class="label">Appointments</span>
-        <h3 class="value">{{ stats.appointmentsToday }}</h3>
-        <span class="trend neutral">Today</span>
-      </div>
-    </div>
-
-    <div class="stat-card">
-      <div class="stat-icon green">
-        <span class="material-icons">payments</span>
-      </div>
-      <div class="stat-info">
-        <span class="label">Earnings</span>
-        <h3 class="value">$2,450</h3>
-      </div>
-    </div>
-  </div>
+  <app-stats-cards [stats]="stats"></app-stats-cards>
 
   <div class="section-container">
     <div class="section-header">
@@ -55,10 +23,9 @@
       <div class="table-controls">
         <div
           class="search-box"
-          role="status"
-          tabindex="-1"
           (click)="$event.stopPropagation()"
           (keydown)="$event.stopPropagation()"
+          tabindex="-1"
         >
           <span class="material-icons">search</span>
           <input
@@ -83,106 +50,10 @@
       </div>
     </div>
 
-    <div class="table-wrapper">
-      <table class="appointments-table">
-        <thead>
-          <tr>
-            <th width="15%">Time</th>
-            <th width="35%">Patient</th>
-            <th width="20%">Date</th>
-            <th width="20%">Status</th>
-            <th width="10%" class="text-right">Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          @if (isLoading()) {
-            <tr>
-              <td colspan="5" class="empty-state">Loading...</td>
-            </tr>
-          } @else if (filteredAppointments().length === 0) {
-            <tr>
-              <td colspan="5" class="empty-state">No appointments found matching your filters.</td>
-            </tr>
-          } @else {
-            @for (appt of filteredAppointments(); track appt.id) {
-              <tr>
-                <td class="time-cell">
-                  <span class="material-icons icon-clock">schedule</span>
-                  {{ appt.startTime | date: 'shortTime' }}
-                </td>
-
-                <td>
-                  <div class="patient-profile">
-                    <div
-                      class="avatar-circle"
-                      [style.background-color]="generateColor(appt.patientName)"
-                    >
-                      {{ getInitials(appt.patientName) }}
-                    </div>
-                    <div class="patient-text">
-                      <span class="name">{{ appt.patientName }}</span>
-                    </div>
-                  </div>
-                </td>
-
-                <td class="date-cell">{{ appt.startTime | date: 'mediumDate' }}</td>
-
-                <td>
-                  <span class="status-badge" [class]="appt.status.toLowerCase()">
-                    {{ appt.status }}
-                  </span>
-                </td>
-
-                <td class="text-right action-cell">
-                  <div class="action-menu-container">
-                    <button class="action-btn" (click)="toggleMenu(appt.id.toString(), $event)">
-                      <span class="material-icons">more_horiz</span>
-                    </button>
-
-                    @if (activeMenuId() === appt.id.toString()) {
-                      <div
-                        class="dropdown-menu"
-                        (click)="$event.stopPropagation()"
-                        role="dropdown-menu"
-                        tabindex="-1"
-                        (click)="$event.stopPropagation()"
-                        (keydown)="$event.stopPropagation()"
-                      >
-                        <button (click)="performAction('view', appt.id.toString())">
-                          <span class="material-icons">visibility</span> View Details
-                        </button>
-                        <button (click)="performAction('reschedule', appt.id.toString())">
-                          <span class="material-icons">edit_calendar</span> Reschedule
-                        </button>
-                        <div class="divider"></div>
-                        @if (appt.status.toLowerCase() === 'pending') {
-                          <button (click)="performAction('confirm', appt.id.toString())">
-                            <span class="material-icons">check_circle</span> Confirm
-                          </button>
-                        }
-                        @if (appt.status.toLowerCase() === 'confirmed') {
-                          <button
-                            class="success"
-                            (click)="performAction('complete', appt.id.toString())"
-                          >
-                            <span class="material-icons">done_all</span> Complete
-                          </button>
-                        }
-                        <button
-                          class="danger"
-                          (click)="performAction('cancel', appt.id.toString())"
-                        >
-                          <span class="material-icons">cancel</span> Cancel
-                        </button>
-                      </div>
-                    }
-                  </div>
-                </td>
-              </tr>
-            }
-          }
-        </tbody>
-      </table>
-    </div>
+    <app-appointments-table
+      [appointments]="filteredAppointments()"
+      [isLoading]="isLoading()"
+      (action)="handleTableAction($event)"
+    ></app-appointments-table>
   </div>
 </div>

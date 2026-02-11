@@ -1,26 +1,27 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, effect, inject, signal } from '@angular/core';
+import { Component, computed, effect, inject, signal, ViewChild } from '@angular/core';
 import { AppointmentService, DoctorService } from '@core/services/index';
 import { AppointmentDto, AppointmentStatus } from '@core/models/appointmnet.models';
+import { StatsCards } from '../../components/stats-cards/stats-cards';
+import { AppointmentsTable } from '../../components/appointments-table/appointments-table';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, StatsCards, AppointmentsTable],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.scss',
 })
 export class Dashboard {
   private appointmentService = inject(AppointmentService);
   private doctorService = inject(DoctorService);
-
-  readonly filterOptions = signal(['all', 'Pending', 'Confirmed', 'Canceled', 'Completed']);
+  readonly filterOptions = signal(['all', 'pending', 'confirmed', 'canceled', 'completed']);
+  @ViewChild(AppointmentsTable) appointmentsTable!: AppointmentsTable;
 
   appointments = signal<AppointmentDto[]>([]);
   isLoading = signal(true);
   searchQuery = signal('');
   statusFilter = signal('all');
-  activeMenuId = signal<string | null>(null);
 
   stats = {
     totalPatients: 0,
@@ -39,11 +40,11 @@ export class Dashboard {
   filteredAppointments = computed(() => {
     const all = this.appointments();
     const query = this.searchQuery().toLowerCase();
-    const filter = this.statusFilter();
+    const filter = this.statusFilter().toLowerCase();
 
     return all.filter((a) => {
       const matchesName = (a.patientName || '').toLowerCase().includes(query);
-      const matchesStatus = filter === 'all' ? true : a.status === filter;
+      const matchesStatus = filter === 'all' ? true : a.status.toLowerCase() === filter;
       return matchesName && matchesStatus;
     });
   });
@@ -60,7 +61,12 @@ export class Dashboard {
 
   setFilter(filter: string) {
     this.statusFilter.set(filter);
-    this.activeMenuId.set(null);
+  }
+
+  closeAllMenus() {
+    if (this.appointmentsTable) {
+      this.appointmentsTable.closeMenu();
+    }
   }
 
   updateFilter(filter: string, event: Event) {
@@ -73,32 +79,19 @@ export class Dashboard {
     this.searchQuery.set(input.value);
   }
 
-  toggleMenu(id: string, event: Event) {
-    event.stopPropagation();
-    if (this.activeMenuId() === id) {
-      this.activeMenuId.set(null);
-    } else {
-      this.activeMenuId.set(id);
-    }
-  }
+  handleTableAction(event: { type: string; id: string }) {
+    const { type, id } = event;
 
-  closeMenu() {
-    this.activeMenuId.set(null);
-  }
-
-  performAction(action: string, id: string) {
-    this.closeMenu();
-
-    if (action === 'view') {
+    if (type === 'view') {
       console.log('Open details for', id);
     }
-    if (action === 'cancel') {
+    if (type === 'cancel') {
       this.cancelAppointment(id);
     }
-    if (action === 'confirm') {
+    if (type === 'confirm') {
       this.confirmAppointment(id);
     }
-    if (action === 'complete') {
+    if (type === 'complete') {
       this.completeAppointment(id);
     }
   }
@@ -170,44 +163,6 @@ export class Dashboard {
     });
   }
 
-  getInitials(name: string): string {
-    if (!name) return '';
-    const parts = name.split(' ');
-    if (parts.length === 1) return parts[0].substring(0, 2).toUpperCase();
-    return (parts[0][0] + parts[1][0]).toUpperCase();
-  }
-
-  generateColor(name: string | undefined): string {
-    if (!name) return '#e0e0e0';
-
-    const colors = [
-      '#FFCDD2',
-      '#F8BBD0',
-      '#E1BEE7',
-      '#D1C4E9',
-      '#C5CAE9',
-      '#BBDEFB',
-      '#B3E5FC',
-      '#B2EBF2',
-      '#B2DFDB',
-      '#C8E6C9',
-      '#DCEDC8',
-      '#F0F4C3',
-      '#FFECB3',
-      '#FFE0B2',
-      '#FFCCBC',
-    ];
-
-    let hash = 0;
-    for (let i = 0; i < name.length; i++) {
-      hash = name.charCodeAt(i) + ((hash << 5) - hash);
-    }
-
-    const index = Math.abs(hash % colors.length);
-
-    return colors[index];
-  }
-
   loadSchedule(doctorId: string) {
     this.isLoading.set(true);
     this.appointmentService.getDoctorSchedule(doctorId).subscribe({
@@ -226,20 +181,5 @@ export class Dashboard {
     const today = new Date().toISOString().split('T')[0];
     this.stats.appointmentsToday = data.filter((a) => a.startTime.startsWith(today)).length;
     this.stats.totalPatients = data.length;
-  }
-
-  getStatusClass(status: AppointmentStatus): string {
-    switch (status) {
-      case AppointmentStatus.Confirmed:
-        return 'confirmed';
-      case AppointmentStatus.Pending:
-        return 'pending';
-      case AppointmentStatus.Canceled:
-        return 'cancelled';
-      case AppointmentStatus.Completed:
-        return 'completed';
-      default:
-        return '';
-    }
   }
 }
