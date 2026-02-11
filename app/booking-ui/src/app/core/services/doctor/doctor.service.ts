@@ -11,6 +11,7 @@ export class DoctorService {
   private http = inject(HttpClient);
   private apiUrl = `${environment.apiUrl}/Doctors`;
 
+  currentDoctor = signal<DoctorDto | null>(null);
   currentDoctorId = signal<string | null>(null);
 
   getDoctors() {
@@ -44,7 +45,13 @@ export class DoctorService {
     return this.getDoctors().pipe(
       map((doctors) => {
         const found = doctors.find((d) => d.userId?.toLowerCase() === authUserId.toLowerCase());
-        return found ? found.id : null;
+
+        if (found) {
+          this.currentDoctor.set(found);
+          return found.id;
+        }
+
+        return null;
       }),
       tap((id) => {
         if (id) {
