@@ -61,6 +61,6 @@
 <app-completion-modal
   [isOpen]="isCompleteModalOpen()"
   [patientName]="selectedAppointmentForCompletion()?.name || ''"
-  (close)="closeCompleteModal()"
+  (closeModal)="closeCompleteModal()"
   (confirm)="onModalConfirm($any($event))"
 ></app-completion-modal>

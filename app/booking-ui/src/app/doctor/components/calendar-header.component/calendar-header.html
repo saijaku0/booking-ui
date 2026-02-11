@@ -1,0 +1,14 @@
+<div class="calendar-header-container">
+  <div class="month-title">
+    <h2>{{ viewDate | date: 'MMMM yyyy' }}</h2>
+  </div>
+
+  <div class="nav-buttons">
+    <button class="btn-nav" (click)="prev.emit()">
+      <span class="material-icons">chevron_left</span> Previous
+    </button>
+    <button class="btn-nav" (click)="next.emit()">
+      Next <span class="material-icons">chevron_right</span>
+    </button>
+  </div>
+</div>

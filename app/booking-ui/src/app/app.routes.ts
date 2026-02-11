@@ -10,6 +10,7 @@ import { AdminLayout } from './admin/layout/admin-layout/admin-layout';
 import { DoctorLayout } from './doctor/layout/doctor-layout/doctor-layout';
 import { SpecialtiesComponent } from './admin/pages/specialties/specialties';
 import { AdminDashboard } from './admin/pages/admin-dashboard/admin-dashboard';
+import { DoctorCalendarComponent } from './doctor/pages/doctor-calendar/doctor-calendar';
 
 export const routes: Routes = [
   { path: '', component: Home },
@@ -29,6 +30,7 @@ export const routes: Routes = [
     children: [
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
       { path: 'dashboard', component: Dashboard },
+      { path: 'calendar', component: DoctorCalendarComponent },
     ],
   },
   {

@@ -1,0 +1,21 @@
+<div class="calendar-container">
+  <app-calendar-header
+    [viewDate]="viewDate"
+    (next)="changeMonth(1)"
+    (prev)="changeMonth(-1)"
+  ></app-calendar-header>
+
+  <app-calendar-grid
+    [days]="calendarDays"
+    [loading]="loading"
+    [selectedId]="selectedAppointment()?.id"
+    (selectAppointment)="onAppointmentSelect($event)"
+  ></app-calendar-grid>
+
+  @if (selectedAppointment(); as appt) {
+    <app-appointment-details
+      [appointment]="appt"
+      (closeDetails)="closeDetails()"
+    ></app-appointment-details>
+  }
+</div>

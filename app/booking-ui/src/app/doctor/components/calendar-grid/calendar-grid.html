@@ -1,0 +1,49 @@
+<div class="calendar-grid-container">
+  <div class="grid-header">
+    @for (day of weekDays; track day) {
+      <div class="weekday">{{ day }}</div>
+    }
+  </div>
+
+  <div class="grid-body">
+    @if (loading) {
+      <div class="loading-overlay">
+        <div class="spinner"></div>
+        <span>Loading...</span>
+      </div>
+    }
+
+    @for (day of days; track day.date) {
+      <div class="day-cell" [class.other-month]="!day.isCurrentMonth">
+        <span class="day-number" [class.today]="isToday(day.date)">
+          {{ day.date | date: 'd' }}
+        </span>
+
+        <div class="appointments-list">
+          @for (appt of day.appointments; track appt.id) {
+            <div
+              class="appt-badge"
+              [class.selected]="selectedId === appt.id"
+              (click)="$event.stopPropagation(); selectAppointment.emit(appt)"
+              [title]="
+                (appt.patientName || 'Patient') + ' (' + (appt.startTime | date: 'shortTime') + ')'
+              "
+              (keydown)="selectAppointment.emit(appt)"
+              (keyup)="selectAppointment.emit(appt)"
+              tabindex="0"
+            >
+              <span class="time">{{ appt.startTime | date: 'HH:mm' }}</span>
+              <span class="name">
+                @if (appt.patientName) {
+                  {{ appt.patientName }}
+                } @else {
+                  #{{ appt.customerId | slice: 0 : 5 }}
+                }
+              </span>
+            </div>
+          }
+        </div>
+      </div>
+    }
+  </div>
+</div>
