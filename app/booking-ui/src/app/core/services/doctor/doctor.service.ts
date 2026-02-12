@@ -2,7 +2,12 @@ import { environment } from '@env/environment';
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable, signal } from '@angular/core';
 import { map, Observable, tap, catchError, of } from 'rxjs';
-import { CreateDoctorRequest, DoctorDetailsDto, DoctorDto } from '@core/models/doctor.model';
+import {
+  CreateDoctorRequest,
+  DoctorDetailsDto,
+  DoctorDto,
+  DoctorStatsDto,
+} from '@core/models/doctor.model';
 
 @Injectable({
   providedIn: 'root',
@@ -62,5 +67,9 @@ export class DoctorService {
         return of(null);
       }),
     );
+  }
+
+  getDoctorStats(doctorId: string, period: string) {
+    return this.http.get<DoctorStatsDto>(`${this.apiUrl}/${doctorId}/stats?period=${period}`);
   }
 }

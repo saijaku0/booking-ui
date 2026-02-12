@@ -10,7 +10,8 @@ import { Component, Input } from '@angular/core';
 export class StatsCards {
   @Input({ required: true }) stats!: {
     totalPatients: number;
-    appointmentsToday: number;
-    earnings: number;
+    completedAppointments: number;
+    totalEarnings: number;
+    appointmentsToday?: number;
   };
 }

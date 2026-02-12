@@ -11,7 +11,16 @@
     </div>
   </div>
 
-  <app-stats-cards [stats]="stats"></app-stats-cards>
+  <div class="stats-controls">
+    @for (period of periods; track period) {
+      <button [class.active]="selectedPeriod() === period" (click)="loadStats(period)">
+        {{ period }}
+      </button>
+    }
+  </div>
+  @if (stats(); as s) {
+    <app-stats-cards [stats]="s"></app-stats-cards>
+  }
 
   <div class="section-container">
     <div class="section-header">

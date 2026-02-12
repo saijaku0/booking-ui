@@ -1,32 +1,25 @@
 <div class="stats-grid">
   <div class="stat-card">
-    <div class="stat-icon blue">
-      <span class="material-icons">people</span>
-    </div>
-    <div class="stat-info">
-      <span class="label">Total Patients</span>
-      <h3 class="value">{{ stats.totalPatients }}</h3>
+    <span class="label">Total Earnings</span>
+    <div class="value">
+      {{ stats.totalEarnings | currency: 'EUR' : 'symbol' : '1.2-2' }}
     </div>
   </div>
 
   <div class="stat-card">
-    <div class="stat-icon orange">
-      <span class="material-icons">event_note</span>
-    </div>
-    <div class="stat-info">
-      <span class="label">Appointments</span>
-      <h3 class="value">{{ stats.appointmentsToday }}</h3>
-      <span class="trend neutral">Today</span>
-    </div>
+    <span class="label">Total Patients</span>
+    <div class="value">{{ stats.totalPatients }}</div>
   </div>
 
   <div class="stat-card">
-    <div class="stat-icon green">
-      <span class="material-icons">payments</span>
-    </div>
-    <div class="stat-info">
-      <span class="label">Earnings</span>
-      <h3 class="value">$2,450</h3>
-    </div>
+    <span class="label">Completed</span>
+    <div class="value">{{ stats.completedAppointments }}</div>
   </div>
+
+  @if (stats.appointmentsToday !== undefined) {
+    <div class="stat-card today">
+      <span class="label">Appointments Today</span>
+      <div class="value">{{ stats.appointmentsToday }}</div>
+    </div>
+  }
 </div>

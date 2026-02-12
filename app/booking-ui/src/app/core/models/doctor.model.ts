@@ -38,3 +38,10 @@ export interface CreateDoctorRequest {
   bio?: string | null;
   imageUrl?: string | null;
 }
+
+export interface DoctorStatsDto {
+  totalPatients: number;
+  completedAppointments: number;
+  totalEarnings: number;
+  period: string;
+}
