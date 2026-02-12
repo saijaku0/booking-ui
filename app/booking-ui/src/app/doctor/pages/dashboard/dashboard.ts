@@ -5,6 +5,8 @@ import { AppointmentDto, AppointmentStatus } from '@core/models/appointmnet.mode
 import { StatsCards } from '../../components/stats-cards/stats-cards';
 import { AppointmentsTable } from '../../components/appointments-table/appointments-table';
 import { AppointmentCompletionModal } from '../../components/appointment-completion-modal/appointment-completion-modal';
+import { DoctorStatsDto } from '@core/models/doctor.model';
+import { finalize } from 'rxjs/internal/operators/finalize';
 
 @Component({
   selector: 'app-dashboard',
@@ -17,20 +19,18 @@ export class Dashboard {
   private appointmentService = inject(AppointmentService);
   private doctorService = inject(DoctorService);
   readonly filterOptions = signal(['all', 'pending', 'confirmed', 'canceled', 'completed']);
+  readonly periods = ['Day', 'Week', 'Month'];
   @ViewChild(AppointmentsTable) appointmentsTable!: AppointmentsTable;
   isCompleteModalOpen = signal(false);
   selectedAppointmentForCompletion = signal<{ id: string; name: string } | null>(null);
 
   appointments = signal<AppointmentDto[]>([]);
+  selectedPeriod = signal<string>('Day');
+  stats = signal<DoctorStatsDto | null>(null);
+  isLoadingStats = signal<boolean>(false);
   isLoading = signal(true);
   searchQuery = signal('');
   statusFilter = signal('all');
-
-  stats = {
-    totalPatients: 0,
-    appointmentsToday: 0,
-    earnings: 0,
-  };
 
   doctorFullName = computed(() => {
     const doc = this.doctorService.currentDoctor();
@@ -58,8 +58,31 @@ export class Dashboard {
 
       if (doctorId) {
         this.loadSchedule(doctorId);
+        this.loadStats(this.selectedPeriod());
       }
     });
+  }
+
+  loadStats(period: string): void {
+    this.selectedPeriod.set(period);
+    this.isLoadingStats.set(true);
+
+    const doctorId = this.doctorService.currentDoctorId();
+
+    if (!doctorId) return;
+
+    this.doctorService
+      .getDoctorStats(doctorId, period)
+      .pipe(finalize(() => this.isLoadingStats.set(false)))
+      .subscribe({
+        next: (data) => {
+          this.stats.set(data);
+          console.log('Статистика загружена:', data);
+        },
+        error: (err) => {
+          console.error('Статистика не загрузилась:', err);
+        },
+      });
   }
 
   setFilter(filter: string) {
@@ -190,8 +213,21 @@ export class Dashboard {
   }
 
   private calculateStats(data: AppointmentDto[]) {
-    const today = new Date().toISOString().split('T')[0];
-    this.stats.appointmentsToday = data.filter((a) => a.startTime.startsWith(today)).length;
-    this.stats.totalPatients = data.length;
+    const today = new Date().toLocaleDateString('en-CA');
+    const todayCount = data.filter((a) => a.startTime.startsWith(today)).length;
+
+    this.stats.update(
+      (current) =>
+        ({
+          ...(current || {
+            totalPatients: 0,
+            completedAppointments: 0,
+            totalEarnings: 0,
+            period: 'Day',
+          }),
+          totalPatients: data.length,
+          appointmentsToday: todayCount,
+        }) as DoctorStatsDto,
+    );
   }
 }
