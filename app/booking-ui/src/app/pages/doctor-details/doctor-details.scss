@@ -1,3 +1,5 @@
+@use '../../styles/mixins.scss' as *;
+
 .details-container {
   max-width: 1200px;
   margin: 40px auto;
@@ -6,12 +8,7 @@
 }
 
 .card {
-  background: #ffffff;
-  border-radius: 16px;
-  padding: 32px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
-  border: 1px solid #f3f4f6;
-  margin-bottom: 32px;
+  @include card;
 }
 
 .divider {
@@ -31,225 +28,6 @@ h2 {
   grid-template-columns: 2fr 1fr;
   gap: 40px;
   align-items: start;
-}
-
-.profile-header {
-  display: flex;
-  gap: 32px;
-  align-items: center;
-
-  .image-wrapper img {
-    width: 180px;
-    height: 180px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 4px solid #ffffff;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
-  }
-
-  .info-wrapper {
-    h1 {
-      margin: 12px 0;
-      font-size: 2rem;
-      color: #111827;
-      font-weight: 700;
-    }
-
-    .specialty-badge {
-      display: inline-block;
-      background: #dbeafe;
-      color: #1e40af;
-      padding: 6px 14px;
-      border-radius: 20px;
-      font-size: 0.875rem;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-
-    .stats-row {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      color: #4b5563;
-      font-size: 0.95rem;
-
-      .stat-item {
-        display: flex;
-        align-items: center;
-        gap: 6px;
-        .material-icons {
-          font-size: 20px;
-        }
-        &.rating .material-icons {
-          color: #fbbf24;
-        }
-        &.experience .material-icons {
-          color: #6b7280;
-        }
-      }
-    }
-  }
-}
-
-.about-section .description {
-  line-height: 1.7;
-  color: #4b5563;
-  font-size: 1rem;
-}
-
-.reviews-section .empty-state {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 40px;
-  background: #f9fafb;
-  border-radius: 12px;
-  color: #9ca3af;
-  .material-icons {
-    font-size: 48px;
-    margin-bottom: 12px;
-  }
-}
-
-.sidebar .booking-card {
-  &.sticky {
-    position: sticky;
-    top: 24px;
-  }
-
-  h2 {
-    margin-bottom: 8px;
-  }
-  .booking-hint {
-    color: #6b7280;
-    font-size: 0.9rem;
-    margin-bottom: 24px;
-  }
-
-  .calendar-placeholder {
-    background: #f3f4f6;
-    border: 2px dashed #d1d5db;
-    border-radius: 12px;
-    padding: 40px 20px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    color: #6b7280;
-    text-align: center;
-
-    .material-icons {
-      font-size: 56px;
-      color: #9ca3af;
-      margin-bottom: 16px;
-    }
-    p {
-      font-weight: 500;
-      margin-bottom: 24px;
-    }
-
-    .check-btn {
-      padding: 12px 24px;
-      background: #2563eb;
-      color: white;
-      border: none;
-      border-radius: 8px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: background-color 0.2s;
-      &:hover {
-        background: #1d4ed8;
-      }
-    }
-  }
-
-  .form-group {
-    margin-bottom: 20px;
-    label {
-      display: block;
-      margin-bottom: 8px;
-      font-weight: 600;
-      font-size: 0.9rem;
-      color: #374151;
-    }
-
-    .date-input {
-      width: 100%;
-      padding: 12px;
-      border: 1px solid #d1d5db;
-      border-radius: 8px;
-      font-family: inherit;
-      font-size: 1rem;
-      color: #1f2937;
-      &:focus {
-        outline: 2px solid #2563eb;
-        border-color: transparent;
-      }
-    }
-  }
-
-  // СЕТКА СЛОТОВ
-  .slots-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr); // 3 в ряд
-    gap: 10px;
-    margin-bottom: 24px;
-
-    .slot-btn {
-      padding: 10px 0;
-      background: white;
-      border: 1px solid #d1d5db;
-      border-radius: 8px;
-      color: #374151;
-      cursor: pointer;
-      font-size: 0.9rem;
-      transition: all 0.2s;
-
-      &:hover {
-        border-color: #2563eb;
-        color: #2563eb;
-      }
-
-      &.active {
-        background: #2563eb;
-        color: white;
-        border-color: #2563eb;
-        box-shadow: 0 4px 6px rgba(37, 99, 235, 0.2);
-      }
-    }
-  }
-
-  .action-area {
-    .book-btn {
-      width: 100%;
-      padding: 14px;
-      background: #2563eb;
-      color: white;
-      border: none;
-      border-radius: 12px;
-      font-weight: 600;
-      font-size: 1rem;
-      cursor: pointer;
-      transition: background 0.2s;
-
-      &:hover:not(:disabled) {
-        background: #1d4ed8;
-      }
-
-      &:disabled {
-        background: #9ca3af;
-        cursor: not-allowed;
-      }
-    }
-
-    .select-hint {
-      text-align: center;
-      font-size: 0.8rem;
-      color: #ef4444;
-      margin-top: 8px;
-    }
-  }
 }
 
 .loading-state,
@@ -278,10 +56,7 @@ h2 {
     grid-template-columns: 1fr;
     gap: 32px;
   }
-  .profile-header {
-    flex-direction: column;
-    text-align: center;
-  }
+
   .sidebar .booking-card.sticky {
     position: static;
   }

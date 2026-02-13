@@ -1,0 +1,42 @@
+<div class="profile-header card">
+  <div class="image-wrapper">
+    <img
+      [src]="
+        doctor.imageUrl ||
+        'https://ui-avatars.com/api/?name=' +
+          doctor.name +
+          '&size=250&background=ebf4ff&color=2563eb'
+      "
+      [alt]="doctor.name"
+    />
+  </div>
+
+  <div class="info-wrapper">
+    <span class="specialty-badge">{{ doctor.specialtyName }}</span>
+    <h1>Dr. {{ doctor.name }} {{ doctor.lastname }}</h1>
+
+    <div class="stats-row">
+      <div class="stat-item rating">
+        <span class="material-icons">star</span>
+        <span>{{ doctor.averageRating | number: '1.1-1' }} ({{ doctor.reviewCount }} reviews)</span>
+      </div>
+      <span class="divider">•</span>
+      <div class="stat-item experience">
+        <span class="material-icons">work_history</span>
+        <span>{{ doctor.experienceYears }} years experience</span>
+      </div>
+      <span class="divider">•</span>
+      <div class="stat-item fee">
+        <span class="material-icons">payments</span>
+        <span>{{ doctor.consultationFee | currency: 'EUR' }}</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="about-section card">
+  <h2>About Doctor</h2>
+  <p class="description">
+    {{ doctor.bio }}
+  </p>
+</div>

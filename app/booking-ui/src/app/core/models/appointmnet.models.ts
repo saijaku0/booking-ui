@@ -28,3 +28,9 @@ export interface CreateAppointmentRequest {
   startTime: string; // UTC
   endTime: string;
 }
+
+export interface TimeSlot {
+  start: string; // "2026-02-12T11:30:00Z"
+  end: string; // "2026-02-12T12:00:00Z"
+  isAvailable: boolean;
+}

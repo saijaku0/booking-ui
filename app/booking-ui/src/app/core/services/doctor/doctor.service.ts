@@ -4,10 +4,13 @@ import { inject, Injectable, signal } from '@angular/core';
 import { map, Observable, tap, catchError, of } from 'rxjs';
 import {
   CreateDoctorRequest,
+  CreateReviewRequest,
   DoctorDetailsDto,
   DoctorDto,
   DoctorStatsDto,
+  ReviewDto,
 } from '@core/models/doctor.model';
+import { TimeSlot } from '@core/models/appointmnet.models';
 
 @Injectable({
   providedIn: 'root',
@@ -25,18 +28,18 @@ export class DoctorService {
 
   getDoctorProfile(id: string) {
     return this.http.get<DoctorDto>(`${this.apiUrl}/${id}`).pipe(
-      map((apiData) => {
+      map((data) => {
         return {
-          id: apiData.id,
-          fullName: `${apiData.name} ${apiData.lastname}`,
-          specialty: apiData.specialtyName || 'General Practice',
-          photoUrl: apiData.imageUrl,
-          averageRating: apiData.averageRating,
-          experienceYears: apiData.experienceYears,
-          totalReviews: apiData.reviewCount || 0,
-          bio:
-            apiData.bio ||
-            `Dr. ${apiData.lastname} is an experienced specialist committed to providing excellent medical care.`,
+          id: data.id,
+          name: data.name,
+          lastname: data.lastname,
+          specialtyName: data.specialtyName || data.specialty,
+          imageUrl: data.imageUrl || data.photoUrl || 'assets/default-doctor.png',
+          averageRating: data.averageRating || 0,
+          reviewCount: data.reviewCount || data.totalReviews || 0,
+          consultationFee: data.consultationFee || 50,
+          experienceYears: data.experienceYears || 0,
+          bio: data.bio || '',
         } as DoctorDetailsDto;
       }),
     );
@@ -69,7 +72,20 @@ export class DoctorService {
     );
   }
 
+  addReview(review: CreateReviewRequest) {
+    return this.http.post<void>(`${environment.apiUrl}/Reviews`, review);
+  }
+
   getDoctorStats(doctorId: string, period: string) {
     return this.http.get<DoctorStatsDto>(`${this.apiUrl}/${doctorId}/stats?period=${period}`);
+  }
+
+  getDoctorSlots(doctorId: string, date: string) {
+    const isoDate = `${date}T00:00:00Z`;
+    return this.http.get<TimeSlot[]>(`${this.apiUrl}/${doctorId}/slots?date=${isoDate}`);
+  }
+
+  getDoctorReviews(doctorId: string) {
+    return this.http.get<ReviewDto[]>(`${environment.apiUrl}/Reviews?doctorId=${doctorId}`);
   }
 }

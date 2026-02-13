@@ -82,7 +82,7 @@ export class DoctorLayout implements OnInit {
   }
 
   get initial(): string {
-    const name = this.doctorProfile()?.fullName || this.currentUser()?.email || '?';
+    const name = this.doctorProfile()?.name || this.currentUser()?.email || '?';
     return name.charAt(0).toUpperCase();
   }
 }

@@ -1,0 +1,77 @@
+@use '../../../../styles/mixins.scss' as *;
+
+.card {
+  @include card;
+}
+
+.profile-header {
+  display: flex;
+  gap: 32px;
+  align-items: center;
+
+  .image-wrapper img {
+    width: 180px;
+    height: 180px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid #ffffff;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  }
+
+  .info-wrapper {
+    h1 {
+      margin: 12px 0;
+      font-size: 2rem;
+      color: #111827;
+      font-weight: 700;
+    }
+
+    .specialty-badge {
+      display: inline-block;
+      background: #dbeafe;
+      color: #1e40af;
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 0.875rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .stats-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: #4b5563;
+      font-size: 0.95rem;
+
+      .stat-item {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        .material-icons {
+          font-size: 20px;
+        }
+        &.rating .material-icons {
+          color: #fbbf24;
+        }
+        &.experience .material-icons {
+          color: #6b7280;
+        }
+      }
+    }
+  }
+}
+
+.about-section .description {
+  line-height: 1.7;
+  color: #4b5563;
+  font-size: 1rem;
+}
+
+@media (max-width: 992px) {
+  .profile-header {
+    flex-direction: column;
+    text-align: center;
+  }
+}

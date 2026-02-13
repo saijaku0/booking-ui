@@ -7,102 +7,24 @@
   } @else if (doctor(); as doc) {
     <div class="content-grid">
       <div class="main-content">
-        <div class="profile-header card">
-          <div class="image-wrapper">
-            <img
-              [src]="
-                doc.photoUrl ||
-                'https://ui-avatars.com/api/?name=' +
-                  doc.fullName +
-                  '&size=250&background=ebf4ff&color=2563eb'
-              "
-              [alt]="doc.fullName"
-            />
-          </div>
+        <app-doctor-info [doctor]="doc" />
 
-          <div class="info-wrapper">
-            <span class="specialty-badge">{{ doc.specialty }}</span>
-            <h1>{{ doc.fullName }}</h1>
-
-            <div class="stats-row">
-              <div class="stat-item rating">
-                <span class="material-icons">star</span>
-                <span
-                  >{{ doc.averageRating | number: '1.1-1' }} ({{ doc.totalReviews }} reviews)</span
-                >
-              </div>
-              <span class="divider">•</span>
-              <div class="stat-item experience">
-                <span class="material-icons">work_history</span>
-                <span>{{ doc.experienceYears }} years experience</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="about-section card">
-          <h2>About Doctor</h2>
-          <p class="description">
-            {{ doc.bio }}
-          </p>
-        </div>
-
-        <div class="reviews-section card">
-          <h2>Patient Reviews</h2>
-          <div class="empty-state">
-            <span class="material-icons">rate_review</span>
-            <p>No reviews yet for this doctor.</p>
-          </div>
-        </div>
+        <app-doctor-reviews
+          [reviews]="reviews()"
+          [isSubmitting]="isSubmittingReview()"
+          (submitReview)="submitReview($event)"
+        />
       </div>
 
       <div class="sidebar">
-        <div class="booking-card card sticky">
-          <h2>Book Appointment</h2>
-          <p class="booking-hint">Select a date and time slot.</p>
-
-          <div class="form-group">
-            <label for="booking-date">Date</label>
-            <input
-              id="booking-date"
-              type="date"
-              [ngModel]="selectedDate()"
-              (ngModelChange)="selectedDate.set($event)"
-              class="date-input"
-            />
-          </div>
-
-          <h3 class="slots-label">Available Slots</h3>
-          <div class="slots-grid" role="group" aria-labelledby="slots-group-label">
-            @for (slot of timeSlots; track slot) {
-              <button
-                class="slot-btn"
-                [class.active]="selectedTime() === slot"
-                (click)="selectTime(slot)"
-              >
-                {{ slot }}
-              </button>
-            }
-          </div>
-
-          <div class="action-area">
-            <button
-              class="book-btn"
-              [disabled]="!selectedTime() || isBooking()"
-              (click)="bookAppointment()"
-            >
-              @if (isBooking()) {
-                Creating...
-              } @else {
-                Confirm Booking
-              }
-            </button>
-
-            @if (!selectedTime()) {
-              <p class="select-hint">Please select a time</p>
-            }
-          </div>
-        </div>
+        <app-doctor-booking
+          [slots]="availableSlots()"
+          [selectedDate]="selectedDate()"
+          [isLoadingSlots]="isLoadingSlots()"
+          [isBooking]="isBooking()"
+          (dateChange)="selectedDate.set($event)"
+          (confirmBooking)="bookAppointment($event)"
+        />
       </div>
     </div>
   } @else {
