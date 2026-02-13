@@ -1,0 +1,149 @@
+@use '../../../../styles/mixins.scss' as *;
+
+.booking-card {
+  @include card;
+
+  .no-slots {
+    grid-column: span 3;
+    text-align: center;
+    color: #6b7280;
+    font-size: 0.9rem;
+  }
+
+  &.sticky {
+    position: sticky;
+    top: 24px;
+  }
+
+  h2 {
+    margin-bottom: 8px;
+  }
+  .booking-hint {
+    color: #6b7280;
+    font-size: 0.9rem;
+    margin-bottom: 24px;
+  }
+
+  .calendar-placeholder {
+    background: #f3f4f6;
+    border: 2px dashed #d1d5db;
+    border-radius: 12px;
+    padding: 40px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #6b7280;
+    text-align: center;
+
+    .material-icons {
+      font-size: 56px;
+      color: #9ca3af;
+      margin-bottom: 16px;
+    }
+    p {
+      font-weight: 500;
+      margin-bottom: 24px;
+    }
+
+    .check-btn {
+      padding: 12px 24px;
+      background: #2563eb;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.2s;
+      &:hover {
+        background: #1d4ed8;
+      }
+    }
+  }
+
+  .form-group {
+    margin-bottom: 20px;
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      color: #374151;
+    }
+
+    .date-input {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      font-family: inherit;
+      font-size: 1rem;
+      color: #1f2937;
+      &:focus {
+        outline: 2px solid #2563eb;
+        border-color: transparent;
+      }
+    }
+  }
+
+  .slots-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-bottom: 24px;
+
+    .slot-btn {
+      padding: 10px 0;
+      background: white;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      color: #374151;
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: all 0.2s;
+
+      &:hover {
+        border-color: #2563eb;
+        color: #2563eb;
+      }
+
+      &.active {
+        background: #2563eb;
+        color: white;
+        border-color: #2563eb;
+        box-shadow: 0 4px 6px rgba(37, 99, 235, 0.2);
+      }
+    }
+  }
+
+  .action-area {
+    .book-btn {
+      width: 100%;
+      padding: 14px;
+      background: #2563eb;
+      color: white;
+      border: none;
+      border-radius: 12px;
+      font-weight: 600;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background 0.2s;
+
+      &:hover:not(:disabled) {
+        background: #1d4ed8;
+      }
+
+      &:disabled {
+        background: #9ca3af;
+        cursor: not-allowed;
+      }
+    }
+
+    .select-hint {
+      text-align: center;
+      font-size: 0.8rem;
+      color: #ef4444;
+      margin-top: 8px;
+    }
+  }
+}

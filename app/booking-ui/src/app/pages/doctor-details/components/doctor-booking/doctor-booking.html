@@ -1,0 +1,41 @@
+<div class="booking-card card sticky">
+  <h2>Book Appointment</h2>
+
+  <div class="form-group">
+    <label for="booking-date">Date</label>
+    <input
+      id="booking-date"
+      type="date"
+      [ngModel]="selectedDate"
+      (ngModelChange)="onDateChange($event)"
+      class="date-input"
+    />
+  </div>
+
+  <h3 class="slots-label">Available Slots</h3>
+
+  @if (isLoadingSlots) {
+    <div class="slots-loader">Loading slots...</div>
+  } @else {
+    <div class="slots-grid">
+      @for (slot of slots; track slot.start) {
+        <button
+          class="slot-btn"
+          [class.selected]="selectedSlot() === slot"
+          [disabled]="!slot.isAvailable"
+          (click)="onSelectSlot(slot)"
+        >
+          {{ slot.start | date: 'HH:mm' }}
+        </button>
+      } @empty {
+        <p class="no-slots">No slots available for this date.</p>
+      }
+    </div>
+  }
+
+  <div class="action-area">
+    <button class="book-btn" [disabled]="!selectedSlot() || isBooking" (click)="onBook()">
+      {{ isBooking ? 'Creating...' : 'Confirm Booking' }}
+    </button>
+  </div>
+</div>

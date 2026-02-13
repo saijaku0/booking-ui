@@ -1,13 +1,14 @@
 export interface DoctorDetailsDto {
   id: string;
-  fullName: string;
-  specialty: string;
-  photoUrl?: string;
-  experienceYears: number;
-  description: string;
+  name: string;
+  lastname: string;
+  specialtyName: string;
+  imageUrl?: string;
   averageRating: number;
-  totalReviews: number;
-  bio: string;
+  reviewCount: number;
+  consultationFee: number;
+  experienceYears: number;
+  bio?: string;
 }
 
 export interface DoctorDto {
@@ -16,10 +17,13 @@ export interface DoctorDto {
   name: string;
   lastname: string;
   fullName: string;
+  specialty: string;
+  photoUrl: string;
   specialtyName: string;
   specialtyId: string;
   averageRating: number;
   reviewCount: number;
+  totalReviews: number;
   imageUrl?: string;
   consultationFee: number;
   experienceYears: number;
@@ -44,4 +48,18 @@ export interface DoctorStatsDto {
   completedAppointments: number;
   totalEarnings: number;
   period: string;
+}
+
+export interface CreateReviewRequest {
+  doctorId: string;
+  rating: number;
+  text: string;
+}
+
+export interface ReviewDto {
+  id: string;
+  patientName: string;
+  rating: number;
+  text: string;
+  createdAt: string;
 }

@@ -25,8 +25,8 @@
     </nav>
 
     <div class="user-profile">
-      @if (doctorProfile()?.photoUrl) {
-        <img [src]="doctorProfile()?.photoUrl" alt="Avatar" class="avatar" />
+      @if (doctorProfile()?.imageUrl) {
+        <img [src]="doctorProfile()?.imageUrl" alt="Avatar" class="avatar" />
       } @else {
         <div class="avatar-placeholder">
           {{ initial }}
@@ -35,11 +35,11 @@
 
       <div class="info">
         <p class="name">
-          {{ doctorProfile()?.fullName || currentUser()?.email }}
+          {{ doctorProfile()?.name || currentUser()?.email }}
         </p>
 
         <p class="role">
-          {{ doctorProfile()?.specialty || currentUser()?.roles?.[0] || 'Doctor' }}
+          {{ doctorProfile()?.specialtyName || currentUser()?.roles?.[0] || 'Doctor' }}
         </p>
       </div>
 
