@@ -4,10 +4,11 @@ import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { PatientDto } from '@core/models/patient.models';
 import { AuthService } from '@core/services/auth/auth.service';
 import { PatientService } from '@core/services/patient/patient.service';
+import { MainLayout } from '@shared/components/main-layout/main-layout';
 
 @Component({
   selector: 'app-patient-layout',
-  imports: [CommonModule, RouterLink, RouterLinkActive, RouterOutlet],
+  imports: [CommonModule, RouterLink, RouterLinkActive, RouterOutlet, MainLayout],
   templateUrl: './patient-layout.html',
   styleUrl: './patient-layout.scss',
 })

@@ -3,10 +3,11 @@ import { DoctorDetailsDto } from '@core/models/doctor.model';
 import { AuthService, DoctorService } from '@core/services/index';
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { MainLayout } from '@shared/components/main-layout/main-layout';
 
 @Component({
   selector: 'app-doctor-layout',
-  imports: [CommonModule, RouterLink, RouterLinkActive, RouterOutlet],
+  imports: [CommonModule, RouterLink, RouterLinkActive, RouterOutlet, MainLayout],
   templateUrl: './doctor-layout.html',
   styleUrl: './doctor-layout.scss',
 })

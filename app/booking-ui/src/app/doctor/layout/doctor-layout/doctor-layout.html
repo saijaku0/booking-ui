@@ -1,65 +1,48 @@
-<div class="layout-container">
-  <aside class="sidebar">
-    <div class="brand">
-      <span class="material-icons logo-icon">medical_services</span>
-      <h2>DoctorPortal</h2>
+<app-main-layout>
+  <div layout-brand class="brand-box">
+    <span class="material-icons logo">medical_services</span>
+    <h2>DoctorPortal</h2>
+  </div>
+
+  <div layout-menu class="menu-list">
+    <a routerLink="/doctor/dashboard" routerLinkActive="active" class="menu-item">
+      <span class="material-icons">dashboard</span>
+      Dashboard
+    </a>
+    <a routerLink="/doctor/calendar" routerLinkActive="active" class="menu-item">
+      <span class="material-icons">calendar_today</span>
+      My Schedule
+    </a>
+    <a routerLink="/doctor/patients" routerLinkActive="active" class="menu-item">
+      <span class="material-icons">people</span>
+      Patients
+    </a>
+    <a routerLink="/doctor/settings" routerLinkActive="active" class="menu-item">
+      <span class="material-icons">settings</span>
+      Settings
+    </a>
+  </div>
+
+  <div layout-footer class="user-profile">
+    <img [src]="doctorProfile()?.imageUrl || 'assets/def.png'" class="avatar" alt="Doctor Avatar" />
+    <div class="info">
+      <p class="name">{{ doctorProfile()?.name }}</p>
+      <p class="role">Doctor</p>
     </div>
+    <button (click)="logout()" class="logout-icon-btn">
+      <span class="material-icons">logout</span>
+    </button>
+  </div>
 
-    <nav class="menu">
-      <a routerLink="/doctor/dashboard" routerLinkActive="active" class="menu-item">
-        <span class="material-icons">dashboard</span>
-        Dashboard
-      </a>
-      <a routerLink="/doctor/calendar" routerLinkActive="active" class="menu-item">
-        <span class="material-icons">calendar_today</span>
-        My Schedule
-      </a>
-      <a routerLink="/doctor/patients" routerLinkActive="active" class="menu-item">
-        <span class="material-icons">people</span>
-        Patients
-      </a>
-      <a routerLink="/doctor/settings" routerLinkActive="active" class="menu-item">
-        <span class="material-icons">settings</span>
-        Settings
-      </a>
-    </nav>
-
-    <div class="user-profile">
-      @if (doctorProfile()?.imageUrl) {
-        <img [src]="doctorProfile()?.imageUrl" alt="Avatar" class="avatar" />
-      } @else {
-        <div class="avatar-placeholder">
-          {{ initial }}
-        </div>
-      }
-
-      <div class="info">
-        <p class="name">
-          {{ doctorProfile()?.name || currentUser()?.email }}
-        </p>
-
-        <p class="role">
-          {{ doctorProfile()?.specialtyName || currentUser()?.roles?.[0] || 'Doctor' }}
-        </p>
-      </div>
-
-      <button (click)="logout()" class="logout-btn" title="Logout">
-        <span class="material-icons">logout</span>
-      </button>
+  <header class="top-bar">
+    <h3>Overview</h3>
+    <div class="actions">
+      <button class="icon-btn"><span class="material-icons">notifications</span></button>
+      <button class="icon-btn"><span class="material-icons">help_outline</span></button>
     </div>
-  </aside>
+  </header>
 
-  <main class="main-content">
-    <header class="top-bar">
-      <h3>Overview</h3>
-      <div class="actions">
-        <button class="icon-btn"><span class="material-icons">notifications</span></button>
-        <button class="icon-btn"><span class="material-icons">help_outline</span></button>
-      </div>
-    </header>
-
-    <div class="page-content">
-      <router-outlet></router-outlet>
-    </div>
-  </main>
-</div>
+  <div class="page-content">
+    <router-outlet></router-outlet>
+  </div>
+</app-main-layout>

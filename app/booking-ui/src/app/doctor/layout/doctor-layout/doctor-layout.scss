@@ -1,4 +1,3 @@
-// --- VARIABLES & MIXINS ---
 $sidebar-width: 280px;
 $topbar-height: 64px;
 $transition: all 0.2s ease-in-out;
@@ -11,131 +10,122 @@ $transition: all 0.2s ease-in-out;
   overflow: hidden;
 }
 
-.sidebar {
-  width: $sidebar-width;
-  background-color: white;
-  border-right: 1px solid rgba(0, 0, 0, 0.08);
+.brand-box {
+  padding: 24px;
   display: flex;
-  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+
+  .logo {
+    font-size: 32px;
+    color: #2563eb;
+  }
+  h2 {
+    margin: 0;
+    font-size: 1.25rem;
+    color: #1f2937;
+  }
+}
+
+.top-bar {
+  height: $topbar-height;
+  background-color: white;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 32px;
   flex-shrink: 0;
-  z-index: 10;
-  transition: $transition;
 
-  .brand {
-    height: $topbar-height;
-    display: flex;
-    align-items: center;
-    padding: 0 24px;
-    gap: 12px;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-
-    .logo-icon {
-      font-size: 28px;
-      color: var(--mat-sys-primary, #005cbb);
-    }
-
-    h2 {
-      margin: 0;
-      font-size: 1.25rem;
-      font-weight: 600;
-      color: var(--mat-sys-on-surface, #333);
-      letter-spacing: -0.5px;
-    }
+  h3 {
+    margin: 0;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--mat-sys-on-surface, #333);
   }
 
-  .menu {
-    flex: 1;
-    padding: 24px 16px;
+  .actions {
     display: flex;
-    flex-direction: column;
-    gap: 8px;
-    overflow-y: auto;
+    gap: 16px;
 
-    .menu-item {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 12px 16px;
-      text-decoration: none;
-      color: var(--mat-sys-on-surface-variant, #666);
-      font-weight: 500;
-      border-radius: 12px;
-      transition: $transition;
-      font-size: 0.95rem;
-
-      .material-icons {
-        font-size: 20px;
-        color: inherit;
-      }
-
-      &:hover {
-        background-color: var(--mat-sys-surface-container-high, #f0f0f0);
-        color: var(--mat-sys-on-surface, #333);
-      }
-
-      &.active {
-        background-color: var(--mat-sys-primary-container, #e3f2fd);
-        color: var(--mat-sys-on-primary-container, #005cbb);
-
-        .material-icons {
-          color: var(--mat-sys-on-primary-container, #005cbb);
-        }
-      }
-    }
-  }
-
-  .user-profile {
-    padding: 20px 24px;
-    border-top: 1px solid rgba(0, 0, 0, 0.08);
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    background-color: white;
-
-    .avatar {
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      object-fit: cover;
-      border: 2px solid white;
-      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    }
-
-    .info {
-      flex: 1;
-      overflow: hidden;
-
-      .name {
-        margin: 0;
-        font-size: 0.9rem;
-        font-weight: 600;
-        color: var(--mat-sys-on-surface, #333);
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-      }
-
-      .role {
-        margin: 0;
-        font-size: 0.75rem;
-        color: var(--mat-sys-primary, #005cbb);
-        font-weight: 500;
-      }
-    }
-
-    .logout-btn {
+    .icon-btn {
       background: none;
       border: none;
       cursor: pointer;
       padding: 8px;
       border-radius: 50%;
-      color: #9ca3af;
+      color: #666;
       transition: $transition;
+      display: flex;
+      align-items: center;
+      justify-content: center;
 
       &:hover {
-        background-color: #fee2e2;
-        color: #ef4444;
+        background-color: rgba(0, 0, 0, 0.05);
+        color: var(--mat-sys-primary, #005cbb);
       }
+    }
+  }
+
+  @media (max-width: 768px) {
+    background-color: transparent;
+  }
+}
+
+.menu-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  color: #4b5563;
+  text-decoration: none;
+  border-radius: 8px;
+  font-weight: 500;
+  transition: all 0.2s;
+
+  &:hover {
+    background: #f3f4f6;
+    color: #111827;
+  }
+  &.active {
+    background: #eff6ff;
+    color: #2563eb;
+    .material-icons {
+      color: #2563eb;
+    }
+  }
+}
+
+.user-profile {
+  padding: 16px;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 12px;
+
+  .avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+  .info p {
+    margin: 0;
+    font-size: 0.9rem;
+    line-height: 1.2;
+  }
+  .info .role {
+    font-size: 0.75rem;
+    color: #6b7280;
+  }
+
+  .logout-icon-btn {
+    background: none;
+    border: none;
+    color: #9ca3af;
+    cursor: pointer;
+    &:hover {
+      color: #ef4444;
     }
   }
 }
@@ -209,7 +199,6 @@ $transition: all 0.2s ease-in-out;
   }
 }
 
-// --- RESPONSIVE (MOBILE) ---
 @media (max-width: 900px) {
   .layout-container {
     flex-direction: column;

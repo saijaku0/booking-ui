@@ -1,0 +1,39 @@
+<div class="layout-container">
+  <button class="side-toggle-btn" (click)="toggleSidebar()" [class.hidden]="isSidebarOpen()">
+    <span class="material-icons">chevron_right</span>
+  </button>
+
+  <div
+    class="overlay"
+    [class.show]="isSidebarOpen()"
+    (click)="closeSidebar()"
+    (keydown)="closeSidebar()"
+    tabindex="1"
+  ></div>
+
+  <aside class="sidebar" [class.open]="isSidebarOpen()">
+    <div class="sidebar-top">
+      <ng-content select="[layout-brand]"></ng-content>
+
+      <button class="close-mobile" (click)="closeSidebar()">
+        <span class="material-icons">close</span>
+      </button>
+    </div>
+
+    <nav class="sidebar-menu">
+      <div (click)="handleMenuClick($event)" (keydown)="closeSidebar()" tabindex="2">
+        <ng-content select="[layout-menu]"></ng-content>
+      </div>
+    </nav>
+
+    <div class="sidebar-footer">
+      <ng-content select="[layout-footer]"></ng-content>
+    </div>
+  </aside>
+
+  <main class="content">
+    <div class="page-wrapper">
+      <ng-content></ng-content>
+    </div>
+  </main>
+</div>
