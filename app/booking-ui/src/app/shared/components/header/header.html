@@ -96,7 +96,9 @@
   } @else {
     <div class="user-panel" [class.mobile-user]="mode === 'mobile'">
       <div class="user-info">
-        <div class="avatar">{{ currentUser()?.email?.charAt(0)?.toUpperCase() }}</div>
+        <a class="avatar" [routerLink]="['/profile']">
+          {{ currentUser()?.email?.charAt(0)?.toUpperCase() }}
+        </a>
         @if (mode === 'mobile') {
           <div class="details">
             <span class="email">{{ currentUser()?.email }}</span>

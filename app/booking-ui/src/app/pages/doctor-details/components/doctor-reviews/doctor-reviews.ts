@@ -13,7 +13,7 @@ import { ReviewDto } from '@core/models/doctor.model';
 })
 export class DoctorReviews {
   @Input({ required: true }) reviews: ReviewDto[] = [];
-  @Input() user!: CurrentUser;
+  @Input() user: CurrentUser | null = null;
   @Input() isSubmitting = false;
 
   @Output() submitReview = new EventEmitter<{ rating: number; text: string }>();

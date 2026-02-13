@@ -11,6 +11,7 @@ import { DoctorLayout } from './doctor/layout/doctor-layout/doctor-layout';
 import { SpecialtiesComponent } from './admin/pages/specialties/specialties';
 import { AdminDashboard } from './admin/pages/admin-dashboard/admin-dashboard';
 import { DoctorCalendarComponent } from './doctor/pages/doctor-calendar/doctor-calendar';
+import { PatientLayout } from './patient/layout/patient-layout/patient-layout';
 
 export const routes: Routes = [
   { path: '', component: Home },
@@ -44,6 +45,13 @@ export const routes: Routes = [
       { path: 'specialties', component: SpecialtiesComponent },
       { path: 'doctors', component: DoctorsComponent },
     ],
+  },
+  {
+    path: 'profile',
+    component: PatientLayout,
+    canActivate: [authGuard],
+    data: { roles: ['patient'] },
+    children: [{ path: '', redirectTo: 'appointments', pathMatch: 'full' }],
   },
   { path: '**', redirectTo: '' },
 ];

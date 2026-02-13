@@ -15,7 +15,7 @@
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 
   @media ($mobile) {
-    position: fixed;
+    position: sticky;
     width: 100%;
     box-sizing: border-box;
   }
@@ -158,6 +158,8 @@ button.nav-link {
     display: grid;
     place-items: center;
     font-weight: bold;
+    color: white;
+    text-decoration: none;
   }
   .details {
     display: flex;

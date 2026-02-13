@@ -1,0 +1,46 @@
+<div class="layout-container">
+  <button class="side-toggle-btn" (click)="toggleSidebar()" [class.hidden]="isSidebarOpen()">
+    <span class="material-icons">chevron_right</span>
+  </button>
+
+  <div
+    class="overlay"
+    [class.show]="isSidebarOpen()"
+    (click)="closeSidebar()"
+    (keyup)="closeSidebar()"
+    tabindex="1"
+  ></div>
+
+  <aside class="sidebar" [class.open]="isSidebarOpen()">
+    <div class="sidebar-header">
+      <h2>My Health</h2>
+      <button class="close-btn" (click)="closeSidebar()">
+        <span class="material-icons">close</span>
+      </button>
+    </div>
+
+    <nav class="nav-links">
+      <a routerLink="appointments" routerLinkActive="active" (click)="closeSidebar()">
+        <span class="material-icons">calendar_today</span>
+        <span>Appointments</span>
+      </a>
+
+      <a routerLink="profile" routerLinkActive="active" (click)="closeSidebar()">
+        <span class="material-icons">person</span>
+        <span>Profile</span>
+      </a>
+
+      <button class="logout-link" (click)="logout()">
+        <span class="material-icons">logout</span>
+        <span>Log Out</span>
+      </button>
+    </nav>
+  </aside>
+
+  <section class="content">
+    <div class="page-wrapper">
+      <h1>Welcome back {{ patientProfile()?.fullName }}!</h1>
+      <router-outlet></router-outlet>
+    </div>
+  </section>
+</div>
