@@ -4,16 +4,24 @@ export enum UserRole {
   Patient = 'patient',
 }
 
+export enum Gender {
+  Male = 'Male',
+  Female = 'Female',
+}
+
 export interface LoginRequest {
   email: string;
   password: string;
 }
 
 export interface RegisterRequest {
-  UserEmail: string;
-  UserPassword: string;
-  UserName: string;
-  UserSurname: string;
+  userName: string;
+  userSurname: string;
+  userEmail: string;
+  userPassword: string;
+  dateOfBirth?: string;
+  gender?: number;
+  phoneNumber?: string;
 }
 
 export interface AuthResponse {

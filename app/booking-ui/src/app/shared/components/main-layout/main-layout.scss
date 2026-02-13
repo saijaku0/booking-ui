@@ -1,0 +1,143 @@
+$primary: #2563eb;
+$sidebar-width: 280px;
+$bg-color: #f3f4f6;
+
+.layout-container {
+  display: grid;
+  grid-template-columns: $sidebar-width 1fr;
+  min-height: 100vh;
+  background-color: $bg-color;
+  font-family: 'Inter', sans-serif;
+}
+
+.side-toggle-btn {
+  display: none;
+}
+
+.sidebar {
+  background: white;
+  border-right: 1px solid #e5e7eb;
+  height: 100vh;
+  position: sticky;
+  top: 0;
+  display: flex;
+  flex-direction: column;
+  z-index: 50;
+
+  .sidebar-top {
+    padding: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    .close-mobile {
+      display: none;
+    }
+  }
+
+  .sidebar-menu {
+    flex: 1;
+    overflow-y: auto;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .sidebar-footer {
+    margin-top: auto;
+    border-top: 1px solid #f3f4f6;
+    background-color: #f9fafb;
+  }
+}
+
+.content {
+  overflow-x: hidden;
+  .page-wrapper {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+}
+
+.overlay {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .layout-container {
+    display: block;
+  }
+
+  .side-toggle-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: fixed;
+    top: 50%;
+    left: 0;
+    transform: translateY(-50%);
+    width: 32px;
+    height: 60px;
+    background-color: $primary;
+    color: white;
+    border: none;
+    border-top-right-radius: 12px;
+    border-bottom-right-radius: 12px;
+    box-shadow: 2px 4px 12px rgba(37, 99, 235, 0.4);
+    z-index: 1000;
+    transition:
+      transform 0.3s,
+      opacity 0.3s;
+    cursor: pointer;
+
+    &.hidden {
+      transform: translateY(-50%) translateX(-100%);
+      opacity: 0;
+    }
+  }
+
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 85%;
+    max-width: 320px;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+    z-index: 1001;
+    box-shadow: 4px 0 24px rgba(0, 0, 0, 0.15);
+
+    &.open {
+      transform: translateX(0);
+    }
+
+    .sidebar-top {
+      padding-right: 16px;
+      .close-mobile {
+        display: block;
+        background: none;
+        border: none;
+        font-size: 24px;
+        color: #9ca3af;
+        padding: 16px;
+      }
+    }
+  }
+
+  .overlay {
+    display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s;
+    &.show {
+      opacity: 1;
+      visibility: visible;
+    }
+  }
+}

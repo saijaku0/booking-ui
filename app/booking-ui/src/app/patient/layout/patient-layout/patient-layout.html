@@ -1,0 +1,32 @@
+<app-main-layout>
+  <div layout-brand class="brand-box">
+    <h2>My Health</h2>
+  </div>
+
+  <div layout-menu class="menu-list">
+    <a routerLink="/patient/appointments" routerLinkActive="active" class="menu-item">
+      <span class="material-icons">calendar_today</span> Appointments
+    </a>
+    <a routerLink="/patient/profile" routerLinkActive="active" class="menu-item">
+      <span class="material-icons">person</span> Profile
+    </a>
+  </div>
+
+  <button layout-footer (click)="logout()" class="full-logout-btn">
+    <span class="material-icons">logout</span>
+    Log Out
+  </button>
+
+  <header class="top-bar">
+    <h3>
+      Welcome back,
+      <p class="subtitle">{{ patientProfile()?.fullName }}</p>
+    </h3>
+    <div class="actions">
+      <button class="icon-btn"><span class="material-icons">notifications</span></button>
+      <button class="icon-btn"><span class="material-icons">help_outline</span></button>
+    </div>
+  </header>
+
+  <router-outlet></router-outlet>
+</app-main-layout>

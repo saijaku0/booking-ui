@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
+import { CurrentUser } from '@core/models/auth.model';
 import { ReviewDto } from '@core/models/doctor.model';
 
 @Component({
@@ -12,7 +13,7 @@ import { ReviewDto } from '@core/models/doctor.model';
 })
 export class DoctorReviews {
   @Input({ required: true }) reviews: ReviewDto[] = [];
-  @Input() user!: { id: number; name: string };
+  @Input() user: CurrentUser | null = null;
   @Input() isSubmitting = false;
 
   @Output() submitReview = new EventEmitter<{ rating: number; text: string }>();

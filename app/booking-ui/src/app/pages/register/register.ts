@@ -17,12 +17,18 @@ export class RegisterComponent {
   private authService = inject(AuthService);
   private router = inject(Router);
 
+  birthDate = signal<string>('');
+  isFocused = signal(false);
   isLoading = signal(false);
   errorMessage = signal<string | null>(null);
+  isGenderFocused = signal(false);
+  maxDate = new Date().toISOString().split('T')[0];
 
   registerForm = this.fb.group({
     firstName: ['', [Validators.required]],
     lastName: ['', [Validators.required]],
+    dateOfBirth: ['', [Validators.required, Validators.pattern(/^\d{4}-\d{2}-\d{2}$/)]],
+    gender: ['', [Validators.required]],
     email: ['', [Validators.required, Validators.email]],
     password: ['', [Validators.required, Validators.minLength(6)]],
     confirmPassword: ['', [Validators.required]],
@@ -31,7 +37,8 @@ export class RegisterComponent {
   onSubmit() {
     if (this.registerForm.invalid) return;
 
-    const { firstName, lastName, email, password, confirmPassword } = this.registerForm.value;
+    const { firstName, lastName, email, password, confirmPassword, gender, dateOfBirth } =
+      this.registerForm.value;
 
     if (password !== confirmPassword) {
       this.errorMessage.set('Passwords do not match');
@@ -42,16 +49,18 @@ export class RegisterComponent {
     this.errorMessage.set(null);
 
     const request: RegisterRequest = {
-      UserEmail: email!,
-      UserPassword: password!,
-      UserName: firstName!,
-      UserSurname: lastName!,
+      userEmail: email!,
+      userPassword: password!,
+      dateOfBirth: dateOfBirth!,
+      userName: firstName!,
+      userSurname: lastName!,
+      gender: Number(gender),
     };
 
     this.authService.register(request).subscribe({
       next: () => {
         alert('Registration successful! Please login.');
-        this.router.navigate(['/login']);
+        this.router.navigate(['/auth/login']);
       },
       error: (err) => {
         console.error(err);
@@ -61,5 +70,13 @@ export class RegisterComponent {
         this.isLoading.set(false);
       },
     });
+  }
+
+  onDateChange(value: Event) {
+    this.birthDate.set((value.target as HTMLInputElement).value);
+    this.registerForm
+      .get('dateOfBirth')
+      ?.setValue((value.target as HTMLInputElement).value, { emitEvent: true });
+    this.registerForm.get('dateOfBirth')?.markAsDirty();
   }
 }
