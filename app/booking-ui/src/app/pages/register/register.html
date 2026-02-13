@@ -32,6 +32,51 @@
         </div>
       </div>
 
+      <div class="date-field-container">
+        <label for="birth-date" class="field-label">Date of Birth</label>
+
+        <div class="input-wrapper" [class.focused]="isFocused()">
+          <span class="material-icons leading-icon">cake</span>
+
+          <input
+            id="birth-date"
+            type="date"
+            class="custom-date-input"
+            formControlName="dateOfBirth"
+            (change)="onDateChange($event)"
+            (focus)="isFocused.set(true)"
+            (blur)="isFocused.set(false)"
+            [max]="maxDate"
+          />
+
+          <span class="material-icons calendar-hint">calendar_today</span>
+        </div>
+
+        <p class="helper-text">Used to verify your identity and age.</p>
+      </div>
+
+      <div class="form-field gender-group">
+        <label for="gender" class="field-label">Gender</label>
+
+        <div class="input-wrapper" [class.focused]="isGenderFocused()">
+          <span class="material-icons leading-icon">wc</span>
+
+          <select
+            id="gender"
+            class="custom-select"
+            [formControlName]="'gender'"
+            (focus)="isGenderFocused.set(true)"
+            (blur)="isGenderFocused.set(false)"
+          >
+            <option value="" disabled selected>Select your gender</option>
+            <option value="1">Male</option>
+            <option value="2">Female</option>
+          </select>
+
+          <span class="material-icons arrow-icon">expand_more</span>
+        </div>
+      </div>
+
       <div class="form-group">
         <label for="reg-pass">Password</label>
         <div class="input-wrapper">
@@ -58,5 +103,10 @@
     <div class="footer">
       <p>Already have an account? <a routerLink="/login">Sign In</a></p>
     </div>
+  </div>
+  <div style="color: red">
+    <p>Форма валидна: {{ registerForm.valid }}</p>
+    <p>Ошибки даты: {{ registerForm.get('dateOfBirth')?.errors | json }}</p>
+    <p>Ошибки пола: {{ registerForm.get('gender')?.errors | json }}</p>
   </div>
 </div>

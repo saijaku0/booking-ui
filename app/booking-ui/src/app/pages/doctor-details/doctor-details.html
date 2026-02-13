@@ -11,6 +11,7 @@
 
         <app-doctor-reviews
           [reviews]="reviews()"
+          [user]="currentUser()"
           [isSubmitting]="isSubmittingReview()"
           (submitReview)="submitReview($event)"
         />
