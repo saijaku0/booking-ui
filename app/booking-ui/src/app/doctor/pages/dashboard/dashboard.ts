@@ -1,7 +1,11 @@
 import { CommonModule } from '@angular/common';
 import { Component, computed, effect, inject, signal, ViewChild } from '@angular/core';
 import { AppointmentService, DoctorService } from '@core/services/index';
-import { AppointmentDto, AppointmentStatus } from '@core/models/appointmnet.models';
+import {
+  AppointmentResponse,
+  AppointmentStatus,
+  CompleteAppointmentRequest,
+} from '@core/models/appointmnet.models';
 import { StatsCards } from '../../components/stats-cards/stats-cards';
 import { AppointmentsTable } from '../../components/appointments-table/appointments-table';
 import { AppointmentCompletionModal } from '../../components/appointment-completion-modal/appointment-completion-modal';
@@ -24,7 +28,7 @@ export class Dashboard {
   isCompleteModalOpen = signal(false);
   selectedAppointmentForCompletion = signal<{ id: string; name: string } | null>(null);
 
-  appointments = signal<AppointmentDto[]>([]);
+  appointments = signal<AppointmentResponse[]>([]);
   selectedPeriod = signal<string>('Day');
   stats = signal<DoctorStatsDto | null>(null);
   isLoadingStats = signal<boolean>(false);
@@ -177,7 +181,15 @@ export class Dashboard {
     const selected = this.selectedAppointmentForCompletion();
     if (!selected) return;
 
-    this.appointmentService.completeAppointment(selected.id, notes).subscribe({
+    const completionRequest: CompleteAppointmentRequest = {
+      appointmentId: selected.id,
+      diagnosis: 'Consultation Complete',
+      medicalNotes: notes,
+      treatmentPlan: '',
+      prescribedMedications: '',
+    };
+
+    this.appointmentService.completeAppointment(selected.id, completionRequest).subscribe({
       next: () => {
         this.appointments.update((list) =>
           list.map((a) =>
@@ -212,7 +224,7 @@ export class Dashboard {
     });
   }
 
-  private calculateStats(data: AppointmentDto[]) {
+  private calculateStats(data: AppointmentResponse[]) {
     const today = new Date().toLocaleDateString('en-CA');
     const todayCount = data.filter((a) => a.startTime.startsWith(today)).length;
 

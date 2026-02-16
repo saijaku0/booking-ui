@@ -1,16 +1,15 @@
 import { environment } from '@env/environment';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable, signal } from '@angular/core';
 import { map, Observable, tap, catchError, of } from 'rxjs';
 import {
   CreateDoctorRequest,
-  CreateReviewRequest,
-  DoctorDetailsDto,
-  DoctorDto,
+  DoctorResponse,
   DoctorStatsDto,
-  ReviewDto,
+  ScheduleConfig,
+  UpdateDoctorRequest,
 } from '@core/models/doctor.model';
-import { TimeSlot } from '@core/models/appointmnet.models';
+import { TimeSlot } from '@core/models/doctor.model';
 
 @Injectable({
   providedIn: 'root',
@@ -19,34 +18,31 @@ export class DoctorService {
   private http = inject(HttpClient);
   private apiUrl = `${environment.apiUrl}/Doctors`;
 
-  currentDoctor = signal<DoctorDto | null>(null);
+  currentDoctor = signal<DoctorResponse | null>(null);
   currentDoctorId = signal<string | null>(null);
 
-  getDoctors() {
-    return this.http.get<DoctorDto[]>(this.apiUrl);
+  getDoctors(searchTerm = '', specialtyId = ''): Observable<DoctorResponse[]> {
+    let params = new HttpParams();
+    if (searchTerm) params = params.set('SearchTerm', searchTerm);
+    if (specialtyId) params = params.set('SpecialtyId', specialtyId);
+
+    return this.http.get<DoctorResponse[]>(this.apiUrl, { params });
   }
 
-  getDoctorProfile(id: string) {
-    return this.http.get<DoctorDto>(`${this.apiUrl}/${id}`).pipe(
-      map((data) => {
-        return {
-          id: data.id,
-          name: data.name,
-          lastname: data.lastname,
-          specialtyName: data.specialtyName || data.specialty,
-          imageUrl: data.imageUrl || data.photoUrl || 'assets/default-doctor.png',
-          averageRating: data.averageRating || 0,
-          reviewCount: data.reviewCount || data.totalReviews || 0,
-          consultationFee: data.consultationFee || 50,
-          experienceYears: data.experienceYears || 0,
-          bio: data.bio || '',
-        } as DoctorDetailsDto;
-      }),
-    );
+  getDoctorById(id: string): Observable<DoctorResponse> {
+    return this.http.get<DoctorResponse>(`${this.apiUrl}/${id}`);
   }
 
-  createDoctor(request: CreateDoctorRequest) {
-    return this.http.post<void>(this.apiUrl, request);
+  createDoctor(doctor: CreateDoctorRequest): Observable<void> {
+    return this.http.post<void>(this.apiUrl, doctor);
+  }
+
+  updateDoctor(id: string, doctor: UpdateDoctorRequest): Observable<void> {
+    return this.http.put<void>(`${this.apiUrl}/${id}`, doctor);
+  }
+
+  deleteDoctor(id: string): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
 
   resolveDoctorId(authUserId: string): Observable<string | null> {
@@ -72,20 +68,24 @@ export class DoctorService {
     );
   }
 
-  addReview(review: CreateReviewRequest) {
-    return this.http.post<void>(`${environment.apiUrl}/Reviews`, review);
+  uploadProfilePhoto(file: File): Observable<{ imageUrl: string }> {
+    const formData = new FormData();
+    formData.append('file', file);
+
+    return this.http.post<{ imageUrl: string }>(`${this.apiUrl}/profile-photo`, formData);
   }
 
-  getDoctorStats(doctorId: string, period: string) {
-    return this.http.get<DoctorStatsDto>(`${this.apiUrl}/${doctorId}/stats?period=${period}`);
+  getDoctorStats(id: string, period = 'month'): Observable<DoctorStatsDto> {
+    const params = new HttpParams().set('period', period);
+    return this.http.get<DoctorStatsDto>(`${this.apiUrl}/${id}/stats`, { params });
   }
 
-  getDoctorSlots(doctorId: string, date: string) {
-    const isoDate = `${date}T00:00:00Z`;
-    return this.http.get<TimeSlot[]>(`${this.apiUrl}/${doctorId}/slots?date=${isoDate}`);
+  updateSchedule(id: string, config: ScheduleConfig): Observable<void> {
+    return this.http.put<void>(`${this.apiUrl}/${id}/schedule`, config);
   }
 
-  getDoctorReviews(doctorId: string) {
-    return this.http.get<ReviewDto[]>(`${environment.apiUrl}/Reviews?doctorId=${doctorId}`);
+  getAvailableSlots(id: string, date: string): Observable<TimeSlot[]> {
+    const params = new HttpParams().set('date', date);
+    return this.http.get<TimeSlot[]>(`${this.apiUrl}/${id}/slots`, { params });
   }
 }

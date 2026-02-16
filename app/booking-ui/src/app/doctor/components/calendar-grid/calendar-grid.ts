@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CalendarDay } from '../../models/calendar.models'; // Наша новая модель
-import { AppointmentDto } from '@core/models/appointmnet.models';
+import { AppointmentResponse } from '@core/models/appointmnet.models';
 
 @Component({
   selector: 'app-calendar-grid',
@@ -15,7 +15,7 @@ export class CalendarGridComponent {
   @Input() loading = false;
   @Input() selectedId: string | undefined;
 
-  @Output() selectAppointment = new EventEmitter<AppointmentDto>();
+  @Output() selectAppointment = new EventEmitter<AppointmentResponse>();
 
   weekDays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 

@@ -2,7 +2,7 @@ import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DoctorCard, DoctorCardDto } from '@shared/components/doctor-card/doctor-card';
 import { DoctorService } from '@core/services/doctor/doctor.service';
-import { DoctorDto } from '@core/models/doctor.model';
+import { DoctorResponse } from '@core/models/doctor.model';
 
 @Component({
   selector: 'app-home',
@@ -23,7 +23,7 @@ export class Home implements OnInit {
 
   loadDoctors() {
     this.doctorService.getDoctors().subscribe({
-      next: (data: DoctorDto[]) => {
+      next: (data: DoctorResponse[]) => {
         const mappedDoctors: DoctorCardDto[] = data.slice(0, 4).map((dto) => ({
           id: dto.id,
           name: `Dr. ${dto.name} ${dto.lastname}`,

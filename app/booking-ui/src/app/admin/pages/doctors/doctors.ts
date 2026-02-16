@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { SpecialtyDto } from '@core/models/specialty.model';
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { SpecialtyService, DoctorService } from '@core/services/index';
-import { CreateDoctorRequest, DoctorDto } from '@core/models/doctor.model';
+import { CreateDoctorRequest, DoctorResponse } from '@core/models/doctor.model';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
 @Component({
@@ -17,17 +17,18 @@ export class DoctorsComponent implements OnInit {
   private specialtyService = inject(SpecialtyService);
   private fb = inject(FormBuilder);
 
-  doctors = signal<DoctorDto[]>([]);
+  doctors = signal<DoctorResponse[]>([]);
   specialties = signal<SpecialtyDto[]>([]);
 
   isLoading = signal(false);
   isModalOpen = signal(false);
 
   doctorForm: FormGroup = this.fb.group({
-    name: ['', Validators.required],
-    lastname: ['', Validators.required],
     email: ['', [Validators.required, Validators.email]],
     password: ['', [Validators.required, Validators.minLength(6)]],
+    name: ['', Validators.required],
+    lastname: ['', Validators.required],
+    phoneNumber: ['', Validators.required],
     specialtyId: ['', Validators.required],
     consultationFee: [50, [Validators.required, Validators.min(1)]],
     experienceYears: [1, [Validators.required, Validators.min(0)]],
@@ -111,7 +112,7 @@ export class DoctorsComponent implements OnInit {
       email: formValue.email,
       password: formValue.password,
       specialtyId: formValue.specialtyId,
-      isActive: true,
+      phoneNumber: formValue.phoneNumber,
       consultationFee: Number(formValue.consultationFee),
       experienceYears: Number(formValue.experienceYears),
       bio: formValue.bio || null,

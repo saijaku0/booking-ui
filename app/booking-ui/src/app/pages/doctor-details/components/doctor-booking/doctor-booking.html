@@ -2,11 +2,12 @@
   <h2>Book Appointment</h2>
 
   <div class="form-group">
-    <label for="booking-date">Date</label>
+    <label for="booking-date">Select Date</label>
     <input
       id="booking-date"
       type="date"
-      [ngModel]="selectedDate"
+      [min]="minDate"
+      [ngModel]="selectedDate()"
       (ngModelChange)="onDateChange($event)"
       class="date-input"
     />
@@ -14,16 +15,19 @@
 
   <h3 class="slots-label">Available Slots</h3>
 
-  @if (isLoadingSlots) {
-    <div class="slots-loader">Loading slots...</div>
+  @if (isLoadingSlots()) {
+    <div class="slots-loader">
+      <div class="spinner-small"></div>
+      <span>Finding slots...</span>
+    </div>
   } @else {
     <div class="slots-grid">
-      @for (slot of slots; track slot.start) {
+      @for (slot of availableSlots(); track slot.start) {
         <button
           class="slot-btn"
           [class.selected]="selectedSlot() === slot"
           [disabled]="!slot.isAvailable"
-          (click)="onSelectSlot(slot)"
+          (click)="selectedSlot.set(slot)"
         >
           {{ slot.start | date: 'HH:mm' }}
         </button>
@@ -34,8 +38,16 @@
   }
 
   <div class="action-area">
-    <button class="book-btn" [disabled]="!selectedSlot() || isBooking" (click)="onBook()">
-      {{ isBooking ? 'Creating...' : 'Confirm Booking' }}
+    <button
+      class="book-btn"
+      [disabled]="!selectedSlot() || isBooking()"
+      (click)="bookAppointment()"
+    >
+      {{ isBooking() ? 'Processing...' : 'Confirm Booking' }}
     </button>
+
+    @if (!authService.currentUser()) {
+      <p class="login-warning">Login required to confirm</p>
+    }
   </div>
 </div>

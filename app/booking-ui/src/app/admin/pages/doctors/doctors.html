@@ -26,13 +26,13 @@
                   <img [src]="doc.imageUrl" class="avatar-img" alt="avatar" />
                 } @else {
                   <div class="avatar-placeholder">
-                    {{ (doc.fullName || doc.name || '?').charAt(0).toUpperCase() }}
+                    {{ (doc.name || '?').charAt(0).toUpperCase() }}
                   </div>
                 }
 
                 <div class="details">
                   <span class="name">
-                    {{ doc.fullName || doc.name + ' ' + doc.lastname }}
+                    {{ doc.name + ' ' + doc.lastname }}
                   </span>
                   <span class="email-hint">{{ doc.specialtyName || 'No Specialty' }}</span>
                 </div>

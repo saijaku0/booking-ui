@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { DoctorDetailsDto } from '@core/models/doctor.model';
+import { DoctorResponse } from '@core/models/doctor.model';
 import { AuthService, DoctorService } from '@core/services/index';
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
@@ -17,7 +17,7 @@ export class DoctorLayout implements OnInit {
   private router = inject(Router);
 
   currentUser = this.authService.currentUser;
-  doctorProfile = signal<DoctorDetailsDto | null>(null);
+  doctorProfile = signal<DoctorResponse | null>(null);
   isProfileLoading = signal(true);
   isInitializing = signal(true);
 
@@ -31,50 +31,33 @@ export class DoctorLayout implements OnInit {
     }
 
     this.doctorService.resolveDoctorId(user.id).subscribe({
-      next: (doctorId) => {
+      next: (doctorId: string | null) => {
         if (doctorId) {
           this.loadProfile(doctorId);
         } else {
           console.error('This user is not a doctor!');
+          this.isProfileLoading.set(false);
         }
         this.isInitializing.set(false);
       },
-      error: () => this.isInitializing.set(false),
+      error: (err: string) => {
+        console.error(err);
+        this.isInitializing.set(false);
+        this.isProfileLoading.set(false);
+      },
     });
   }
 
-  initDoctorData() {
-    const user = this.currentUser();
-
-    if (user && user.id) {
-      console.log('Auth UserId (Token):', user.id);
-
-      this.doctorService.resolveDoctorId(user.id).subscribe({
-        next: (realDoctorId) => {
-          if (realDoctorId) {
-            console.log('Real DoctorId (DB PK):', realDoctorId);
-
-            this.loadProfile(realDoctorId);
-          } else {
-            console.error('Doctor entity not found for this User');
-            this.isProfileLoading.set(false);
-          }
-        },
-        error: (err) => {
-          console.error('Error resolving doctor ID', err);
-          this.isProfileLoading.set(false);
-        },
-      });
-    }
-  }
-
   loadProfile(doctorId: string) {
-    this.doctorService.getDoctorProfile(doctorId).subscribe({
-      next: (profile) => {
+    this.doctorService.getDoctorById(doctorId).subscribe({
+      next: (profile: DoctorResponse) => {
         this.doctorProfile.set(profile);
         this.isProfileLoading.set(false);
       },
-      error: (err) => console.error(err),
+      error: (err: string) => {
+        console.error('Failed to load doctor profile', err);
+        this.isProfileLoading.set(false);
+      },
     });
   }
 
