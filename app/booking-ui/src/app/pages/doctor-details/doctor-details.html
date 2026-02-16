@@ -5,27 +5,13 @@
       <p>Loading doctor profile...</p>
     </div>
   } @else if (doctor(); as doc) {
-    <div class="content-grid">
-      <div class="main-content">
+    <div class="main-content">
+      <div class="content-grid">
         <app-doctor-info [doctor]="doc" />
-
-        <app-doctor-reviews
-          [reviews]="reviews()"
-          [user]="currentUser()"
-          [isSubmitting]="isSubmittingReview()"
-          (submitReview)="submitReview($event)"
-        />
-      </div>
-
-      <div class="sidebar">
-        <app-doctor-booking
-          [slots]="availableSlots()"
-          [selectedDate]="selectedDate()"
-          [isLoadingSlots]="isLoadingSlots()"
-          [isBooking]="isBooking()"
-          (dateChange)="selectedDate.set($event)"
-          (confirmBooking)="bookAppointment($event)"
-        />
+        <div class="sidebar">
+          <app-doctor-booking [doctor]="doc" />
+        </div>
+        <app-doctor-reviews [doctorId]="doc.id" />
       </div>
     </div>
   } @else {

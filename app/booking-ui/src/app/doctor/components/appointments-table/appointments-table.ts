@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output, signal } from '@angular/core';
-import { AppointmentDto, AppointmentStatus } from '@core/models/appointmnet.models';
+import { AppointmentResponse, AppointmentStatus } from '@core/models/appointmnet.models';
 
 @Component({
   selector: 'app-appointments-table',
@@ -9,7 +9,7 @@ import { AppointmentDto, AppointmentStatus } from '@core/models/appointmnet.mode
   styleUrl: './appointments-table.scss',
 })
 export class AppointmentsTable {
-  @Input({ required: true }) appointments: AppointmentDto[] = [];
+  @Input({ required: true }) appointments: AppointmentResponse[] = [];
   @Input() isLoading = false;
 
   @Output() action = new EventEmitter<{ type: string; id: string }>();

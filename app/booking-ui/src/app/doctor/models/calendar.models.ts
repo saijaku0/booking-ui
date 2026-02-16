@@ -1,7 +1,7 @@
-import { AppointmentDto } from '@core/models/appointmnet.models';
+import { AppointmentResponse } from '@core/models/appointmnet.models';
 
 export interface CalendarDay {
   date: Date;
   isCurrentMonth: boolean;
-  appointments: AppointmentDto[];
+  appointments: AppointmentResponse[];
 }

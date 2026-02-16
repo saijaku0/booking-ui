@@ -37,7 +37,7 @@
                 @if (appt.patientName) {
                   {{ appt.patientName }}
                 } @else {
-                  #{{ appt.customerId | slice: 0 : 5 }}
+                  #{{ appt.patientId | slice: 0 : 5 }}
                 }
               </span>
             </div>

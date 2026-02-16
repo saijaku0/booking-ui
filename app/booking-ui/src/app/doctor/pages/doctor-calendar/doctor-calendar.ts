@@ -1,12 +1,12 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component, inject, OnInit, signal } from '@angular/core';
 import { finalize } from 'rxjs';
-import { AppointmentDto } from '@core/models/appointmnet.models';
-import { AppointmentService, DoctorService } from '@core/services';
+import { AppointmentService, AuthService, DoctorService } from '@core/services';
 import { CalendarDay } from '../../models/calendar.models';
 import { AppointmentDetailsComponent } from '../../components/appointment-details/appointment-details';
 import { CalendarHeaderComponent } from '../../components/calendar-header.component/calendar-header.component';
 import { CalendarGridComponent } from '../../components/calendar-grid/calendar-grid';
+import { AppointmentResponse } from '@core/models/appointmnet.models';
 
 @Component({
   selector: 'app-doctor-calendar',
@@ -23,9 +23,10 @@ import { CalendarGridComponent } from '../../components/calendar-grid/calendar-g
 export class DoctorCalendarComponent implements OnInit {
   private appointmentService = inject(AppointmentService);
   private doctorService = inject(DoctorService);
+  private authService = inject(AuthService);
   private cdr = inject(ChangeDetectorRef);
 
-  selectedAppointment = signal<AppointmentDto | null>(null);
+  selectedAppointment = signal<AppointmentResponse | null>(null);
   viewDate: Date = new Date();
   calendarDays: CalendarDay[] = [];
   loading = false;
@@ -64,9 +65,12 @@ export class DoctorCalendarComponent implements OnInit {
 
     if (this.calendarDays.length === 0) this.generateCalendar();
 
+    if (!this.calendarDays.length) return;
+
     const startIso = this.calendarDays[0].date.toISOString();
     const endIso = this.calendarDays[this.calendarDays.length - 1].date.toISOString();
-    const doctorId = this.doctorService.currentDoctorId();
+
+    const doctorId = this.authService.currentUser()?.id;
 
     if (!doctorId) {
       this.loading = false;
@@ -74,7 +78,7 @@ export class DoctorCalendarComponent implements OnInit {
     }
 
     this.appointmentService
-      .getAppointmentList(doctorId, startIso, endIso)
+      .getDoctorSchedule(startIso, endIso)
       .pipe(
         finalize(() => {
           this.loading = false;
@@ -82,16 +86,16 @@ export class DoctorCalendarComponent implements OnInit {
         }),
       )
       .subscribe({
-        next: (data) => {
+        next: (data: AppointmentResponse[]) => {
           this.mapAppointmentsToDays(data);
         },
-        error: (err) => {
+        error: (err: string) => {
           console.error('ERROR:', err);
         },
       });
   }
 
-  private mapAppointmentsToDays(appointments: AppointmentDto[]) {
+  private mapAppointmentsToDays(appointments: AppointmentResponse[]) {
     if (!appointments || !Array.isArray(appointments)) return;
 
     this.calendarDays.forEach((day) => (day.appointments = []));
@@ -123,7 +127,7 @@ export class DoctorCalendarComponent implements OnInit {
     this.loadAppointments();
   }
 
-  onAppointmentSelect(appt: AppointmentDto) {
+  onAppointmentSelect(appt: AppointmentResponse) {
     if (this.selectedAppointment()?.id === appt.id) {
       this.selectedAppointment.set(null);
     } else {

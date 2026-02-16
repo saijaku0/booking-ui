@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
-import { DoctorDetailsDto } from '@core/models/doctor.model';
+import { DoctorResponse } from '@core/models/doctor.model';
 
 @Component({
   selector: 'app-doctor-info',
@@ -9,5 +9,5 @@ import { DoctorDetailsDto } from '@core/models/doctor.model';
   styleUrl: './doctor-info.scss',
 })
 export class DoctorInfo {
-  @Input() doctor!: DoctorDetailsDto;
+  @Input({ required: true }) doctor!: DoctorResponse;
 }

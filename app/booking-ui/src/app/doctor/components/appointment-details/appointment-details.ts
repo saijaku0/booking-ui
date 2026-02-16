@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { AppointmentDto } from '@core/models/appointmnet.models';
+import { AppointmentResponse } from '@core/models/appointmnet.models';
 
 @Component({
   selector: 'app-appointment-details',
@@ -10,6 +10,6 @@ import { AppointmentDto } from '@core/models/appointmnet.models';
   styleUrl: './appointment-details.scss',
 })
 export class AppointmentDetailsComponent {
-  @Input({ required: true }) appointment!: AppointmentDto;
+  @Input({ required: true }) appointment!: AppointmentResponse;
   @Output() closeDetails = new EventEmitter<void>();
 }

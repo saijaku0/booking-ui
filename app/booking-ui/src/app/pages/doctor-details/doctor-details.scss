@@ -26,8 +26,25 @@ h2 {
 .content-grid {
   display: grid;
   grid-template-columns: 2fr 1fr;
+  grid-template-areas:
+    'info sidebar'
+    'reviews sidebar';
   gap: 40px;
   align-items: start;
+
+  app-doctor-info {
+    grid-area: info;
+  }
+
+  .sidebar {
+    grid-area: sidebar;
+    position: sticky;
+    top: 24px;
+  }
+
+  app-doctor-reviews {
+    grid-area: reviews;
+  }
 }
 
 .loading-state,
@@ -54,10 +71,14 @@ h2 {
 @media (max-width: 992px) {
   .content-grid {
     grid-template-columns: 1fr;
+    grid-template-areas:
+      'info'
+      'sidebar'
+      'reviews';
     gap: 32px;
   }
 
-  .sidebar .booking-card.sticky {
+  .sidebar {
     position: static;
   }
 }

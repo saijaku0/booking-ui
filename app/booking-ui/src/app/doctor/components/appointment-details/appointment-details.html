@@ -5,7 +5,7 @@
         @if (appointment.patientName) {
           {{ appointment.patientName }}
         } @else {
-          Patient #{{ appointment.customerId | slice: 0 : 5 }}
+          Patient #{{ appointment.patientId | slice: 0 : 5 }}
         }
       </h3>
 
