@@ -1,9 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, Output, signal } from '@angular/core';
-import { AppointmentResponse, AppointmentStatus } from '@core/models/appointmnet.models';
+import { Component, EventEmitter, Input, Output, computed, signal } from '@angular/core';
+import { AppointmentResponse } from '@core/models/appointmnet.models';
 
 @Component({
   selector: 'app-appointments-table',
+  standalone: true,
   imports: [CommonModule],
   templateUrl: './appointments-table.html',
   styleUrl: './appointments-table.scss',
@@ -11,79 +12,95 @@ import { AppointmentResponse, AppointmentStatus } from '@core/models/appointmnet
 export class AppointmentsTable {
   @Input({ required: true }) appointments: AppointmentResponse[] = [];
   @Input() isLoading = false;
-
   @Output() action = new EventEmitter<{ type: string; id: string }>();
+
+  searchQuery = signal('');
+  statusFilter = signal<string>('all');
+  periodFilter = signal<string>('all');
 
   activeMenuId = signal<string | null>(null);
 
-  getInitials(name: string): string {
-    if (!name) return '';
-    const parts = name.split(' ');
-    if (parts.length === 1) return parts[0].substring(0, 2).toUpperCase();
-    return (parts[0][0] + parts[1][0]).toUpperCase();
-  }
+  filteredAppointments = computed(() => {
+    let data = this.appointments;
+    const query = this.searchQuery().toLowerCase();
+    const status = this.statusFilter().toLowerCase();
+    const period = this.periodFilter();
 
-  generateColor(name: string | undefined): string {
-    if (!name) return '#e0e0e0';
-
-    const colors = [
-      '#FFCDD2',
-      '#F8BBD0',
-      '#E1BEE7',
-      '#D1C4E9',
-      '#C5CAE9',
-      '#BBDEFB',
-      '#B3E5FC',
-      '#B2EBF2',
-      '#B2DFDB',
-      '#C8E6C9',
-      '#DCEDC8',
-      '#F0F4C3',
-      '#FFECB3',
-      '#FFE0B2',
-      '#FFCCBC',
-    ];
-
-    let hash = 0;
-    for (let i = 0; i < name.length; i++) {
-      hash = name.charCodeAt(i) + ((hash << 5) - hash);
+    if (query) {
+      data = data.filter((a) => a.patientName.toLowerCase().includes(query));
     }
 
-    const index = Math.abs(hash % colors.length);
+    if (status !== 'all') {
+      data = data.filter((a) => a.status.toLowerCase() === status);
+    }
 
-    return colors[index];
+    if (period !== 'all') {
+      const now = new Date();
+      now.setHours(0, 0, 0, 0);
+
+      data = data.filter((a) => {
+        const appDate = new Date(a.startTime);
+        appDate.setHours(0, 0, 0, 0);
+
+        if (period === 'today') {
+          return appDate.getTime() === now.getTime();
+        }
+        if (period === 'upcoming') {
+          return appDate >= now;
+        }
+        return true;
+      });
+    }
+
+    return data.sort((a, b) => new Date(a.startTime).getTime() - new Date(b.startTime).getTime());
+  });
+
+  setFilter(filterType: 'status' | 'period', value: string) {
+    if (filterType === 'status') this.statusFilter.set(value);
+    if (filterType === 'period') this.periodFilter.set(value);
+    this.activeMenuId.set(null);
   }
 
-  getStatusClass(status: AppointmentStatus): string {
-    switch (status) {
-      case AppointmentStatus.Confirmed:
-        return 'confirmed';
-      case AppointmentStatus.Pending:
-        return 'pending';
-      case AppointmentStatus.Canceled:
-        return 'cancelled';
-      case AppointmentStatus.Completed:
-        return 'completed';
-      default:
-        return '';
-    }
+  onSearch(event: Event) {
+    const input = event.target as HTMLInputElement;
+    this.searchQuery.set(input.value);
   }
 
   toggleMenu(id: string, event: Event) {
     event.stopPropagation();
     if (this.activeMenuId() === id) {
-      this.activeMenuId.set(null);
+      this.closeMenu();
     } else {
       this.activeMenuId.set(id);
     }
   }
 
-  onActionClick(type: string, id: string) {
-    this.activeMenuId.set(null);
-    this.action.emit({ type, id });
-  }
-
   closeMenu() {
     this.activeMenuId.set(null);
+  }
+
+  emitAction(type: string, id: string) {
+    this.action.emit({ type, id });
+    this.closeMenu();
+  }
+
+  getInitials(name: string): string {
+    return name
+      ? name
+          .split(' ')
+          .map((n) => n[0])
+          .join('')
+          .substring(0, 2)
+          .toUpperCase()
+      : '?';
+  }
+
+  generateColor(name: string): string {
+    const colors = ['#BFDBFE', '#BBF7D0', '#FECACA', '#FED7AA', '#DDD6FE', '#FBCFE8'];
+    let hash = 0;
+    for (let i = 0; i < name.length; i++) {
+      hash = name.charCodeAt(i) + ((hash << 5) - hash);
+    }
+    return colors[Math.abs(hash) % colors.length];
   }
 }
