@@ -1,49 +1,50 @@
 <div class="details-panel" id="appointment-details">
   <div class="details-header">
     <div class="header-left">
-      <h3>
-        @if (appointment.patientName) {
-          {{ appointment.patientName }}
-        } @else {
-          Patient #{{ appointment.patientId | slice: 0 : 5 }}
-        }
-      </h3>
-
-      <span class="status-badge" [class]="(appointment.status || 'pending').toLowerCase()">
-        {{ appointment.status || 'Pending' }}
+      <h3>{{ appointment.patientName || 'Patient' }}</h3>
+      <span class="status-badge" [class]="appointment.status.toLowerCase()">
+        {{ appointment.status }}
       </span>
     </div>
-
     <button class="close-btn" (click)="closeDetails.emit()">
       <span class="material-icons">close</span>
     </button>
   </div>
 
   <div class="details-body">
-    <div class="info-grid">
-      <div class="info-item">
-        <span class="label">Appointment Time</span>
-        <div class="value-with-icon">
-          <span class="material-icons">schedule</span>
-          <span>
-            {{ appointment.startTime | date: 'fullDate' }}
-            at <strong>{{ appointment.startTime | date: 'shortTime' }}</strong>
-          </span>
-        </div>
-      </div>
-
-      <div class="info-item">
-        <span class="label">Medical Notes</span>
-        <p class="value notes">
-          {{ appointment.medicalNotes || 'No notes provided yet.' }}
-        </p>
-      </div>
+    <div class="info-item">
+      <span class="label">Time</span>
+      <p>{{ appointment.startTime | date: 'fullDate' }}</p>
     </div>
 
-    <div class="actions-row">
-      <button class="action-btn secondary">
-        <span class="material-icons">history</span> Patient History
-      </button>
+    <div class="info-item">
+      <span class="label">Medical Notes</span>
+      <p class="notes-text">{{ appointment.medicalNotes || 'No notes.' }}</p>
+    </div>
+
+    <hr class="divider" />
+
+    <div class="attachments-section">
+      <span class="label">Attached Files ({{ appointment.attachments?.length || 0 }})</span>
+
+      <div class="files-list">
+        @for (file of appointment.attachments; track file.id) {
+          <div class="file-card">
+            <span class="material-icons">
+              {{ file.fileType.includes('image') ? 'image' : 'description' }}
+            </span>
+            <div class="file-info">
+              <span class="name">{{ file.fileName }}</span>
+              <span class="date">{{ file.createdAt | date: 'short' }}</span>
+            </div>
+            <button class="download-icon" (click)="$event.stopPropagation()">
+              <span class="material-icons">download</span>
+            </button>
+          </div>
+        } @empty {
+          <p class="empty-text">No files attached to this appointment.</p>
+        }
+      </div>
     </div>
   </div>
 </div>

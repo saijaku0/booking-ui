@@ -120,38 +120,50 @@
       border-left: 3px solid #cbd5e0;
     }
   }
+}
 
-  .actions-row {
+.files-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.file-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+
+  .material-icons {
+    color: #64748b;
+  }
+
+  .file-info {
+    flex: 1;
     display: flex;
-    gap: 12px;
-    border-top: 1px solid #edf2f7;
-    padding-top: 20px;
-
-    .action-btn {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      padding: 10px 20px;
-      border-radius: 8px;
-      border: 1px solid transparent;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.2s;
+    flex-direction: column;
+    .name {
       font-size: 0.9rem;
+      font-weight: 500;
+      color: #1e293b;
+    }
+    .date {
+      font-size: 0.75rem;
+      color: #94a3b8;
+    }
+  }
 
-      .material-icons {
-        font-size: 18px;
-      }
-
-      &.secondary {
-        background: white;
-        border-color: #e2e8f0;
-        color: #4a5568;
-        &:hover {
-          background: #f7fafc;
-          border-color: #cbd5e0;
-        }
-      }
+  .download-icon {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #3b82f6;
+    &:hover {
+      color: #2563eb;
     }
   }
 }

@@ -12,4 +12,11 @@ import { AppointmentResponse } from '@core/models/appointmnet.models';
 export class AppointmentDetailsComponent {
   @Input({ required: true }) appointment!: AppointmentResponse;
   @Output() closeDetails = new EventEmitter<void>();
+  @Output() isDetailsOpen = new EventEmitter<string>();
+
+  onViewHistory() {
+    if (this.appointment.patientId) {
+      this.isDetailsOpen.emit(this.appointment.patientId);
+    }
+  }
 }
