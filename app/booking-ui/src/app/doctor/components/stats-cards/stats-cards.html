@@ -1,25 +1,59 @@
-<div class="stats-grid">
-  <div class="stat-card">
-    <span class="label">Total Earnings</span>
-    <div class="value">
-      {{ stats.totalEarnings | currency: 'EUR' : 'symbol' : '1.2-2' }}
+<div class="stats-container">
+  <div class="stats-header">
+    <h3>Statistics</h3>
+
+    <div class="period-toggle">
+      @for (period of periods; track period) {
+        <button
+          type="button"
+          [class.active]="selectedPeriod() === period"
+          (click)="loadStats(period)"
+          [disabled]="isLoading()"
+        >
+          {{ period }}
+        </button>
+      }
     </div>
   </div>
 
-  <div class="stat-card">
-    <span class="label">Total Patients</span>
-    <div class="value">{{ stats.totalPatients }}</div>
-  </div>
-
-  <div class="stat-card">
-    <span class="label">Completed</span>
-    <div class="value">{{ stats.completedAppointments }}</div>
-  </div>
-
-  @if (stats.appointmentsToday !== undefined) {
-    <div class="stat-card today">
-      <span class="label">Appointments Today</span>
-      <div class="value">{{ stats.appointmentsToday }}</div>
+  @if (isLoading()) {
+    <div class="loading-state">
+      <div class="spinner"></div>
+      <p>Updating numbers...</p>
     </div>
+  } @else if (stats(); as s) {
+    <div class="cards-grid">
+      <div class="stat-card blue">
+        <div class="icon-box">
+          <span class="material-icons">people</span>
+        </div>
+        <div class="info">
+          <span class="label">Total Patients</span>
+          <span class="value">{{ s.totalPatients }}</span>
+        </div>
+      </div>
+
+      <div class="stat-card green">
+        <div class="icon-box">
+          <span class="material-icons">event_available</span>
+        </div>
+        <div class="info">
+          <span class="label">Completed</span>
+          <span class="value">{{ s.completedAppointments }}</span>
+        </div>
+      </div>
+
+      <div class="stat-card purple">
+        <div class="icon-box">
+          <span class="material-icons">payments</span>
+        </div>
+        <div class="info">
+          <span class="label">Total Earnings</span>
+          <span class="value">{{ s.totalEarnings | currency: 'USD' : 'symbol' : '1.0-0' }}</span>
+        </div>
+      </div>
+    </div>
+  } @else {
+    <div class="empty-state">No statistics available.</div>
   }
 </div>
