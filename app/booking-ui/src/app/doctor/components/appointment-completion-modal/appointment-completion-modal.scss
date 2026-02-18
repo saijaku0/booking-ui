@@ -1,177 +1,136 @@
-.modal-backdrop {
+.modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
-  width: 100vw;
-  height: 100vh;
+  width: 100%;
+  height: 100%;
   background: rgba(0, 0, 0, 0.5);
   display: flex;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
   z-index: 1000;
-  backdrop-filter: blur(2px);
-  animation: fadeIn 0.2s ease-out;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s;
+
+  &.open {
+    opacity: 1;
+    visibility: visible;
+  }
 }
 
 .modal-container {
   background: white;
   width: 90%;
-  max-width: 600px;
-  border-radius: 16px;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+  max-width: 600px; // Чуть шире для формы
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
   display: flex;
   flex-direction: column;
-  overflow: hidden;
-  animation: slideUp 0.3s ease-out;
+  max-height: 90vh; // Чтобы не улетал за экран
+}
 
-  .modal-header {
-    padding: 20px 24px;
-    border-bottom: 1px solid #eee;
+.modal-header {
+  padding: 20px;
+  border-bottom: 1px solid #e5e7eb;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  h3 {
+    margin: 0;
+    font-size: 1.25rem;
+    color: #111827;
+  }
+
+  .close-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #9ca3af;
+    &:hover {
+      color: #111827;
+    }
+  }
+}
+
+.modal-body {
+  padding: 20px;
+  overflow-y: auto; // Скролл для длинной формы
+
+  .patient-info {
+    margin-top: 0;
+    margin-bottom: 20px;
+    color: #4b5563;
+    font-size: 0.95rem;
+  }
+}
+
+.form-group {
+  margin-bottom: 16px;
+
+  label {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #374151;
+    margin-bottom: 6px;
+
+    .required {
+      color: #ef4444;
+    }
+  }
+
+  input,
+  textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    font-family: inherit;
+    resize: vertical;
+
+    &:focus {
+      outline: none;
+      border-color: #2563eb;
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+    }
+  }
+}
+
+.modal-footer {
+  padding: 16px 20px;
+  border-top: 1px solid #e5e7eb;
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+
+  button {
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-weight: 500;
+    cursor: pointer;
+    border: none;
     display: flex;
-    justify-content: space-between;
     align-items: center;
+    gap: 6px;
+  }
 
-    h3 {
-      margin: 0;
-      color: #2c3e50;
-      font-size: 1.25rem;
-    }
-
-    .close-btn {
-      background: none;
-      border: none;
-      cursor: pointer;
-      color: #95a5a6;
-      &:hover {
-        color: #e74c3c;
-      }
+  .btn-cancel {
+    background: white;
+    border: 1px solid #d1d5db;
+    color: #374151;
+    &:hover {
+      background: #f9fafb;
     }
   }
 
-  .modal-body {
-    padding: 24px;
-
-    .patient-info {
-      margin-top: 0;
-      color: #7f8c8d;
-      margin-bottom: 20px;
-      strong {
-        color: #2c3e50;
-      }
+  .btn-confirm {
+    background: #2563eb;
+    color: white;
+    &:hover {
+      background: #1d4ed8;
     }
-
-    .form-group {
-      margin-bottom: 24px;
-      label {
-        display: block;
-        margin-bottom: 8px;
-        font-weight: 600;
-        color: #34495e;
-      }
-      textarea {
-        width: 100%;
-        padding: 12px;
-        border: 1px solid #bdc3c7;
-        border-radius: 8px;
-        font-family: inherit;
-        resize: vertical;
-        &:focus {
-          outline: none;
-          border-color: #3498db;
-          box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
-        }
-      }
-    }
-
-    .attachments-section {
-      label {
-        font-size: 0.85rem;
-        color: #95a5a6;
-        display: block;
-        margin-bottom: 8px;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-      }
-      .action-buttons {
-        display: flex;
-        gap: 10px;
-        flex-wrap: wrap;
-
-        .secondary-btn {
-          display: flex;
-          align-items: center;
-          gap: 6px;
-          background: #f8f9fa;
-          border: 1px solid #e9ecef;
-          padding: 8px 12px;
-          border-radius: 6px;
-          color: #495057;
-          cursor: pointer;
-          transition: all 0.2s;
-
-          &:hover {
-            background: #e9ecef;
-          }
-          .material-icons {
-            font-size: 18px;
-          }
-        }
-      }
-    }
-  }
-
-  .modal-footer {
-    padding: 16px 24px;
-    background: #f8f9fa;
-    display: flex;
-    justify-content: flex-end;
-    gap: 12px;
-
-    button {
-      padding: 10px 20px;
-      border-radius: 8px;
-      font-weight: 600;
-      cursor: pointer;
-      border: none;
-    }
-
-    .cancel-btn {
-      background: white;
-      border: 1px solid #dee2e6;
-      color: #495057;
-      &:hover {
-        background: #f1f3f5;
-      }
-    }
-
-    .confirm-btn {
-      background: #27ae60;
-      color: white;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      &:hover {
-        background: #219150;
-      }
-    }
-  }
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-@keyframes slideUp {
-  from {
-    transform: translateY(20px);
-    opacity: 0;
-  }
-  to {
-    transform: translateY(0);
-    opacity: 1;
   }
 }
