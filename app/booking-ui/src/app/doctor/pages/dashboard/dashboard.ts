@@ -1,245 +1,205 @@
+import { Component, computed, effect, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Component, computed, effect, inject, signal, ViewChild } from '@angular/core';
+import { finalize } from 'rxjs/operators';
+
 import { AppointmentService, DoctorService } from '@core/services/index';
 import {
   AppointmentResponse,
   AppointmentStatus,
   CompleteAppointmentRequest,
 } from '@core/models/appointmnet.models';
+
 import { StatsCards } from '../../components/stats-cards/stats-cards';
 import { AppointmentsTable } from '../../components/appointments-table/appointments-table';
 import { AppointmentCompletionModal } from '../../components/appointment-completion-modal/appointment-completion-modal';
-import { DoctorStatsDto } from '@core/models/doctor.model';
-import { finalize } from 'rxjs/internal/operators/finalize';
+import { CompletionFormData } from '../../components/appointment-completion-modal/model/completion-model';
+import { RescheduleModal } from '../../components/reschedule-modal/reschedule-modal';
+import { AppointmentDetailsModal } from '../../components/appointment-details-modal/appointment-details-modal';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, StatsCards, AppointmentsTable, AppointmentCompletionModal],
+  imports: [
+    CommonModule,
+    StatsCards,
+    AppointmentsTable,
+    AppointmentCompletionModal,
+    RescheduleModal,
+    AppointmentDetailsModal,
+  ],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.scss',
 })
 export class Dashboard {
+  public doctorService = inject(DoctorService);
   private appointmentService = inject(AppointmentService);
-  private doctorService = inject(DoctorService);
-  readonly filterOptions = signal(['all', 'pending', 'confirmed', 'canceled', 'completed']);
-  readonly periods = ['Day', 'Week', 'Month'];
-  @ViewChild(AppointmentsTable) appointmentsTable!: AppointmentsTable;
-  isCompleteModalOpen = signal(false);
-  selectedAppointmentForCompletion = signal<{ id: string; name: string } | null>(null);
 
   appointments = signal<AppointmentResponse[]>([]);
-  selectedPeriod = signal<string>('Day');
-  stats = signal<DoctorStatsDto | null>(null);
-  isLoadingStats = signal<boolean>(false);
   isLoading = signal(true);
-  searchQuery = signal('');
-  statusFilter = signal('all');
+
+  isCompleteModalOpen = signal(false);
+  selectedAppointmentId = signal<string | null>(null);
+  selectedPatientName = signal<string>('');
+
+  isRescheduleModalOpen = signal(false);
+  rescheduleAppointmentId = signal<string | null>(null);
+
+  selectedDetailsId = signal<string | null>(null);
+  isDetailsOpen = signal(false);
 
   doctorFullName = computed(() => {
     const doc = this.doctorService.currentDoctor();
-    if (doc) {
-      return `${doc.name} ${doc.lastname}`;
-    }
-    return 'Doctor';
-  });
-
-  filteredAppointments = computed(() => {
-    const all = this.appointments();
-    const query = this.searchQuery().toLowerCase();
-    const filter = this.statusFilter().toLowerCase();
-
-    return all.filter((a) => {
-      const matchesName = (a.patientName || '').toLowerCase().includes(query);
-      const matchesStatus = filter === 'all' ? true : a.status.toLowerCase() === filter;
-      return matchesName && matchesStatus;
-    });
+    return doc ? `${doc.name} ${doc.lastname}` : 'Doctor';
   });
 
   constructor() {
     effect(() => {
       const doctorId = this.doctorService.currentDoctorId();
-
       if (doctorId) {
         this.loadSchedule(doctorId);
-        this.loadStats(this.selectedPeriod());
       }
     });
   }
 
-  loadStats(period: string): void {
-    this.selectedPeriod.set(period);
-    this.isLoadingStats.set(true);
-
-    const doctorId = this.doctorService.currentDoctorId();
-
+  loadSchedule(idOrNull?: string) {
+    const doctorId = idOrNull || this.doctorService.currentDoctorId();
     if (!doctorId) return;
 
-    this.doctorService
-      .getDoctorStats(doctorId, period)
-      .pipe(finalize(() => this.isLoadingStats.set(false)))
+    this.isLoading.set(true);
+
+    const now = new Date();
+    const nextMonth = new Date();
+    nextMonth.setDate(now.getDate() + 30);
+
+    this.appointmentService
+      .getDoctorAppointments(doctorId, now.toISOString(), nextMonth.toISOString())
+      .pipe(finalize(() => this.isLoading.set(false)))
       .subscribe({
         next: (data) => {
-          this.stats.set(data);
-          console.log('Статистика загружена:', data);
+          this.appointments.set(data);
         },
         error: (err) => {
-          console.error('Статистика не загрузилась:', err);
+          console.error('Ошибка загрузки:', err);
+          this.appointments.set([]);
         },
       });
-  }
-
-  setFilter(filter: string) {
-    this.statusFilter.set(filter);
-  }
-
-  closeAllMenus() {
-    if (this.appointmentsTable) {
-      this.appointmentsTable.closeMenu();
-    }
-  }
-
-  updateFilter(filter: string, event: Event) {
-    event.stopPropagation();
-    this.setFilter(filter);
-  }
-
-  onSearch(event: Event) {
-    const input = event.target as HTMLInputElement;
-    this.searchQuery.set(input.value);
   }
 
   handleTableAction(event: { type: string; id: string }) {
     const { type, id } = event;
 
-    if (type === 'view') {
-      console.log('Open details for', id);
-    }
-    if (type === 'cancel') {
-      this.cancelAppointment(id);
-    }
-    if (type === 'confirm') {
-      this.confirmAppointment(id);
-    }
-    if (type === 'complete') {
-      this.completeAppointment(id);
+    switch (type) {
+      case 'view':
+        this.selectedDetailsId.set(id);
+        this.isDetailsOpen.set(true);
+        break;
+
+      case 'reschedule':
+        this.rescheduleAppointmentId.set(id);
+        this.isRescheduleModalOpen.set(true);
+        break;
+
+      case 'confirm':
+        this.changeStatus(id, AppointmentStatus.Confirmed);
+        break;
+
+      case 'cancel':
+        if (confirm('Are you sure you want to cancel this appointment?')) {
+          this.changeStatus(id, AppointmentStatus.Canceled);
+        }
+        break;
+
+      case 'complete': {
+        const appt = this.appointments().find((a) => a.id === id);
+        if (appt) {
+          this.selectedAppointmentId.set(id);
+          this.selectedPatientName.set(appt.patientName);
+          this.isCompleteModalOpen.set(true);
+        }
+        break;
+      }
     }
   }
 
-  confirmAppointment(id: string) {
-    this.appointmentService.confirmAppointment(id).subscribe({
-      next: () => {
-        this.appointments.update((list) =>
-          list.map((a) => {
-            if (a.id === id) {
-              return { ...a, status: AppointmentStatus.Confirmed };
-            }
-            return a;
-          }),
-        );
-      },
-      error: (err) => {
-        console.error('Failed to confirm', err);
-        alert('Could not confirm appointment');
-      },
-    });
-  }
+  onRescheduleConfirm(newDateIso: string) {
+    const id = this.rescheduleAppointmentId();
+    if (!id) return;
 
-  cancelAppointment(id: string) {
-    if (!confirm('Are you sure you want to cancel this appointment?')) {
-      return;
-    }
+    const originalAppt = this.appointments().find((a) => a.id === id);
+    if (!originalAppt) return;
 
-    this.appointmentService.cancelAppointment(id).subscribe({
-      next: () => {
-        this.appointments.update((currentList) =>
-          currentList.map((appt) => {
-            if (appt.id === id) {
-              return { ...appt, status: AppointmentStatus.Canceled };
-            }
-            return appt;
-          }),
-        );
-      },
-      error: (err) => {
-        console.error('Failed to cancel', err);
-        alert('Error cancelling appointment');
-      },
-    });
-  }
+    const start = new Date(originalAppt.startTime).getTime();
+    const end = new Date(originalAppt.endTime).getTime();
+    const durationMs = end - start;
 
-  completeAppointment(id: string) {
-    const appt = this.appointments().find((a) => a.id === id);
-    if (!appt) return;
+    const newStart = new Date(newDateIso).getTime();
+    const newEndIso = new Date(newStart + durationMs).toISOString();
 
-    this.selectedAppointmentForCompletion.set({ id: appt.id, name: appt.patientName });
-
-    this.isCompleteModalOpen.set(true);
-  }
-
-  onModalConfirm(notes: string) {
-    const selected = this.selectedAppointmentForCompletion();
-    if (!selected) return;
-
-    const completionRequest: CompleteAppointmentRequest = {
-      appointmentId: selected.id,
-      diagnosis: 'Consultation Complete',
-      medicalNotes: notes,
-      treatmentPlan: '',
-      prescribedMedications: '',
-    };
-
-    this.appointmentService.completeAppointment(selected.id, completionRequest).subscribe({
+    this.appointmentService.rescheduleAppointment(id, newDateIso, newEndIso).subscribe({
       next: () => {
         this.appointments.update((list) =>
           list.map((a) =>
-            a.id === selected.id ? { ...a, status: AppointmentStatus.Completed } : a,
+            a.id === id
+              ? {
+                  ...a,
+                  startTime: newDateIso,
+                  endTime: newEndIso,
+                  status: AppointmentStatus.Confirmed,
+                }
+              : a,
           ),
         );
-        this.closeCompleteModal();
+        alert('Appointment rescheduled successfully');
       },
       error: (err) => {
-        console.error('Error', err);
+        console.error(err);
+        alert('Failed to reschedule. Probably slot is taken.');
+      },
+    });
+  }
+
+  private changeStatus(id: string, status: AppointmentStatus) {
+    const request$ =
+      status === AppointmentStatus.Confirmed
+        ? this.appointmentService.confirmAppointment(id)
+        : this.appointmentService.cancelAppointment(id);
+
+    request$.subscribe({
+      next: () => {
+        this.appointments.update((list) => list.map((a) => (a.id === id ? { ...a, status } : a)));
+      },
+      error: () => alert('Failed to update status'),
+    });
+  }
+
+  onCompleteConfirm(formData: CompletionFormData) {
+    const id = this.selectedAppointmentId();
+    if (!id) return;
+
+    const req: CompleteAppointmentRequest = {
+      appointmentId: id,
+      diagnosis: formData.diagnosis,
+      medicalNotes: formData.medicalNotes,
+      treatmentPlan: formData.treatmentPlan,
+      prescribedMedications: formData.prescribedMedications,
+    };
+
+    this.appointmentService.completeAppointment(id, req).subscribe({
+      next: () => {
+        this.appointments.update((list) =>
+          list.map((a) => (a.id === id ? { ...a, status: AppointmentStatus.Completed } : a)),
+        );
+        this.closeModal();
+      },
+      error: (err) => {
+        console.error(err);
         alert('Error completing appointment');
       },
     });
   }
 
-  closeCompleteModal() {
+  closeModal() {
     this.isCompleteModalOpen.set(false);
-    this.selectedAppointmentForCompletion.set(null);
-  }
-
-  loadSchedule(doctorId: string) {
-    this.isLoading.set(true);
-    this.appointmentService.getDoctorSchedule(doctorId).subscribe({
-      next: (data) => {
-        this.appointments.set(data);
-        this.calculateStats(data);
-        this.isLoading.set(false);
-      },
-      error: () => {
-        this.isLoading.set(false);
-      },
-    });
-  }
-
-  private calculateStats(data: AppointmentResponse[]) {
-    const today = new Date().toLocaleDateString('en-CA');
-    const todayCount = data.filter((a) => a.startTime.startsWith(today)).length;
-
-    this.stats.update(
-      (current) =>
-        ({
-          ...(current || {
-            totalPatients: 0,
-            completedAppointments: 0,
-            totalEarnings: 0,
-            period: 'Day',
-          }),
-          totalPatients: data.length,
-          appointmentsToday: todayCount,
-        }) as DoctorStatsDto,
-    );
+    this.selectedAppointmentId.set(null);
   }
 }

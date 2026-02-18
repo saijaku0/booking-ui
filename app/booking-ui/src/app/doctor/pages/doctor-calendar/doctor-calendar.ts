@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component, inject, OnInit, signal } from '@angular/core';
 import { finalize } from 'rxjs';
-import { AppointmentService, AuthService, DoctorService } from '@core/services';
+import { AppointmentService, AuthService } from '@core/services';
 import { CalendarDay } from '../../models/calendar.models';
 import { AppointmentDetailsComponent } from '../../components/appointment-details/appointment-details';
 import { CalendarHeaderComponent } from '../../components/calendar-header.component/calendar-header.component';
@@ -22,7 +22,6 @@ import { AppointmentResponse } from '@core/models/appointmnet.models';
 })
 export class DoctorCalendarComponent implements OnInit {
   private appointmentService = inject(AppointmentService);
-  private doctorService = inject(DoctorService);
   private authService = inject(AuthService);
   private cdr = inject(ChangeDetectorRef);
 

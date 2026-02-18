@@ -45,8 +45,21 @@ export class AppointmentService {
     return this.http.post<void>(`${this.apiUrl}/${id}/confirm`, {});
   }
 
-  rescheduleAppointment(id: string, request: RescheduleRequest): Observable<void> {
-    return this.http.put<void>(`${this.apiUrl}/${id}/reschedule`, request);
+  getDoctorAppointments(doctorId: string, start: string, end: string) {
+    const params = new HttpParams().set('doctorId', doctorId).set('start', start).set('end', end);
+
+    return this.http.get<AppointmentResponse[]>(`${this.apiUrl}/`, { params });
+  }
+
+  rescheduleAppointment(
+    id: string,
+    startTime: string,
+    endTime: string,
+  ): Observable<RescheduleRequest[]> {
+    return this.http.put<RescheduleRequest[]>(`${this.apiUrl}/${id}/reschedule`, {
+      startTime: startTime,
+      endTime: endTime,
+    });
   }
 
   completeAppointment(id: string, data: CompleteAppointmentRequest): Observable<void> {
