@@ -1,0 +1,45 @@
+<div
+  class="modal-overlay"
+  [class.open]="isOpen"
+  (click)="onClose()"
+  (keydown)="onClose()"
+  tabindex="1"
+>
+  <div
+    class="modal-container"
+    (click)="$event.stopPropagation()"
+    (keydown)="$event.stopPropagation()"
+    tabindex="2"
+  >
+    <h3>Reschedule Appointment</h3>
+
+    <div class="form-group">
+      <label for="datetime"> New Date & Time </label>
+
+      <input
+        type="datetime-local"
+        id="datetime"
+        [min]="minDate"
+        [(ngModel)]="newDate"
+        aria-describedby="datetime-help"
+      />
+
+      <small id="datetime-help"> Please select a time within working hours. </small>
+    </div>
+
+    <div class="modal-actions">
+      <button class="btn-cancel" (click)="onClose()" (keydown)="onClose()" tabindex="3">
+        Cancel
+      </button>
+      <button
+        class="btn-confirm"
+        (click)="onConfirm()"
+        [disabled]="!newDate"
+        (keydown)="onConfirm()"
+        tabindex="4"
+      >
+        Confirm Change
+      </button>
+    </div>
+  </div>
+</div>
