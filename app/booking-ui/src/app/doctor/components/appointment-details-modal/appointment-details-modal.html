@@ -1,0 +1,99 @@
+<div
+  class="drawer-overlay"
+  [class.active]="isOpen"
+  (click)="onClose()"
+  (keydown)="onClose()"
+  tabindex="1"
+></div>
+
+<div class="details-drawer" [class.open]="isOpen">
+  <div class="drawer-header">
+    <h3>Appointment Details</h3>
+    <button class="close-btn" (click)="onClose()" (keydown)="onClose()" tabindex="2">
+      <span class="material-icons">close</span>
+    </button>
+  </div>
+
+  <div class="drawer-body">
+    @if (isLoading()) {
+      <div class="loader-box">
+        <div class="spinner"></div>
+        <p>Loading details...</p>
+      </div>
+    } @else if (appointment(); as app) {
+      <div class="patient-card">
+        <div class="avatar-large">{{ app.patientName[0] }}</div>
+        <h4>{{ app.patientName }}</h4>
+        <span class="status-badge" [class]="app.status.toLowerCase()">{{ app.status }}</span>
+        <p class="specialty-text">{{ app.specialty }}</p>
+      </div>
+
+      <div class="info-grid">
+        <div class="info-item">
+          <span class="label">Price</span>
+          <span class="value">{{ app.price | currency }}</span>
+        </div>
+        <div class="info-item">
+          <span class="label">Date</span>
+          <span class="value">{{ app.startTime | date: 'dd.MM.yyyy' }}</span>
+        </div>
+      </div>
+
+      <hr />
+
+      <div class="section">
+        <h5 class="section-title"><span class="material-icons">info</span> General Info</h5>
+        <div class="data-row">
+          <span class="material-icons">schedule</span>
+          <span
+            >{{ app.startTime | date: 'shortTime' }} - {{ app.endTime | date: 'shortTime' }}</span
+          >
+        </div>
+        @if (app.doctorPhoneNumber) {
+          <div class="data-row">
+            <span class="material-icons">phone</span>
+            <span>{{ app.doctorPhoneNumber }}</span>
+          </div>
+        }
+      </div>
+
+      <div class="section">
+        <h5 class="section-title"><span class="material-icons">description</span> Medical Notes</h5>
+        <div class="notes-box">
+          {{ app.medicalNotes || 'No notes provided yet.' }}
+        </div>
+      </div>
+
+      <div class="section">
+        <h5 class="section-title">
+          <span class="material-icons">attach_file</span>
+          Attachments ({{ app.attachments.length }})
+        </h5>
+
+        <div class="attachments-list">
+          @for (file of app.attachments; track file.id) {
+            <div
+              class="file-item"
+              (click)="downloadAttachment(file.id)"
+              (keydown)="downloadAttachment(file.id)"
+              tabindex="3"
+            >
+              <span class="material-icons file-icon">
+                {{ file.fileType.includes('image') ? 'image' : 'insert_drive_file' }}
+              </span>
+              <div class="file-info">
+                <span class="file-name">{{ file.fileName }}</span>
+                <span class="file-date">{{ file.createdAt | date: 'short' }}</span>
+              </div>
+              <span class="material-icons download-icon">download</span>
+            </div>
+          } @empty {
+            <p class="empty-text">No documents attached.</p>
+          }
+        </div>
+      </div>
+    } @else {
+      <div class="error-msg">Appointment not found.</div>
+    }
+  </div>
+</div>
