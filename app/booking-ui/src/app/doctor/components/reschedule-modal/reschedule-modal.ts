@@ -10,15 +10,15 @@ import { FormsModule } from '@angular/forms';
 })
 export class RescheduleModal {
   @Input() isOpen = false;
-  @Output() closeModal = new EventEmitter<void>();
+  @Output() closeRescheduleModal = new EventEmitter<void>();
   @Output() confirm = new EventEmitter<string>();
 
   newDate = '';
   minDate = new Date().toISOString().slice(0, 16);
 
-  onClose() {
+  onCloseRescheduleModal() {
     this.newDate = '';
-    this.closeModal.emit();
+    this.closeRescheduleModal.emit();
   }
 
   onConfirm() {
@@ -28,6 +28,6 @@ export class RescheduleModal {
     const isoString = dateObj.toISOString();
 
     this.confirm.emit(isoString);
-    this.onClose();
+    this.onCloseRescheduleModal();
   }
 }
