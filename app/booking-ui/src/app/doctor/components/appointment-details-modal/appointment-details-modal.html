@@ -1,15 +1,15 @@
 <div
   class="drawer-overlay"
-  [class.active]="isOpen"
-  (click)="onClose()"
-  (keydown)="onClose()"
+  [class.active]="isDetailsOpen"
+  (click)="onCloseDetailsModal()"
+  (keyup)="onCloseDetailsModal()"
   tabindex="1"
 ></div>
 
-<div class="details-drawer" [class.open]="isOpen">
+<div class="details-drawer" [class.open]="isDetailsOpen">
   <div class="drawer-header">
     <h3>Appointment Details</h3>
-    <button class="close-btn" (click)="onClose()" (keydown)="onClose()" tabindex="2">
+    <button class="close-btn" (click)="onCloseDetailsModal()" tabindex="2">
       <span class="material-icons">close</span>
     </button>
   </div>

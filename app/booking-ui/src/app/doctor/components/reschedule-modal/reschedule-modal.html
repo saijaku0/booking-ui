@@ -1,8 +1,8 @@
 <div
   class="modal-overlay"
   [class.open]="isOpen"
-  (click)="onClose()"
-  (keydown)="onClose()"
+  (click)="onCloseRescheduleModal()"
+  (keydown)="onCloseRescheduleModal()"
   tabindex="1"
 >
   <div
@@ -28,7 +28,12 @@
     </div>
 
     <div class="modal-actions">
-      <button class="btn-cancel" (click)="onClose()" (keydown)="onClose()" tabindex="3">
+      <button
+        class="btn-cancel"
+        (click)="onCloseRescheduleModal()"
+        (keydown)="onCloseRescheduleModal()"
+        tabindex="3"
+      >
         Cancel
       </button>
       <button

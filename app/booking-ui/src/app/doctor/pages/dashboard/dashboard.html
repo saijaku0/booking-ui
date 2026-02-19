@@ -24,18 +24,18 @@
 <app-completion-modal
   [isOpen]="isCompleteModalOpen()"
   [patientName]="selectedPatientName()"
-  (closeModal)="closeModal()"
+  (closeModal)="closeCompleteModal()"
   (confirm)="onCompleteConfirm($any($event))"
 ></app-completion-modal>
 
 <app-reschedule-modal
   [isOpen]="isRescheduleModalOpen()"
-  (close)="isRescheduleModalOpen.set(false)"
+  (closeRescheduleModal)="closeRescheduleModal()"
   (confirm)="onRescheduleConfirm($event)"
 ></app-reschedule-modal>
 
 <app-appointment-details-modal
   [appointmentId]="selectedDetailsId()"
-  [isOpen]="isDetailsOpen()"
-  (close)="isDetailsOpen.set(false)"
+  [isDetailsOpen]="isDetailsOpen()"
+  (closeDetailsModal)="closeDetailsModal()"
 ></app-appointment-details-modal>

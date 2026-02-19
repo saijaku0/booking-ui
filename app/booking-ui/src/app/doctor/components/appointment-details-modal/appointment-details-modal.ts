@@ -23,14 +23,14 @@ export class AppointmentDetailsModal implements OnChanges {
   private appointmentService = inject(AppointmentService);
 
   @Input() appointmentId: string | null = null;
-  @Input() isOpen = false;
-  @Output() closeModal = new EventEmitter<void>();
+  @Input() isDetailsOpen = false;
+  @Output() closeDetailsModal = new EventEmitter<void>();
 
   appointment = signal<AppointmentResponse | null>(null);
   isLoading = signal(false);
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['appointmentId'] && this.appointmentId && this.isOpen) {
+    if (changes['appointmentId'] && this.appointmentId && this.isDetailsOpen) {
       this.loadDetails(this.appointmentId);
     }
   }
@@ -53,7 +53,7 @@ export class AppointmentDetailsModal implements OnChanges {
     console.log('Downloading file:', fileId);
   }
 
-  onClose() {
-    this.closeModal.emit();
+  onCloseDetailsModal() {
+    this.closeDetailsModal.emit();
   }
 }

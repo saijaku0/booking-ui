@@ -150,10 +150,12 @@ export class Dashboard {
           ),
         );
         alert('Appointment rescheduled successfully');
+        this.isRescheduleModalOpen.set(false);
       },
       error: (err) => {
         console.error(err);
         alert('Failed to reschedule. Probably slot is taken.');
+        this.isRescheduleModalOpen.set(false);
       },
     });
   }
@@ -189,7 +191,7 @@ export class Dashboard {
         this.appointments.update((list) =>
           list.map((a) => (a.id === id ? { ...a, status: AppointmentStatus.Completed } : a)),
         );
-        this.closeModal();
+        this.closeCompleteModal();
       },
       error: (err) => {
         console.error(err);
@@ -198,8 +200,18 @@ export class Dashboard {
     });
   }
 
-  closeModal() {
+  closeCompleteModal() {
     this.isCompleteModalOpen.set(false);
     this.selectedAppointmentId.set(null);
+  }
+
+  closeRescheduleModal() {
+    this.isRescheduleModalOpen.set(false);
+    this.rescheduleAppointmentId.set(null);
+  }
+
+  closeDetailsModal() {
+    this.isDetailsOpen.set(false);
+    this.selectedDetailsId.set(null);
   }
 }
