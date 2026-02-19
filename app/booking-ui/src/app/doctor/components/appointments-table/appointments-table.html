@@ -13,14 +13,14 @@
     <div class="filters-wrapper">
       <div class="filter-group">
         <span class="label">Time:</span>
-        <button [class.active]="periodFilter() === 'all'" (click)="setFilter('period', 'all')">
+        <button [class.active]="selectedPeriod === 'all'" (click)="setFilter('period', 'all')">
           All
         </button>
-        <button [class.active]="periodFilter() === 'today'" (click)="setFilter('period', 'today')">
+        <button [class.active]="selectedPeriod === 'today'" (click)="setFilter('period', 'today')">
           Today
         </button>
         <button
-          [class.active]="periodFilter() === 'upcoming'"
+          [class.active]="selectedPeriod === 'upcoming'"
           (click)="setFilter('period', 'upcoming')"
         >
           Upcoming

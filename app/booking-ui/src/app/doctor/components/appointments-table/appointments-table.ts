@@ -12,52 +12,34 @@ import { AppointmentResponse } from '@core/models/appointmnet.models';
 export class AppointmentsTable {
   @Input({ required: true }) appointments: AppointmentResponse[] = [];
   @Input() isLoading = false;
+  @Input() selectedPeriod = 'all';
+  @Output() periodChange = new EventEmitter<string>();
   @Output() action = new EventEmitter<{ type: string; id: string }>();
 
   searchQuery = signal('');
   statusFilter = signal<string>('all');
-  periodFilter = signal<string>('all');
-
   activeMenuId = signal<string | null>(null);
 
   filteredAppointments = computed(() => {
     let data = this.appointments;
     const query = this.searchQuery().toLowerCase();
     const status = this.statusFilter().toLowerCase();
-    const period = this.periodFilter();
 
     if (query) {
       data = data.filter((a) => a.patientName.toLowerCase().includes(query));
     }
-
     if (status !== 'all') {
       data = data.filter((a) => a.status.toLowerCase() === status);
     }
-
-    if (period !== 'all') {
-      const now = new Date();
-      now.setHours(0, 0, 0, 0);
-
-      data = data.filter((a) => {
-        const appDate = new Date(a.startTime);
-        appDate.setHours(0, 0, 0, 0);
-
-        if (period === 'today') {
-          return appDate.getTime() === now.getTime();
-        }
-        if (period === 'upcoming') {
-          return appDate >= now;
-        }
-        return true;
-      });
-    }
-
     return data.sort((a, b) => new Date(a.startTime).getTime() - new Date(b.startTime).getTime());
   });
 
   setFilter(filterType: 'status' | 'period', value: string) {
-    if (filterType === 'status') this.statusFilter.set(value);
-    if (filterType === 'period') this.periodFilter.set(value);
+    if (filterType === 'status') {
+      this.statusFilter.set(value);
+    } else if (filterType === 'period') {
+      this.periodChange.emit(value);
+    }
     this.activeMenuId.set(null);
   }
 

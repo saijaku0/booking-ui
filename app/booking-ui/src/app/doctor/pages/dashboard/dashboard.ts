@@ -40,6 +40,7 @@ export class Dashboard {
   isCompleteModalOpen = signal(false);
   selectedAppointmentId = signal<string | null>(null);
   selectedPatientName = signal<string>('');
+  selectedPeriod = signal<'all' | 'today' | 'upcoming'>('all');
 
   isRescheduleModalOpen = signal(false);
   rescheduleAppointmentId = signal<string | null>(null);
@@ -55,35 +56,60 @@ export class Dashboard {
   constructor() {
     effect(() => {
       const doctorId = this.doctorService.currentDoctorId();
+      const period = this.selectedPeriod();
       if (doctorId) {
-        this.loadSchedule(doctorId);
+        this.loadSchedule(doctorId, period);
       }
     });
   }
 
-  loadSchedule(idOrNull?: string) {
-    const doctorId = idOrNull || this.doctorService.currentDoctorId();
-    if (!doctorId) return;
-
-    this.isLoading.set(true);
-
+  private getDateRange(period: 'all' | 'today' | 'upcoming'): { start: string; end: string } {
     const now = new Date();
-    const nextMonth = new Date();
-    nextMonth.setDate(now.getDate() + 30);
+    let start: Date, end: Date;
 
+    switch (period) {
+      case 'today':
+        start = new Date(now.setHours(0, 0, 0, 0));
+        end = new Date(now.setHours(23, 59, 59, 999));
+        break;
+      case 'upcoming':
+        start = new Date();
+        end = new Date();
+        end.setDate(now.getDate() + 7);
+        break;
+      case 'all':
+      default:
+        start = new Date();
+        start.setFullYear(now.getFullYear() - 1);
+        end = new Date();
+        end.setFullYear(now.getFullYear() + 1);
+        break;
+    }
+    return { start: start.toISOString(), end: end.toISOString() };
+  }
+
+  loadSchedule(doctorId: string, period: 'all' | 'today' | 'upcoming' = this.selectedPeriod()) {
+    this.isLoading.set(true);
+    const { start, end } = this.getDateRange(period);
     this.appointmentService
-      .getDoctorAppointments(doctorId, now.toISOString(), nextMonth.toISOString())
+      .getDoctorAppointments(doctorId, start, end)
       .pipe(finalize(() => this.isLoading.set(false)))
       .subscribe({
-        next: (data) => {
-          this.appointments.set(data);
-        },
+        next: (data) => this.appointments.set(data),
         error: (err) => {
           console.error('Ошибка загрузки:', err);
           this.appointments.set([]);
         },
       });
   }
+
+  // Обработчик изменения периода из таблицы
+  onPeriodChange(period: string) {
+    this.selectedPeriod.set(period as 'all' | 'today' | 'upcoming');
+    // Загрузка произойдёт автоматически через effect (см. ниже)
+  }
+
+  // В конструкторе обновим effect
 
   handleTableAction(event: { type: string; id: string }) {
     const { type, id } = event;
